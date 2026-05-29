@@ -52,11 +52,7 @@ export const SIZE_RULES: ReadonlySet<string> = new Set([
 ])
 
 /** Rules that force an attribute into the "numeric" size category. */
-export const NUMERIC_RULES: ReadonlySet<string> = new Set([
-  'numeric',
-  'integer',
-  'decimal',
-])
+export const NUMERIC_RULES: ReadonlySet<string> = new Set(['numeric', 'integer', 'decimal'])
 
 /** Rules that force an attribute into the "file" size category. */
 export const FILE_RULES: ReadonlySet<string> = new Set([

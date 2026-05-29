@@ -12,7 +12,7 @@
  * including cross-field rules, which capture sibling values at build time.
  */
 
-import { isEmpty } from '@/lib/helpers'
+import { isEmpty, stringifyValue } from '@/lib/helpers'
 import type { CustomMessages, FieldRuleFn, RuleEntry, ValidationData } from '@/lib/types'
 import { Validator } from '@/lib/core/Validator'
 import { Rule } from '@/lib/ruleObjects/Rule'
@@ -27,8 +27,7 @@ type CustomRuleFn = (value: unknown, ...parameters: unknown[]) => true | string
 export type ValidationRule = ValidationBuilder & FieldRuleFn
 
 const makeCallable = (instance: ValidationBuilder): ValidationBuilder => {
-  const fn = (value: unknown): true | string =>
-    (fn as unknown as ValidationBuilder).toRule()(value)
+  const fn = (value: unknown): true | string => (fn as unknown as ValidationBuilder).toRule()(value)
   Object.setPrototypeOf(fn, Object.getPrototypeOf(instance) as object)
   for (const key of Object.getOwnPropertyNames(instance)) {
     const descriptor = Object.getOwnPropertyDescriptor(instance, key)
@@ -245,7 +244,9 @@ class ValidationBuilder {
     return this.push(`multiple_of:${divisor}`)
   }
   decimal(places: number, maxPlaces?: number): this {
-    return this.push(maxPlaces === undefined ? `decimal:${places}` : `decimal:${places},${maxPlaces}`)
+    return this.push(
+      maxPlaces === undefined ? `decimal:${places}` : `decimal:${places},${maxPlaces}`,
+    )
   }
   mustBePositive(): this {
     return this.push('numeric').push('min:0')
@@ -282,12 +283,14 @@ class ValidationBuilder {
   }
   asDateOfBirth(maxAge = 150): this {
     return this.custom((value) => {
-      const time = typeof value === 'string' || value instanceof Date ? Date.parse(String(value)) : NaN
+      const time =
+        typeof value === 'string' || value instanceof Date ? Date.parse(String(value)) : NaN
       if (Number.isNaN(time)) return 'Please enter a valid date of birth.'
       const date = new Date(time)
       const now = new Date()
       if (date.getTime() >= now.getTime()) return 'Date of birth must be in the past.'
-      if (now.getFullYear() - date.getFullYear() > maxAge) return 'Date of birth is too far in the past.'
+      if (now.getFullYear() - date.getFullYear() > maxAge)
+        return 'Date of birth is too far in the past.'
       return true
     })
   }
@@ -426,7 +429,7 @@ class ValidationBuilder {
   }
   password(minLength = 8): this {
     return this.custom((value) => {
-      const text = String(value ?? '')
+      const text = stringifyValue(value)
       if (text.length < minLength) {
         return `The ${this.label} field must be at least ${minLength} characters with letters and numbers.`
       }
@@ -440,7 +443,9 @@ class ValidationBuilder {
   }
   asPhoneNumber(): this {
     return this.custom((value) =>
-      /^[+]?[\d\s\-().]{7,20}$/.test(String(value ?? '')) ? true : 'Please enter a valid phone number.',
+      /^[+]?[\d\s\-().]{7,20}$/.test(stringifyValue(value))
+        ? true
+        : 'Please enter a valid phone number.',
     )
   }
   notEmpty(): this {
@@ -492,7 +497,9 @@ class ValidationBuilder {
 // Static chain entry points are generated from the instance prototype so the
 // full API is available as both `validation.required()` and `new validation().required()`.
 type ChainStarters = {
-  [Method in keyof ValidationBuilder]: ValidationBuilder[Method] extends (...args: infer Args) => unknown
+  [Method in keyof ValidationBuilder]: ValidationBuilder[Method] extends (
+    ...args: infer Args
+  ) => unknown
     ? (...args: Args) => ValidationBuilder
     : never
 }
@@ -505,7 +512,15 @@ interface ValidationStatic extends ChainStarters {
   customRuleNames(): string[]
 }
 
-const STATIC_OWN = new Set(['extend', 'hasRule', 'removeRule', 'customRuleNames', 'prototype', 'length', 'name'])
+const STATIC_OWN = new Set([
+  'extend',
+  'hasRule',
+  'removeRule',
+  'customRuleNames',
+  'prototype',
+  'length',
+  'name',
+])
 
 /**
  * The public entry point. Usable statically (`validation.required()`) or as a
@@ -517,7 +532,8 @@ export const validation = new Proxy(ValidationBuilder, {
       const builder = new ValidationBuilder() as unknown as Record<string, unknown>
       const method = builder[property]
       if (typeof method === 'function') {
-        return (...args: unknown[]): unknown => (method as (...a: unknown[]) => unknown).apply(builder, args)
+        return (...args: unknown[]): unknown =>
+          (method as (...a: unknown[]) => unknown).apply(builder, args)
       }
     }
     return Reflect.get(target, property, receiver)

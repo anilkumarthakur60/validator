@@ -88,7 +88,10 @@ const matchesFormat = (value: string, format: string): boolean => {
 }
 
 export const dateRules: RuleModule = {
-  date: { validate: ({ value }) => (isString(value) || value instanceof Date) && parseDate(value) !== null },
+  date: {
+    validate: ({ value }) =>
+      (isString(value) || value instanceof Date) && parseDate(value) !== null,
+  },
 
   date_format: {
     replace: (ctx) => ({ format: ctx.parameters.join(', ') }),
@@ -99,7 +102,8 @@ export const dateRules: RuleModule = {
   date_equals: {
     dependent: true,
     replace: dateReplacer,
-    validate: ({ value, parameters, data }) => compare(value, parameters[0], data, (a, b) => a === b),
+    validate: ({ value, parameters, data }) =>
+      compare(value, parameters[0], data, (a, b) => a === b),
   },
 
   before: {
@@ -110,7 +114,8 @@ export const dateRules: RuleModule = {
   before_or_equal: {
     dependent: true,
     replace: dateReplacer,
-    validate: ({ value, parameters, data }) => compare(value, parameters[0], data, (a, b) => a <= b),
+    validate: ({ value, parameters, data }) =>
+      compare(value, parameters[0], data, (a, b) => a <= b),
   },
   after: {
     dependent: true,
@@ -120,7 +125,8 @@ export const dateRules: RuleModule = {
   after_or_equal: {
     dependent: true,
     replace: dateReplacer,
-    validate: ({ value, parameters, data }) => compare(value, parameters[0], data, (a, b) => a >= b),
+    validate: ({ value, parameters, data }) =>
+      compare(value, parameters[0], data, (a, b) => a >= b),
   },
 
   timezone: { validate: ({ value }) => isString(value) && isValidTimezone(value) },

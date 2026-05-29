@@ -32,7 +32,8 @@ const lastSegment = (attribute: string): string => attribute.split('.').pop() ??
 const buildQuery = (ctx: RuleContext): DatabaseQuery => {
   const table = ctx.parameters[0] ?? ''
   const columnParam = ctx.parameters[1]
-  const column = columnParam && columnParam.toUpperCase() !== 'NULL' ? columnParam : lastSegment(ctx.attribute)
+  const column =
+    columnParam && columnParam.toUpperCase() !== 'NULL' ? columnParam : lastSegment(ctx.attribute)
   const values = Array.isArray(ctx.value) ? ctx.value : [ctx.value]
   return { table, column, value: ctx.value, values, attribute: ctx.attribute, wheres: [] }
 }
@@ -68,7 +69,8 @@ export const utilityRules: RuleModule = {
   },
 
   not_in: {
-    validate: ({ value, parameters }) => !Array.isArray(value) && !parameters.includes(String(value)),
+    validate: ({ value, parameters }) =>
+      !Array.isArray(value) && !parameters.includes(String(value)),
   },
 
   json: { validate: ({ value }) => isString(value) && isValidJson(value) },

@@ -58,7 +58,10 @@ export const presenceRules: RuleModule = {
     dependent: true,
     replace: otherValueReplacer,
     validate: ({ value, parameters, data }) => {
-      const triggered = anyFieldEquals(otherValue({ data }, parameters[0] ?? ''), parameters.slice(1))
+      const triggered = anyFieldEquals(
+        otherValue({ data }, parameters[0] ?? ''),
+        parameters.slice(1),
+      )
       return triggered ? !isEmpty(value) : true
     },
   },
@@ -126,7 +129,7 @@ export const presenceRules: RuleModule = {
     replace: fieldListReplacer,
     validate: ({ value, parameters }) => {
       if (typeof value !== 'object' || value === null || Array.isArray(value)) return false
-      const keys = Object.keys(value as Record<string, unknown>)
+      const keys = Object.keys(value)
       return parameters.every((key) => keys.includes(key))
     },
   },

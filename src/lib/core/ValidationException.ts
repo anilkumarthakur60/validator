@@ -32,6 +32,8 @@ export class ValidationException extends Error {
     const first = bag.first()
     const remaining = bag.count() - 1
     if (first === '') return 'The given data was invalid.'
-    return remaining > 0 ? `${first} (and ${remaining} more error${remaining > 1 ? 's' : ''})` : first
+    return remaining > 0
+      ? `${first} (and ${remaining} more error${remaining > 1 ? 's' : ''})`
+      : first
   }
 }

@@ -7,6 +7,7 @@
 
 import {
   containsSpoofedCharacters,
+  isAscii,
   isString,
   isValidEmailFilter,
   isValidEmailRfc,
@@ -53,10 +54,12 @@ const matchesEmailStyle = (value: string, style: string): boolean => {
   }
 }
 
-const buildAlpha = (unicode: RegExp, ascii: RegExp) => (value: unknown, ascii_: boolean): boolean => {
-  const text = asText(value)
-  return text !== null && (ascii_ ? ascii : unicode).test(text)
-}
+const buildAlpha =
+  (unicode: RegExp, ascii: RegExp) =>
+  (value: unknown, ascii_: boolean): boolean => {
+    const text = asText(value)
+    return text !== null && (ascii_ ? ascii : unicode).test(text)
+  }
 
 const alphaCheck = buildAlpha(/^[\p{L}\p{M}]+$/u, /^[a-zA-Z]+$/)
 const alphaDashCheck = buildAlpha(/^[\p{L}\p{M}\p{N}_-]+$/u, /^[a-zA-Z0-9_-]+$/)
@@ -76,7 +79,7 @@ export const stringRules: RuleModule = {
   ascii: {
     validate: ({ value }) => {
       const text = asText(value)
-      return text !== null && /^[\x00-\x7F]*$/.test(text)
+      return text !== null && isAscii(text)
     },
   },
 

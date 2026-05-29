@@ -68,14 +68,16 @@ const parseEntry = (entry: RuleEntry): ParsedRule => {
   if (typeof entry === 'function') return { kind: 'closure', rule: entry }
   if (isForEach(entry)) return { kind: 'foreach', rule: entry }
   if (isRuleObject(entry)) return { kind: 'object', rule: entry }
-  throw new TypeError('[validation] Unsupported rule entry; expected string, function, or rule object.')
+  throw new TypeError(
+    '[validation] Unsupported rule entry; expected string, function, or rule object.',
+  )
 }
 
 const isRuleObject = (entry: unknown): entry is ValidationRuleObject =>
   typeof entry === 'object' &&
   entry !== null &&
   'validate' in entry &&
-  typeof (entry as { validate: unknown }).validate === 'function'
+  typeof entry.validate === 'function'
 
 /** Parse a single field's rule definition into a flat list of parsed rules. */
 export const parseFieldRules = (definition: FieldRuleDefinition): ParsedRule[] => {

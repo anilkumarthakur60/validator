@@ -12,14 +12,19 @@ import { isFile } from '@/lib/helpers'
 import type { FailFn, RuleContext, ValidationRuleObject, ValidatorAwareRule } from '@/lib/types'
 import type { Validator } from '@/lib/core/Validator'
 import { getBuiltinRule } from '@/lib/core/registry'
-import { Dimensions } from '@/lib/ruleObjects/Dimensions'
+import { type Dimensions } from '@/lib/ruleObjects/Dimensions'
 
 interface BuiltinCheck {
   readonly name: string
   readonly parameters: readonly string[]
 }
 
-const SIZE_UNITS: Readonly<Record<string, number>> = { kb: 1, mb: 1024, gb: 1_048_576, tb: 1_073_741_824 }
+const SIZE_UNITS: Readonly<Record<string, number>> = {
+  kb: 1,
+  mb: 1024,
+  gb: 1_048_576,
+  tb: 1_073_741_824,
+}
 
 /** Convert a size (number of kb, or `"10mb"`) into kilobytes. */
 const toKilobytes = (size: number | string): number => {
@@ -90,30 +95,37 @@ export class FileRule implements ValidationRuleObject, ValidatorAwareRule {
   }
 
   async validate(attribute: string, value: unknown, fail: FailFn): Promise<void> {
-    if (this.validator === null) return
+    const validator = this.validator
+    if (validator === null) return
     if (!isFile(value)) {
       fail('The :attribute field must be a file.')
       return
     }
     if (this.isImage) {
-      const imageCtx = this.context(attribute, value, this.allowSvg ? ['allow_svg'] : [])
+      const imageCtx = this.context(validator, attribute, value, this.allowSvg ? ['allow_svg'] : [])
       const def = getBuiltinRule('image')
       if (def && !(await def.validate(imageCtx))) fail('The :attribute field must be an image.')
     }
     for (const check of this.checks) {
       const definition = getBuiltinRule(check.name)
       if (!definition) continue
-      const passed = await definition.validate(this.context(attribute, value, check.parameters))
-      if (!passed) fail(this.validator.buildBuiltinMessage(attribute, check.name, check.parameters))
+      const passed = await definition.validate(
+        this.context(validator, attribute, value, check.parameters),
+      )
+      if (!passed) fail(validator.buildBuiltinMessage(attribute, check.name, check.parameters))
     }
     if (this.dimensionsRule) {
-      this.dimensionsRule.setValidator(this.validator)
+      this.dimensionsRule.setValidator(validator)
       await this.dimensionsRule.validate(attribute, value, fail)
     }
   }
 
-  private context(attribute: string, value: unknown, parameters: readonly string[]): RuleContext {
-    const validator = this.validator as Validator
+  private context(
+    validator: Validator,
+    attribute: string,
+    value: unknown,
+    parameters: readonly string[],
+  ): RuleContext {
     return {
       attribute,
       attributePattern: attribute,

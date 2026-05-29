@@ -2,10 +2,7 @@ import { Validator } from '@/lib/core/Validator'
 
 // Minimal sanity check for the root workspace app. The full interactive
 // showcase lives in the standalone `demo/` project (`npm run demo`).
-const validator = Validator.make(
-  { email: 'person@example.com' },
-  { email: 'required|email' },
-)
+const validator = Validator.make({ email: 'person@example.com' }, { email: 'required|email' })
 
 const app = document.querySelector<HTMLDivElement>('#app')
 if (app) {

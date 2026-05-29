@@ -20,7 +20,9 @@ export const arrayRules: RuleModule = {
         return parameters.length === 0 || value.every((_, i) => parameters.includes(String(i)))
       }
       if (isPlainObject(value)) {
-        return parameters.length === 0 || Object.keys(value).every((key) => parameters.includes(key))
+        return (
+          parameters.length === 0 || Object.keys(value).every((key) => parameters.includes(key))
+        )
       }
       return false
     },
@@ -61,7 +63,8 @@ export const arrayRules: RuleModule = {
   in_array_keys: {
     replace: literalValuesReplacer,
     validate: ({ value, parameters }) => {
-      if (Array.isArray(value)) return parameters.some((key) => /^\d+$/.test(key) && Number(key) < value.length)
+      if (Array.isArray(value))
+        return parameters.some((key) => /^\d+$/.test(key) && Number(key) < value.length)
       if (isPlainObject(value)) return parameters.some((key) => key in value)
       return false
     },

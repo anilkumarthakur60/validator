@@ -79,10 +79,10 @@ export class Password implements ValidationRuleObject, ValidatorAwareRule {
       fail('The :attribute field must be a valid string.')
       return
     }
-    if ([...value].length < this.minLength) {
+    if (Array.from(value).length < this.minLength) {
       fail(`The :attribute field must be at least ${this.minLength} characters.`)
     }
-    if (this.maxLength !== null && [...value].length > this.maxLength) {
+    if (this.maxLength !== null && Array.from(value).length > this.maxLength) {
       fail(`The :attribute field must not be greater than ${this.maxLength} characters.`)
     }
     if (this.needsLetters && !/\p{L}/u.test(value)) {

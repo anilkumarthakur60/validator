@@ -22,7 +22,12 @@ const fields: readonly Field[] = [
   { name: 'email', label: 'Email (validated live)', type: 'email', placeholder: 'you@example.com' },
   { name: 'age', label: 'Age', type: 'number', placeholder: '18' },
   { name: 'password', label: 'Password', type: 'password', placeholder: '••••••••' },
-  { name: 'password_confirmation', label: 'Confirm password', type: 'password', placeholder: '••••••••' },
+  {
+    name: 'password_confirmation',
+    label: 'Confirm password',
+    type: 'password',
+    placeholder: '••••••••',
+  },
 ]
 
 const liveEmailRule = validation.nullable().email().toRule()
@@ -91,7 +96,12 @@ function wireSubmit(): void {
   form.addEventListener('submit', (event) => {
     event.preventDefault()
     const data = Object.fromEntries(new FormData(form).entries())
-    const validator = Validator.make(data, schema, {}, { password_confirmation: 'password confirmation' })
+    const validator = Validator.make(
+      data,
+      schema,
+      {},
+      { password_confirmation: 'password confirmation' },
+    )
 
     for (const field of fields) clearMessage(field.name)
 

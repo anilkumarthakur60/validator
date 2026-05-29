@@ -70,8 +70,9 @@ describe('fluent registry', () => {
   })
 
   it('extend() + rule()', () => {
-    validation.extend('nepaliPhone', (value) =>
-      /^(\+977)?9[78]\d{8}$/.test(String(value)) || 'Invalid Nepali phone number.',
+    validation.extend(
+      'nepaliPhone',
+      (value) => /^(\+977)?9[78]\d{8}$/.test(String(value)) || 'Invalid Nepali phone number.',
     )
     expect(validation.hasRule('nepaliPhone')).toBe(true)
     const rule = validation.required().rule('nepaliPhone').toRule()

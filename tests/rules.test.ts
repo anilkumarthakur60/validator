@@ -71,7 +71,9 @@ describe('boolean / accepted / declined', () => {
 
 describe('array rules', () => {
   it('array key allow-list', () => {
-    expect(Validator.make({ u: { name: 'x', admin: true } }, { u: 'array:name' }).fails()).toBe(true)
+    expect(Validator.make({ u: { name: 'x', admin: true } }, { u: 'array:name' }).fails()).toBe(
+      true,
+    )
     expect(Validator.make({ u: { name: 'x' } }, { u: 'array:name,age' }).passes()).toBe(true)
   })
   it('list / distinct / contains', () => {

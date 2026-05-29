@@ -79,17 +79,13 @@ export interface ValidatorAwareRule {
 }
 
 /** A one-off closure rule. */
-export type ClosureRule = (
-  attribute: string,
-  value: unknown,
-  fail: FailFn,
-) => void | Promise<void>
+export type ClosureRule = (attribute: string, value: unknown, fail: FailFn) => void | Promise<void>
 
 /** Any single entry in a field's rule list. */
 export type RuleEntry = string | ValidationRuleObject | ClosureRule | ForEachLike
 
 /** A field's rules: a `|`-delimited string, a single entry, or an array of entries. */
-export type FieldRuleDefinition = RuleEntry | ReadonlyArray<RuleEntry>
+export type FieldRuleDefinition = RuleEntry | readonly RuleEntry[]
 
 /** The full rules schema passed to `Validator.make`. */
 export type RulesSchema = Record<string, FieldRuleDefinition>
@@ -145,5 +141,5 @@ export interface DatabaseQuery {
   readonly values: readonly unknown[]
   readonly attribute: string
   readonly ignore?: { id: unknown; column: string }
-  readonly wheres: ReadonlyArray<{ column: string; value: unknown }>
+  readonly wheres: readonly { column: string; value: unknown }[]
 }

@@ -14,9 +14,8 @@ import {
   formatMessage,
   type MessageTemplate,
   type SizeType,
-  type TypedMessage,
 } from '@/lib/messages'
-import { isFile, isPlainObject } from '@/lib/helpers'
+import { isFile, isPlainObject, stringifyValue } from '@/lib/helpers'
 import type {
   AfterCallback,
   CustomAttributes,
@@ -32,13 +31,7 @@ import type {
 import { MessageBag } from '@/lib/core/MessageBag'
 import { ValidatedInput } from '@/lib/core/ValidatedInput'
 import { ValidationException } from '@/lib/core/ValidationException'
-import {
-  dotGet,
-  dotHas,
-  dotSet,
-  expandWildcards,
-  replaceWildcardParameter,
-} from '@/lib/core/data'
+import { dotGet, dotHas, dotSet, expandWildcards, replaceWildcardParameter } from '@/lib/core/data'
 import { FILE_RULES, getBuiltinRule, NUMERIC_RULES, SIZE_RULES } from '@/lib/core/registry'
 import {
   parseFieldRules,
@@ -276,13 +269,13 @@ export class Validator {
     }
     if (typeof value === 'boolean') return value ? 'true' : 'false'
     if (value === null || value === undefined) return 'empty'
-    return String(value)
+    return stringifyValue(value)
   }
 
   // ── normalization ───────────────────────────────────────
 
   private requireNormalized(): AttributeRules[] {
-    if (this.normalized === null) this.normalized = this.normalize()
+    this.normalized ??= this.normalize()
     return this.normalized
   }
 
@@ -297,12 +290,10 @@ export class Validator {
       for (const expanded of expandWildcards(this.data, pattern)) {
         const extra = conditionalByAttribute.get(expanded.attribute)
         if (extra) consumed.add(expanded.attribute)
-        const entry = this.buildAttributeRules(
-          expanded.attribute,
-          pattern,
-          expanded.explicitKeys,
-          [...parsed, ...(extra?.rules ?? [])],
-        )
+        const entry = this.buildAttributeRules(expanded.attribute, pattern, expanded.explicitKeys, [
+          ...parsed,
+          ...(extra?.rules ?? []),
+        ])
         const existing = merged.get(expanded.attribute)
         if (existing) {
           existing.rules.push(...entry.rules)
@@ -316,7 +307,10 @@ export class Validator {
     // Conditional rules for attributes not present in the schema.
     for (const [attribute, spec] of conditionalByAttribute) {
       if (consumed.has(attribute) || merged.has(attribute)) continue
-      merged.set(attribute, this.buildAttributeRules(attribute, attribute, spec.explicitKeys, spec.rules))
+      merged.set(
+        attribute,
+        this.buildAttributeRules(attribute, attribute, spec.explicitKeys, spec.rules),
+      )
     }
 
     return [...merged.values()]
@@ -400,7 +394,17 @@ export class Validator {
       }
     }
 
-    return { attribute, pattern, explicitKeys, rules, ruleNames, nullable, sometimes, bail, excludes }
+    return {
+      attribute,
+      pattern,
+      explicitKeys,
+      rules,
+      ruleNames,
+      nullable,
+      sometimes,
+      bail,
+      excludes,
+    }
   }
 
   private substituteParameters(
@@ -410,7 +414,9 @@ export class Validator {
     if (!rule.parameters.some((parameter) => parameter.includes('*'))) return rule
     return {
       ...rule,
-      parameters: rule.parameters.map((parameter) => replaceWildcardParameter(parameter, explicitKeys)),
+      parameters: rule.parameters.map((parameter) =>
+        replaceWildcardParameter(parameter, explicitKeys),
+      ),
     }
   }
 
@@ -506,13 +512,16 @@ export class Validator {
     return true
   }
 
-  private evaluateBuiltin(entry: AttributeRules, rule: ParsedBuiltinRule): boolean | Promise<boolean> {
+  private evaluateBuiltin(
+    entry: AttributeRules,
+    rule: ParsedBuiltinRule,
+  ): boolean | Promise<boolean> {
     const definition = getBuiltinRule(rule.name)
     if (!definition) {
       throw new Error(`[validation] Unknown validation rule "${rule.name}".`)
     }
     const value = dotGet(this.data, entry.attribute)
-    if (!this.shouldValidate(entry, rule.name, value, Boolean(definition.implicit))) return true
+    if (!this.shouldValidate(entry, value, Boolean(definition.implicit))) return true
 
     const context = this.buildContext(entry, rule, value)
     const result = definition.validate(context)
@@ -526,10 +535,13 @@ export class Validator {
     return result
   }
 
-  private evaluateObject(entry: AttributeRules, parsed: ParsedObjectRule): boolean | Promise<boolean> {
+  private evaluateObject(
+    entry: AttributeRules,
+    parsed: ParsedObjectRule,
+  ): boolean | Promise<boolean> {
     const rule = parsed.rule
     const value = dotGet(this.data, entry.attribute)
-    if (!this.shouldValidate(entry, '__object__', value, Boolean(rule.implicit))) return true
+    if (!this.shouldValidate(entry, value, Boolean(rule.implicit))) return true
 
     if (isDataAware(rule)) rule.setData(this.data)
     if (isValidatorAware(rule)) rule.setValidator(this)
@@ -544,9 +556,12 @@ export class Validator {
     return passed
   }
 
-  private evaluateClosure(entry: AttributeRules, parsed: ParsedClosureRule): boolean | Promise<boolean> {
+  private evaluateClosure(
+    entry: AttributeRules,
+    parsed: ParsedClosureRule,
+  ): boolean | Promise<boolean> {
     const value = dotGet(this.data, entry.attribute)
-    if (!this.shouldValidate(entry, '__closure__', value, false)) return true
+    if (!this.shouldValidate(entry, value, false)) return true
 
     let passed = true
     const fail = (message: string): void => {
@@ -559,18 +574,17 @@ export class Validator {
   }
 
   /** Laravel's `isValidatable`: present-or-implicit, and nullable handling. */
-  private shouldValidate(
-    entry: AttributeRules,
-    _ruleName: string,
-    value: unknown,
-    implicit: boolean,
-  ): boolean {
+  private shouldValidate(entry: AttributeRules, value: unknown, implicit: boolean): boolean {
     if (entry.nullable && value === null && !implicit) return false
     if (typeof value === 'string' && value.trim() === '') return implicit
     return dotHas(this.data, entry.attribute) || implicit
   }
 
-  private buildContext(entry: AttributeRules, rule: ParsedBuiltinRule, value: unknown): RuleContext {
+  private buildContext(
+    entry: AttributeRules,
+    rule: ParsedBuiltinRule,
+    value: unknown,
+  ): RuleContext {
     return {
       attribute: entry.attribute,
       attributePattern: entry.pattern,
@@ -586,12 +600,22 @@ export class Validator {
   private addBuiltinFailure(entry: AttributeRules, rule: ParsedBuiltinRule): void {
     this.bag.add(
       entry.attribute,
-      this.composeMessage(entry.attribute, entry.pattern, entry.explicitKeys, rule.name, rule.parameters),
+      this.composeMessage(
+        entry.attribute,
+        entry.pattern,
+        entry.explicitKeys,
+        rule.name,
+        rule.parameters,
+      ),
     )
   }
 
   /** Build the message a built-in rule would produce (used by rule objects). */
-  buildBuiltinMessage(attribute: string, ruleName: string, parameters: readonly string[] = []): string {
+  buildBuiltinMessage(
+    attribute: string,
+    ruleName: string,
+    parameters: readonly string[] = [],
+  ): string {
     return this.composeMessage(attribute, attribute, [], ruleName, parameters)
   }
 
@@ -634,7 +658,7 @@ export class Validator {
   private selectTyped(attribute: string, ruleName: string, template: MessageTemplate): string {
     if (typeof template === 'string') return template
     if (!SIZE_RULES.has(ruleName)) return template.string
-    return template[this.getSizeType(attribute) as keyof TypedMessage]
+    return template[this.getSizeType(attribute)]
   }
 
   private formatExternalMessage(entry: AttributeRules, message: string): string {
@@ -674,17 +698,17 @@ export class Validator {
 const looseFieldEquals = (value: unknown, parameter: string | undefined): boolean => {
   if (parameter === undefined) return false
   if (typeof value === 'boolean') {
-    if (parameter === 'true' || parameter === '1') return value === true
-    if (parameter === 'false' || parameter === '0') return value === false
+    if (parameter === 'true' || parameter === '1') return value
+    if (parameter === 'false' || parameter === '0') return !value
   }
   return String(value) === parameter
 }
 
 const isDataAware = (rule: object): rule is { setData(data: ValidationData): void } =>
-  'setData' in rule && typeof (rule as { setData: unknown }).setData === 'function'
+  'setData' in rule && typeof rule.setData === 'function'
 
 const isValidatorAware = (rule: object): rule is { setValidator(validator: Validator): void } =>
-  'setValidator' in rule && typeof (rule as { setValidator: unknown }).setValidator === 'function'
+  'setValidator' in rule && typeof rule.setValidator === 'function'
 
 const toOrdinal = (n: number): string => {
   const suffixes = ['th', 'st', 'nd', 'rd']

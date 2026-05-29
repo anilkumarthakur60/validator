@@ -6,15 +6,13 @@
  * available; in non-browser contexts it cannot measure pixels and passes.
  */
 
-import { fileExtension, isFile, isString } from '@/lib/helpers'
+import { fileExtension, isAscii, isFile, isString } from '@/lib/helpers'
 import type { RuleModule } from '@/lib/core/ruleDefinition'
 import { literalValuesReplacer } from '@/lib/rules/_shared'
 
 const IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'bmp', 'gif', 'webp']
 
-interface ImageDecoder {
-  (file: File): Promise<{ width: number; height: number }>
-}
+type ImageDecoder = (file: File) => Promise<{ width: number; height: number }>
 
 const decodeImage: ImageDecoder | null =
   typeof createImageBitmap === 'function'
@@ -63,8 +61,7 @@ export const fileRules: RuleModule = {
 
   extensions: {
     replace: literalValuesReplacer,
-    validate: ({ value, parameters }) =>
-      isFile(value) && parameters.includes(fileExtension(value)),
+    validate: ({ value, parameters }) => isFile(value) && parameters.includes(fileExtension(value)),
   },
 
   mimetypes: {
@@ -82,10 +79,13 @@ export const fileRules: RuleModule = {
     validate: ({ value, parameters }) => {
       if (!isString(value)) return isFile(value)
       const encoding = (parameters[0] ?? 'utf-8').toLowerCase()
-      if (encoding === 'ascii' || encoding === 'us-ascii') return /^[\x00-\x7F]*$/.test(value)
+      if (encoding === 'ascii' || encoding === 'us-ascii') return isAscii(value)
       if (encoding === 'utf-8' || encoding === 'utf8') {
         try {
-          return new TextDecoder('utf-8', { fatal: true }).decode(new TextEncoder().encode(value)) === value
+          return (
+            new TextDecoder('utf-8', { fatal: true }).decode(new TextEncoder().encode(value)) ===
+            value
+          )
         } catch {
           return false
         }

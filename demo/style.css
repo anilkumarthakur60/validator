@@ -8,10 +8,18 @@
   --err: #f87171;
   --accent: #7c9cff;
   --border: #2a2f3d;
-  font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
@@ -26,9 +34,19 @@ body {
   padding: 2.5rem 1.25rem 4rem;
 }
 
-h1 { font-size: 1.6rem; margin: 0 0 0.25rem; }
-h2 { font-size: 1.05rem; margin: 2rem 0 0.75rem; color: var(--accent); }
-.lead { color: var(--muted); margin-top: 0; }
+h1 {
+  font-size: 1.6rem;
+  margin: 0 0 0.25rem;
+}
+h2 {
+  font-size: 1.05rem;
+  margin: 2rem 0 0.75rem;
+  color: var(--accent);
+}
+.lead {
+  color: var(--muted);
+  margin-top: 0;
+}
 
 .panel {
   background: var(--panel);
@@ -37,10 +55,19 @@ h2 { font-size: 1.05rem; margin: 2rem 0 0.75rem; color: var(--accent); }
   padding: 1.25rem;
 }
 
-.field { margin-bottom: 1rem; }
-.field:last-child { margin-bottom: 0; }
+.field {
+  margin-bottom: 1rem;
+}
+.field:last-child {
+  margin-bottom: 0;
+}
 
-label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 0.35rem; }
+label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 0.35rem;
+}
 
 input {
   width: 100%;
@@ -51,13 +78,28 @@ input {
   color: var(--text);
   font-size: 0.95rem;
 }
-input:focus { outline: none; border-color: var(--accent); }
-input.invalid { border-color: var(--err); }
-input.valid { border-color: var(--ok); }
+input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+input.invalid {
+  border-color: var(--err);
+}
+input.valid {
+  border-color: var(--ok);
+}
 
-.msg { font-size: 0.8rem; margin-top: 0.35rem; min-height: 1rem; }
-.msg.error { color: var(--err); }
-.msg.ok { color: var(--ok); }
+.msg {
+  font-size: 0.8rem;
+  margin-top: 0.35rem;
+  min-height: 1rem;
+}
+.msg.error {
+  color: var(--err);
+}
+.msg.ok {
+  color: var(--ok);
+}
 
 button {
   margin-top: 0.5rem;
@@ -80,4 +122,6 @@ pre {
   margin: 0.5rem 0 0;
 }
 
-code { color: var(--accent); }
+code {
+  color: var(--accent);
+}

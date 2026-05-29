@@ -20,9 +20,6 @@ describe('Validator — basics', () => {
   })
 
   it('selects type-aware size messages', () => {
-    expect(
-      Validator.make({ n: 5 }, { n: 'numeric|max:3' }).errors === undefined,
-    ).toBe(false)
     const numeric = Validator.make({ n: 5 }, { n: 'numeric|max:3' })
     numeric.passes()
     expect(numeric.errors().first('n')).toBe('The n field must not be greater than 3.')
@@ -68,7 +65,10 @@ describe('Validator — basics', () => {
   })
 
   it('stops on first failure when configured', () => {
-    const v = Validator.make({ a: '', b: '' }, { a: 'required', b: 'required' }).stopOnFirstFailure()
+    const v = Validator.make(
+      { a: '', b: '' },
+      { a: 'required', b: 'required' },
+    ).stopOnFirstFailure()
     v.passes()
     expect(v.errors().count()).toBe(1)
   })
@@ -102,10 +102,7 @@ describe('Validator — nested & wildcards', () => {
   })
 
   it('retrieves wildcard errors via MessageBag.get', () => {
-    const v = Validator.make(
-      { tags: ['', ''] },
-      { 'tags.*': 'required' },
-    )
+    const v = Validator.make({ tags: ['', ''] }, { 'tags.*': 'required' })
     v.passes()
     expect(v.errors().get('tags.*')).toHaveLength(2)
   })
@@ -167,9 +164,11 @@ describe('Validator — custom messages & attributes', () => {
 
 describe('Validator — async rules', () => {
   it('runs unique/exists resolvers asynchronously', async () => {
-    const unique = vi.fn(async () => false)
-    const v = Validator.make({ email: 'taken@x.com' }, { email: 'required|email|unique:users' })
-      .withResolvers({ unique })
+    const unique = vi.fn(() => Promise.resolve(false))
+    const v = Validator.make(
+      { email: 'taken@x.com' },
+      { email: 'required|email|unique:users' },
+    ).withResolvers({ unique })
     expect(await v.failsAsync()).toBe(true)
     expect(unique).toHaveBeenCalledOnce()
     expect(v.errors().first('email')).toBe('The email has already been taken.')
@@ -177,7 +176,7 @@ describe('Validator — async rules', () => {
 
   it('throws when async rules run on the sync path', () => {
     const v = Validator.make({ email: 'x@y.com' }, { email: 'unique:users' }).withResolvers({
-      unique: async () => true,
+      unique: () => Promise.resolve(true),
     })
     expect(() => v.passes()).toThrow(/asynchronous/)
   })

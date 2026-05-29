@@ -46,28 +46,22 @@ export const toNumber = (value: unknown): number => Number(value)
 
 /** Laravel's boolean-castable set for the `boolean` rule. */
 export const isBooleanLike = (value: unknown): boolean =>
-  value === true ||
-  value === false ||
-  value === 1 ||
-  value === 0 ||
-  value === '1' ||
-  value === '0'
+  value === true || value === false || value === 1 || value === 0 || value === '1' || value === '0'
 
-const ACCEPTED_VALUES: ReadonlyArray<unknown> = [true, 'true', 1, '1', 'yes', 'on']
-const DECLINED_VALUES: ReadonlyArray<unknown> = [false, 'false', 0, '0', 'no', 'off']
+const ACCEPTED_VALUES: readonly unknown[] = [true, 'true', 1, '1', 'yes', 'on']
+const DECLINED_VALUES: readonly unknown[] = [false, 'false', 0, '0', 'no', 'off']
 
 export const isAccepted = (value: unknown): boolean => ACCEPTED_VALUES.includes(value)
 export const isDeclined = (value: unknown): boolean => DECLINED_VALUES.includes(value)
 
-export const isValidEmailRfc = (value: string): boolean =>
-  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+export const isValidEmailRfc = (value: string): boolean => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
 
 /** Strict-ish RFC check that rejects consecutive/trailing dots. */
 export const isValidEmailStrict = (value: string): boolean => {
   if (!isValidEmailRfc(value)) return false
   const [local, domain] = value.split('@')
   if (local === undefined || domain === undefined) return false
-  if (/\.\./.test(value)) return false
+  if (value.includes('..')) return false
   if (local.startsWith('.') || local.endsWith('.')) return false
   if (domain.startsWith('.') || domain.endsWith('.')) return false
   return true
@@ -132,8 +126,7 @@ export const isValidMacAddress = (value: string): boolean =>
   /^(?:[0-9A-Fa-f]{4}\.){2}[0-9A-Fa-f]{4}$/.test(value)
 
 export const isValidUuid = (value: string, version?: number): boolean => {
-  const generic =
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+  const generic = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
   if (!generic.test(value)) return value.toLowerCase() === '00000000-0000-0000-0000-000000000000'
   if (version === undefined) return true
   return value.charAt(14) === String(version)
@@ -169,6 +162,32 @@ export const parseDate = (value: unknown): number | null => {
 
 export const isValidDate = (value: unknown): boolean => parseDate(value) !== null
 
+/** Whether every code point in the string is 7-bit ASCII. */
+export const isAscii = (value: string): boolean => {
+  for (const char of value) {
+    if ((char.codePointAt(0) ?? 0) > 0x7f) return false
+  }
+  return true
+}
+
+/** Convert any value to a display string without `[object Object]` surprises. */
+export const stringifyValue = (value: unknown): string => {
+  switch (typeof value) {
+    case 'string':
+      return value
+    case 'number':
+    case 'bigint':
+    case 'boolean':
+    case 'symbol':
+    case 'function':
+      return value.toString()
+    case 'object':
+      return value === null ? '' : JSON.stringify(value)
+    default:
+      return ''
+  }
+}
+
 /**
  * Laravel-compatible "size" of a value:
  *  - string → character length
@@ -180,7 +199,7 @@ export const isValidDate = (value: unknown): boolean => parseDate(value) !== nul
 export const sizeOf = (value: unknown, isNumericContext = false): number => {
   if (typeof value === 'number') return value
   if (typeof value === 'string') {
-    return isNumericContext && isNumeric(value) ? Number(value) : [...value].length
+    return isNumericContext && isNumeric(value) ? Number(value) : Array.from(value).length
   }
   if (Array.isArray(value)) return value.length
   if (isFile(value)) return value.size / 1024

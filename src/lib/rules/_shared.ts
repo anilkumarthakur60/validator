@@ -3,24 +3,22 @@
  * common replacer builders). Not part of the public API.
  */
 
-import { isAccepted, isDeclined, isEmpty, parseDate } from '@/lib/helpers'
+import { isAccepted, isDeclined, isEmpty, parseDate, stringifyValue } from '@/lib/helpers'
 import { dotGet } from '@/lib/core/data'
 import type { Replaceable, ReplacerContext } from '@/lib/types'
 
 /** Loose, Laravel-style equality between a field value and a string parameter. */
 export const looseEquals = (value: unknown, parameter: string): boolean => {
   if (typeof value === 'boolean') {
-    if (parameter === 'true' || parameter === '1') return value === true
-    if (parameter === 'false' || parameter === '0') return value === false
+    if (parameter === 'true' || parameter === '1') return value
+    if (parameter === 'false' || parameter === '0') return !value
   }
   if (value === null || value === undefined) return parameter === ''
-  return String(value) === parameter
+  return stringifyValue(value) === parameter
 }
 
-export const anyFieldEquals = (
-  value: unknown,
-  parameters: readonly string[],
-): boolean => parameters.some((parameter) => looseEquals(value, parameter))
+export const anyFieldEquals = (value: unknown, parameters: readonly string[]): boolean =>
+  parameters.some((parameter) => looseEquals(value, parameter))
 
 export const otherValue = (ctx: { data: Record<string, unknown> }, field: string): unknown =>
   dotGet(ctx.data, field)
@@ -66,6 +64,7 @@ export const otherFieldReplacer = (ctx: ReplacerContext): Record<string, Replace
 export const dateReplacer = (ctx: ReplacerContext): Record<string, Replaceable> => {
   const parameter = ctx.parameters[0] ?? ''
   return {
-    date: parseDate(parameter) !== null ? parameter : ctx.validator.getDisplayableAttribute(parameter),
+    date:
+      parseDate(parameter) !== null ? parameter : ctx.validator.getDisplayableAttribute(parameter),
   }
 }

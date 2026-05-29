@@ -3,19 +3,14 @@
  * {@link DatabaseQuery} and defer to the configured async resolver.
  */
 
-import type {
-  DatabaseQuery,
-  FailFn,
-  ValidationRuleObject,
-  ValidatorAwareRule,
-} from '@/lib/types'
+import type { DatabaseQuery, FailFn, ValidationRuleObject, ValidatorAwareRule } from '@/lib/types'
 import type { Validator } from '@/lib/core/Validator'
 
 const lastSegment = (attribute: string): string => attribute.split('.').pop() ?? attribute
 
 abstract class DatabaseRule implements ValidatorAwareRule {
   protected validator: Validator | null = null
-  protected readonly wheres: Array<{ column: string; value: unknown }> = []
+  protected readonly wheres: { column: string; value: unknown }[] = []
   protected readonly table: string
   protected readonly column: string | null
 
@@ -33,7 +28,11 @@ abstract class DatabaseRule implements ValidatorAwareRule {
     return this
   }
 
-  protected buildQuery(attribute: string, value: unknown, extra: Partial<DatabaseQuery> = {}): DatabaseQuery {
+  protected buildQuery(
+    attribute: string,
+    value: unknown,
+    extra: Partial<DatabaseQuery> = {},
+  ): DatabaseQuery {
     return {
       table: this.table,
       column: this.column ?? lastSegment(attribute),

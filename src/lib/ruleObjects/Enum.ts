@@ -3,12 +3,13 @@
  * enum object (its values are used). Supports `only`/`except`/`when`.
  */
 
+import { isArray } from '@/lib/helpers'
 import type { FailFn, ValidationRuleObject } from '@/lib/types'
 
 export type EnumSource = readonly unknown[] | Record<string, string | number>
 
 const toValues = (source: EnumSource): unknown[] =>
-  Array.isArray(source) ? [...source] : Object.values(source)
+  isArray(source) ? [...source] : Object.values(source)
 
 export class Enum implements ValidationRuleObject {
   private allowed: unknown[]
@@ -29,18 +30,16 @@ export class Enum implements ValidationRuleObject {
     return this
   }
 
-  when(
-    condition: boolean,
-    then: (rule: Enum) => void,
-    otherwise?: (rule: Enum) => void,
-  ): this {
+  when(condition: boolean, then: (rule: Enum) => void, otherwise?: (rule: Enum) => void): this {
     if (condition) then(this)
     else otherwise?.(this)
     return this
   }
 
   validate(_attribute: string, value: unknown, fail: FailFn): void {
-    const matches = this.allowed.some((allowed) => allowed === value || String(allowed) === String(value))
+    const matches = this.allowed.some(
+      (allowed) => allowed === value || String(allowed) === String(value),
+    )
     if (!matches) fail('The selected :attribute is invalid.')
   }
 }

@@ -32,7 +32,9 @@ export const makeBuiltinRuleObject = (
         if (!passed) fail(active.buildBuiltinMessage(attribute, name, parameters))
       }
       const result = definition.validate(context)
-      return result instanceof Promise ? result.then(handle) : handle(result)
+      if (result instanceof Promise) return result.then(handle)
+      handle(result)
+      return undefined
     },
   }
 }

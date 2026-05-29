@@ -4,12 +4,7 @@
  */
 
 import { isEmpty } from '@/lib/helpers'
-import type {
-  ClosureRule,
-  FieldRuleDefinition,
-  RuleEntry,
-  ValidationRuleObject,
-} from '@/lib/types'
+import type { ClosureRule, FieldRuleDefinition, RuleEntry, ValidationRuleObject } from '@/lib/types'
 import { FOR_EACH, type ForEachLike } from '@/lib/ruleObjects/markers'
 import { makeBuiltinRuleObject } from '@/lib/ruleObjects/delegating'
 import { AnyOf } from '@/lib/ruleObjects/AnyOf'
@@ -24,7 +19,11 @@ type Condition = boolean | (() => boolean)
 const resolve = (condition: Condition): (() => boolean) =>
   typeof condition === 'function' ? condition : () => condition
 
-const conditional = (active: () => boolean, message: string, failWhenEmpty: boolean): ValidationRuleObject => ({
+const conditional = (
+  active: () => boolean,
+  message: string,
+  failWhenEmpty: boolean,
+): ValidationRuleObject => ({
   implicit: true,
   validate(_attribute: string, value: unknown, fail): void {
     if (!active()) return
@@ -112,4 +111,6 @@ export const Rule = {
   },
 }
 
-const noop: ClosureRule = () => {}
+const noop: ClosureRule = () => {
+  /* intentional no-op */
+}

@@ -15,7 +15,9 @@ const allDigits = (value: unknown): boolean => /^\d+$/.test(String(value))
 export const numberRules: RuleModule = {
   numeric: {
     validate: ({ value, parameters }) =>
-      parameters[0] === 'strict' ? typeof value === 'number' && Number.isFinite(value) : isNumeric(value),
+      parameters[0] === 'strict'
+        ? typeof value === 'number' && Number.isFinite(value)
+        : isNumeric(value),
   },
 
   integer: {

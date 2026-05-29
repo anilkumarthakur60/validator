@@ -49,7 +49,7 @@ export class ValidatedInput implements Iterable<[string, unknown]> {
   }
 
   /** Read a (dot-aware) key with an optional fallback. */
-  get<T = unknown>(key: string, fallback?: T): unknown {
+  get(key: string, fallback?: unknown): unknown {
     return this.has(key) ? dotGet(this.input, key) : fallback
   }
 

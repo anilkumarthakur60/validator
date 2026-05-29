@@ -11,7 +11,10 @@ describe('Rule facade', () => {
   })
 
   it('Rule.enum with only/except', () => {
-    const v = Validator.make({ s: 'pending' }, { s: [Rule.enum(['pending', 'active']).only(['active'])] })
+    const v = Validator.make(
+      { s: 'pending' },
+      { s: [Rule.enum(['pending', 'active']).only(['active'])] },
+    )
     expect(v.fails()).toBe(true)
   })
 
@@ -24,7 +27,15 @@ describe('Rule facade', () => {
   })
 
   it('Rule.anyOf', () => {
-    const rules = { username: ['required', Rule.anyOf([['string', 'email'], ['string', 'alpha_dash', 'min:6']])] }
+    const rules = {
+      username: [
+        'required',
+        Rule.anyOf([
+          ['string', 'email'],
+          ['string', 'alpha_dash', 'min:6'],
+        ]),
+      ],
+    }
     expect(Validator.make({ username: 'a@b.com' }, rules).passes()).toBe(true)
     expect(Validator.make({ username: 'longdash' }, rules).passes()).toBe(true)
     expect(Validator.make({ username: 'no' }, rules).fails()).toBe(true)
@@ -41,8 +52,11 @@ describe('Rule facade', () => {
   })
 
   it('Rule.exists uses the resolver', async () => {
-    const exists = vi.fn(async (_query: unknown) => true)
-    const v = Validator.make({ id: 7 }, { id: [Rule.exists('users').where('active', true)] }).withResolvers({
+    const exists = vi.fn<(query: unknown) => Promise<boolean>>(() => Promise.resolve(true))
+    const v = Validator.make(
+      { id: 7 },
+      { id: [Rule.exists('users').where('active', true)] },
+    ).withResolvers({
       exists,
     })
     expect(await v.passesAsync()).toBe(true)
@@ -54,7 +68,10 @@ describe('Rule facade', () => {
 
 describe('Password rule object', () => {
   it('enforces complexity (sync portions)', async () => {
-    const weak = Validator.make({ password: 'abc' }, { password: [Password.min(8).letters().numbers()] })
+    const weak = Validator.make(
+      { password: 'abc' },
+      { password: [Password.min(8).letters().numbers()] },
+    )
     expect(await weak.failsAsync()).toBe(true)
     const strong = Validator.make(
       { password: 'abcdefg9' },
@@ -64,9 +81,12 @@ describe('Password rule object', () => {
   })
 
   it('uncompromised uses the resolver', async () => {
-    const v = Validator.make({ password: 'password123' }, {
-      password: [Password.min(8).uncompromised()],
-    }).withResolvers({ compromised: async () => 42 })
+    const v = Validator.make(
+      { password: 'password123' },
+      {
+        password: [Password.min(8).uncompromised()],
+      },
+    ).withResolvers({ compromised: () => Promise.resolve(42) })
     expect(await v.failsAsync()).toBe(true)
     expect(v.errors().first('password')).toMatch(/data leak/)
   })
@@ -74,11 +94,17 @@ describe('Password rule object', () => {
 
 describe('Custom rule objects (closures + contracts)', () => {
   it('runs closure rules', () => {
-    const v = Validator.make({ title: 'foo' }, {
-      title: ['required', (_a, value, fail): void => {
-        if (value === 'foo') fail('The :attribute is invalid.')
-      }],
-    })
+    const v = Validator.make(
+      { title: 'foo' },
+      {
+        title: [
+          'required',
+          (_a, value, fail): void => {
+            if (value === 'foo') fail('The :attribute is invalid.')
+          },
+        ],
+      },
+    )
     expect(v.fails()).toBe(true)
     expect(v.errors().first('title')).toBe('The title is invalid.')
   })
@@ -89,7 +115,9 @@ describe('Custom rule objects (closures + contracts)', () => {
       setData(data: Record<string, unknown>): void {
         received = data
       },
-      validate(): void {},
+      validate(): void {
+        /* no-op */
+      },
     }
     const v = Validator.make({ a: 1, b: 2 }, { a: [rule] })
     v.passes()
