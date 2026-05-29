@@ -36,7 +36,7 @@ jobs:
         run: npm ci
 
       - name: Configure Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
 
       # Project Pages are served from /<repo>/, so the demo must build with a
       # matching base path. Derive it from the repository name.
