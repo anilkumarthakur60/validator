@@ -6,7 +6,7 @@
 import type { DatabaseQuery, FailFn, ValidationRuleObject, ValidatorAwareRule } from '@/lib/types'
 import type { Validator } from '@/lib/core/Validator'
 
-const lastSegment = (attribute: string): string => attribute.split('.').pop() ?? attribute
+const lastSegment = (attribute: string): string => attribute.slice(attribute.lastIndexOf('.') + 1)
 
 abstract class DatabaseRule implements ValidatorAwareRule {
   protected validator: Validator | null = null

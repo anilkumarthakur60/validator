@@ -81,14 +81,9 @@ export const fileRules: RuleModule = {
       const encoding = (parameters[0] ?? 'utf-8').toLowerCase()
       if (encoding === 'ascii' || encoding === 'us-ascii') return isAscii(value)
       if (encoding === 'utf-8' || encoding === 'utf8') {
-        try {
-          return (
-            new TextDecoder('utf-8', { fatal: true }).decode(new TextEncoder().encode(value)) ===
-            value
-          )
-        } catch {
-          return false
-        }
+        // Re-encoding never throws; the round-trip differs only for lone
+        // surrogates (which `TextEncoder` replaces with U+FFFD).
+        return new TextDecoder('utf-8').decode(new TextEncoder().encode(value)) === value
       }
       return true
     },

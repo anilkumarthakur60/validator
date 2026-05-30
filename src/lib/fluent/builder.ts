@@ -29,10 +29,7 @@ export type ValidationRule = ValidationBuilder & FieldRuleFn
 const makeCallable = (instance: ValidationBuilder): ValidationBuilder => {
   const fn = (value: unknown): true | string => (fn as unknown as ValidationBuilder).toRule()(value)
   Object.setPrototypeOf(fn, Object.getPrototypeOf(instance) as object)
-  for (const key of Object.getOwnPropertyNames(instance)) {
-    const descriptor = Object.getOwnPropertyDescriptor(instance, key)
-    if (descriptor) Object.defineProperty(fn, key, descriptor)
-  }
+  Object.defineProperties(fn, Object.getOwnPropertyDescriptors(instance))
   return fn as unknown as ValidationBuilder
 }
 
@@ -449,7 +446,13 @@ class ValidationBuilder {
     )
   }
   notEmpty(): this {
-    return this.custom((value) => (isEmpty(value) ? 'This field must not be empty.' : true))
+    // Implicit so it runs even when the value is empty (the case it guards).
+    return this.push({
+      implicit: true,
+      validate: (_attribute, value, fail) => {
+        if (isEmpty(value)) fail('This field must not be empty.')
+      },
+    })
   }
   minPasswordLength(min = 8): this {
     return this.minLength(min)

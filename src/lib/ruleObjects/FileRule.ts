@@ -11,19 +11,12 @@
 import { isFile } from '@/lib/helpers'
 import type { FailFn, RuleContext, ValidationRuleObject, ValidatorAwareRule } from '@/lib/types'
 import type { Validator } from '@/lib/core/Validator'
-import { getBuiltinRule } from '@/lib/core/registry'
+import { requireBuiltinRule } from '@/lib/core/registry'
 import { type Dimensions } from '@/lib/ruleObjects/Dimensions'
 
 interface BuiltinCheck {
   readonly name: string
   readonly parameters: readonly string[]
-}
-
-const SIZE_UNITS: Readonly<Record<string, number>> = {
-  kb: 1,
-  mb: 1024,
-  gb: 1_048_576,
-  tb: 1_073_741_824,
 }
 
 /** Convert a size (number of kb, or `"10mb"`) into kilobytes. */
@@ -33,7 +26,9 @@ const toKilobytes = (size: number | string): number => {
   if (!match) return Number(size)
   const amount = Number(match[1])
   const unit = (match[2] ?? 'kb').toLowerCase()
-  return amount * (SIZE_UNITS[unit] ?? 1)
+  const multiplier =
+    unit === 'tb' ? 1_073_741_824 : unit === 'gb' ? 1_048_576 : unit === 'mb' ? 1024 : 1
+  return amount * multiplier
 }
 
 export class FileRule implements ValidationRuleObject, ValidatorAwareRule {
@@ -103,13 +98,12 @@ export class FileRule implements ValidationRuleObject, ValidatorAwareRule {
     }
     if (this.isImage) {
       const imageCtx = this.context(validator, attribute, value, this.allowSvg ? ['allow_svg'] : [])
-      const def = getBuiltinRule('image')
-      if (def && !(await def.validate(imageCtx))) fail('The :attribute field must be an image.')
+      if (!(await requireBuiltinRule('image').validate(imageCtx))) {
+        fail('The :attribute field must be an image.')
+      }
     }
     for (const check of this.checks) {
-      const definition = getBuiltinRule(check.name)
-      if (!definition) continue
-      const passed = await definition.validate(
+      const passed = await requireBuiltinRule(check.name).validate(
         this.context(validator, attribute, value, check.parameters),
       )
       if (!passed) fail(validator.buildBuiltinMessage(attribute, check.name, check.parameters))

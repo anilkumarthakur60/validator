@@ -44,7 +44,8 @@ export class MessageBag {
   first(key?: string): string {
     if (key === undefined) {
       for (const messages of this.store.values()) {
-        if (messages.length > 0) return messages[0] ?? ''
+        const [first] = messages
+        if (first !== undefined) return first
       }
       return ''
     }

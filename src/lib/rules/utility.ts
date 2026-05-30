@@ -27,7 +27,7 @@ const warnOnce = (rule: string): void => {
   console.warn(`[validation] No resolver configured for "${rule}"; the rule passes by default.`)
 }
 
-const lastSegment = (attribute: string): string => attribute.split('.').pop() ?? attribute
+const lastSegment = (attribute: string): string => attribute.slice(attribute.lastIndexOf('.') + 1)
 
 const buildQuery = (ctx: RuleContext): DatabaseQuery => {
   const table = ctx.parameters[0] ?? ''
@@ -80,35 +80,35 @@ export const utilityRules: RuleModule = {
   mac_address: { validate: ({ value }) => isString(value) && isValidMacAddress(value) },
 
   current_password: {
-    validate: async ({ value, parameters, validator }) => {
+    validate: ({ value, parameters, validator }) => {
       const resolver = validator.getResolvers().currentPassword
       if (!resolver) {
         warnOnce('current_password')
         return true
       }
-      return isString(value) ? resolver(value, parameters[0]) : false
+      return isString(value) ? Promise.resolve(resolver(value, parameters[0])) : false
     },
   },
 
   exists: {
-    validate: async (ctx) => {
+    validate: (ctx) => {
       const resolver = ctx.validator.getResolvers().exists
       if (!resolver) {
         warnOnce('exists')
         return true
       }
-      return resolver(buildQuery(ctx))
+      return Promise.resolve(resolver(buildQuery(ctx)))
     },
   },
 
   unique: {
-    validate: async (ctx) => {
+    validate: (ctx) => {
       const resolver = ctx.validator.getResolvers().unique
       if (!resolver) {
         warnOnce('unique')
         return true
       }
-      return resolver(buildQuery(ctx))
+      return Promise.resolve(resolver(buildQuery(ctx)))
     },
   },
 }

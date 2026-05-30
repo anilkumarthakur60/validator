@@ -46,8 +46,8 @@ jobs:
       - name: Typecheck (demo)
         run: npm run demo:typecheck
 
-      - name: Run tests
-        run: npm test
+      - name: Run tests with coverage (100% thresholds enforced)
+        run: npm run coverage
 
       - name: Build library workspace
         run: npm run build

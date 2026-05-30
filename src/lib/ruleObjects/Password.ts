@@ -74,7 +74,7 @@ export class Password implements ValidationRuleObject, ValidatorAwareRule {
     return this
   }
 
-  async validate(_attribute: string, value: unknown, fail: FailFn): Promise<void> {
+  validate(_attribute: string, value: unknown, fail: FailFn): void | Promise<void> {
     if (!isString(value)) {
       fail('The :attribute field must be a valid string.')
       return
@@ -97,17 +97,20 @@ export class Password implements ValidationRuleObject, ValidatorAwareRule {
     if (this.needsSymbols && !/[^\p{L}\p{N}\s]/u.test(value)) {
       fail('The :attribute field must contain at least one symbol.')
     }
-    if (this.uncompromisedThreshold !== null) {
-      const resolver = this.validator?.getResolvers().compromised
-      if (resolver) {
-        const count = await resolver(value)
-        if (count > this.uncompromisedThreshold) {
+    // The breach check is the only asynchronous part — stay synchronous otherwise.
+    const threshold = this.uncompromisedThreshold
+    const resolver = this.validator?.getResolvers().compromised
+    if (threshold !== null && resolver) {
+      const password = value
+      return Promise.resolve(resolver(password)).then((count) => {
+        if (count > threshold) {
           fail(
             'The given :attribute has appeared in a data leak. Please choose a different :attribute.',
           )
         }
-      }
+      })
     }
+    return undefined
   }
 
   /** A string usable for the HTML `passwordrules` attribute. */

@@ -59,8 +59,10 @@ export const isValidEmailRfc = (value: string): boolean => /^[^\s@]+@[^\s@]+\.[^
 /** Strict-ish RFC check that rejects consecutive/trailing dots. */
 export const isValidEmailStrict = (value: string): boolean => {
   if (!isValidEmailRfc(value)) return false
-  const [local, domain] = value.split('@')
-  if (local === undefined || domain === undefined) return false
+  // RFC-valid ⇒ exactly one '@'; slicing avoids a possibly-undefined destructure.
+  const at = value.indexOf('@')
+  const local = value.slice(0, at)
+  const domain = value.slice(at + 1)
   if (value.includes('..')) return false
   if (local.startsWith('.') || local.endsWith('.')) return false
   if (domain.startsWith('.') || domain.endsWith('.')) return false
@@ -165,7 +167,7 @@ export const isValidDate = (value: unknown): boolean => parseDate(value) !== nul
 /** Whether every code point in the string is 7-bit ASCII. */
 export const isAscii = (value: string): boolean => {
   for (const char of value) {
-    if ((char.codePointAt(0) ?? 0) > 0x7f) return false
+    if (char.charCodeAt(0) > 0x7f) return false
   }
   return true
 }
@@ -219,4 +221,4 @@ export const digitCount = (value: unknown): number =>
   String(Math.abs(Number(value))).replace('.', '').length
 
 export const fileExtension = (file: File): string =>
-  file.name.includes('.') ? (file.name.split('.').pop() ?? '').toLowerCase() : ''
+  file.name.includes('.') ? file.name.slice(file.name.lastIndexOf('.') + 1).toLowerCase() : ''

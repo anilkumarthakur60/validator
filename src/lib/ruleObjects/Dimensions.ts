@@ -5,7 +5,7 @@
 
 import type { FailFn, RuleContext, ValidationRuleObject, ValidatorAwareRule } from '@/lib/types'
 import type { Validator } from '@/lib/core/Validator'
-import { getBuiltinRule } from '@/lib/core/registry'
+import { requireBuiltinRule } from '@/lib/core/registry'
 
 export class Dimensions implements ValidationRuleObject, ValidatorAwareRule {
   private readonly constraints = new Map<string, string>()
@@ -54,8 +54,6 @@ export class Dimensions implements ValidationRuleObject, ValidatorAwareRule {
   async validate(attribute: string, value: unknown, fail: FailFn): Promise<void> {
     if (this.validator === null) return
     const parameters = [...this.constraints.entries()].map(([key, val]) => `${key}=${val}`)
-    const definition = getBuiltinRule('dimensions')
-    if (!definition) return
     const context: RuleContext = {
       attribute,
       attributePattern: attribute,
@@ -64,7 +62,7 @@ export class Dimensions implements ValidationRuleObject, ValidatorAwareRule {
       data: this.validator.getData(),
       validator: this.validator,
     }
-    const passed = await definition.validate(context)
+    const passed = await requireBuiltinRule('dimensions').validate(context)
     if (!passed) fail('The :attribute field has invalid image dimensions.')
   }
 }

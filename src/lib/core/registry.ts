@@ -32,6 +32,13 @@ const registry = new Map<string, BuiltinDefinition>(
 
 export const getBuiltinRule = (name: string): BuiltinDefinition | undefined => registry.get(name)
 
+/** Look up a rule that is required to exist, throwing for an unknown name. */
+export const requireBuiltinRule = (name: string): BuiltinDefinition => {
+  const definition = registry.get(name)
+  if (!definition) throw new Error(`[validation] Unknown validation rule "${name}".`)
+  return definition
+}
+
 export const hasBuiltinRule = (name: string): boolean => registry.has(name)
 
 /** Register (or override) a globally-available built-in rule. */

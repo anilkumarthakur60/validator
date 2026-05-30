@@ -32,7 +32,7 @@ import { MessageBag } from '@/lib/core/MessageBag'
 import { ValidatedInput } from '@/lib/core/ValidatedInput'
 import { ValidationException } from '@/lib/core/ValidationException'
 import { dotGet, dotHas, dotSet, expandWildcards, replaceWildcardParameter } from '@/lib/core/data'
-import { FILE_RULES, getBuiltinRule, NUMERIC_RULES, SIZE_RULES } from '@/lib/core/registry'
+import { FILE_RULES, getBuiltinRule, NUMERIC_RULES, requireBuiltinRule } from '@/lib/core/registry'
 import {
   parseFieldRules,
   type ParsedBuiltinRule,
@@ -49,11 +49,14 @@ interface SometimesSpec {
 }
 
 /** Normalized rules for a single, fully-expanded attribute. */
+/** A parsed rule that the engine actually executes (forEach is resolved away). */
+type ExecutableRule = ParsedBuiltinRule | ParsedObjectRule | ParsedClosureRule
+
 interface AttributeRules {
   readonly attribute: string
   readonly pattern: string
   readonly explicitKeys: readonly string[]
-  readonly rules: ParsedRule[]
+  readonly rules: ExecutableRule[]
   readonly ruleNames: ReadonlySet<string>
   readonly nullable: boolean
   readonly sometimes: boolean
@@ -198,12 +201,9 @@ export class Validator {
 
   validated(): ValidationData {
     let result: ValidationData = {}
-    const seen = new Set<string>()
+    // `requireNormalized()` yields unique attributes, so no de-dup is needed.
     for (const entry of this.requireNormalized()) {
       if (this.excludedAttributes.has(entry.attribute)) continue
-      if (seen.has(entry.attribute)) continue
-      seen.add(entry.attribute)
-      if (entry.sometimes && !dotHas(this.data, entry.attribute)) continue
       if (!dotHas(this.data, entry.attribute)) continue
       result = dotSet(result, entry.attribute, dotGet(this.data, entry.attribute))
     }
@@ -304,9 +304,10 @@ export class Validator {
       }
     }
 
-    // Conditional rules for attributes not present in the schema.
+    // Conditional rules for attributes not present in the schema. (Attributes
+    // also in the schema were already merged above and are marked `consumed`.)
     for (const [attribute, spec] of conditionalByAttribute) {
-      if (consumed.has(attribute) || merged.has(attribute)) continue
+      if (consumed.has(attribute)) continue
       merged.set(
         attribute,
         this.buildAttributeRules(attribute, attribute, spec.explicitKeys, spec.rules),
@@ -350,22 +351,22 @@ export class Validator {
     explicitKeys: readonly string[],
     parsed: readonly ParsedRule[],
   ): AttributeRules {
-    const rules: ParsedRule[] = []
+    const rules: ExecutableRule[] = []
     const excludes: ParsedBuiltinRule[] = []
     const ruleNames = new Set<string>()
     let nullable = false
     let sometimes = false
     let bail = false
 
-    // Expand `Rule.forEach` entries into concrete rules for this element.
-    const queue: ParsedRule[] = parsed.flatMap((rule) =>
-      rule.kind === 'foreach'
-        ? parseFieldRules(rule.rule.resolve(dotGet(this.data, attribute), attribute))
-        : [rule],
-    )
+    // Expand `Rule.forEach` entries (recursively) into concrete rules.
+    const expand = (entries: readonly ParsedRule[]): ExecutableRule[] =>
+      entries.flatMap((rule) =>
+        rule.kind === 'foreach'
+          ? expand(parseFieldRules(rule.rule.resolve(dotGet(this.data, attribute), attribute)))
+          : [rule],
+      )
 
-    for (const rule of queue) {
-      if (rule.kind === 'foreach') continue
+    for (const rule of expand(parsed)) {
       if (rule.kind !== 'builtin') {
         rules.push(rule)
         continue
@@ -442,24 +443,12 @@ export class Validator {
   private isExcluded(entry: AttributeRules): boolean {
     for (const exclude of entry.excludes) {
       const other = exclude.parameters[0] ?? ''
-      switch (exclude.name) {
-        case 'exclude':
-          return true
-        case 'exclude_if':
-          if (looseFieldEquals(dotGet(this.data, other), exclude.parameters[1])) return true
-          break
-        case 'exclude_unless':
-          if (!looseFieldEquals(dotGet(this.data, other), exclude.parameters[1])) return true
-          break
-        case 'exclude_with':
-          if (dotHas(this.data, other)) return true
-          break
-        case 'exclude_without':
-          if (!dotHas(this.data, other)) return true
-          break
-        default:
-          break
-      }
+      const matches = looseFieldEquals(dotGet(this.data, other), exclude.parameters[1])
+      if (exclude.name === 'exclude') return true
+      if (exclude.name === 'exclude_if' && matches) return true
+      if (exclude.name === 'exclude_unless' && !matches) return true
+      if (exclude.name === 'exclude_with' && dotHas(this.data, other)) return true
+      if (exclude.name === 'exclude_without' && !dotHas(this.data, other)) return true
     }
     return false
   }
@@ -505,21 +494,17 @@ export class Validator {
     return false
   }
 
-  private evaluate(entry: AttributeRules, rule: ParsedRule): boolean | Promise<boolean> {
+  private evaluate(entry: AttributeRules, rule: ExecutableRule): boolean | Promise<boolean> {
     if (rule.kind === 'builtin') return this.evaluateBuiltin(entry, rule)
     if (rule.kind === 'object') return this.evaluateObject(entry, rule)
-    if (rule.kind === 'closure') return this.evaluateClosure(entry, rule)
-    return true
+    return this.evaluateClosure(entry, rule)
   }
 
   private evaluateBuiltin(
     entry: AttributeRules,
     rule: ParsedBuiltinRule,
   ): boolean | Promise<boolean> {
-    const definition = getBuiltinRule(rule.name)
-    if (!definition) {
-      throw new Error(`[validation] Unknown validation rule "${rule.name}".`)
-    }
+    const definition = requireBuiltinRule(rule.name)
     const value = dotGet(this.data, entry.attribute)
     if (!this.shouldValidate(entry, value, Boolean(definition.implicit))) return true
 
@@ -652,12 +637,13 @@ export class Validator {
       this.customMessages[ruleName]
     if (custom !== undefined) return custom
     const fallback: MessageTemplate = defaultMessages[ruleName] ?? FALLBACK_MESSAGE
-    return this.selectTyped(attribute, ruleName, fallback)
+    return this.selectTyped(attribute, fallback)
   }
 
-  private selectTyped(attribute: string, ruleName: string, template: MessageTemplate): string {
+  private selectTyped(attribute: string, template: MessageTemplate): string {
     if (typeof template === 'string') return template
-    if (!SIZE_RULES.has(ruleName)) return template.string
+    // A typed template (object) is only ever defined for size rules, so the
+    // value's size type selects the right wording.
     return template[this.getSizeType(attribute)]
   }
 
@@ -718,6 +704,7 @@ const toOrdinal = (n: number): string => {
 
 const structuredCloneSafe = (data: ValidationData): ValidationData => {
   const clone = (value: unknown): unknown => {
+    if (value instanceof Date || isFile(value)) return value
     if (Array.isArray(value)) return value.map(clone)
     if (isPlainObject(value)) {
       const result: Record<string, unknown> = {}
