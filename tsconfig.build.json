@@ -1,10 +1,7 @@
 {
-  // Declaration-emit config for the publishable package (used by vite-plugin-dts).
-  // It narrows the program to src/lib and pins rootDir there so the bundler emits
-  // dist/index.d.ts at the top level (not dist/src/lib/index.d.ts).
+  // Declaration-emit config for the publishable package, used by tsup (`npm run build`).
+  // It narrows the program to src/lib so the bundled .d.ts only describes the library
+  // (not the root sanity app or tests).
   "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "rootDir": "./src/lib"
-  },
   "include": ["src/lib"]
 }
