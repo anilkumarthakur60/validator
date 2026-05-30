@@ -3,7 +3,7 @@
 The `Password` rule object expresses complexity requirements fluently.
 
 ```ts
-import { Validator, Password } from '@hc/validation'
+import { Validator, Password } from '@anil-labs/validator'
 
 Validator.make(data, {
   password: ['required', 'confirmed', Password.min(8)],

@@ -46,7 +46,7 @@ callback receives the element value and its fully-expanded attribute name, and
 returns the rules for that element:
 
 ```ts
-import { Rule } from '@hc/validation'
+import { Rule } from '@anil-labs/validator'
 
 Validator.make(data, {
   'companies.*.id': Rule.forEach((value, attribute) => [

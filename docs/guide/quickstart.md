@@ -6,7 +6,7 @@ Pass the data and a rules map to `Validator.make`. Rules can be a
 `|`-delimited string or an array.
 
 ```ts
-import { Validator } from '@hc/validation'
+import { Validator } from '@anil-labs/validator'
 
 const validator = Validator.make(
   { title: 'Hello', body: '', tags: ['a', 'a'] },
@@ -48,7 +48,7 @@ if (validator.passes()) {
 [`ValidationException`](/api#validationexception) (status `422`):
 
 ```ts
-import { ValidationException } from '@hc/validation'
+import { ValidationException } from '@anil-labs/validator'
 
 try {
   const data = validator.validate()
@@ -77,7 +77,7 @@ if (await v.failsAsync()) {
 ## Single-field rules (Quasar / Vue)
 
 ```ts
-import { validation } from '@hc/validation'
+import { validation } from '@anil-labs/validator'
 
 const rules = [validation.required().email().maxLength(255).toRule()]
 rules[0]('a@b.com') // true

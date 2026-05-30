@@ -59,7 +59,7 @@ withResolvers({
 ## Fluent exists / unique
 
 ```ts
-import { Rule } from '@hc/validation'
+import { Rule } from '@anil-labs/validator'
 
 Validator.make(data, {
   email: ['required', Rule.unique('users').ignore(user.id).where('account_id', 1)],

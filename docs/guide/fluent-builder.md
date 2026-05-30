@@ -6,7 +6,7 @@ composes the same engine as `Validator`, so behavior matches exactly.
 
 ```vue
 <script setup lang="ts">
-import { validation } from '@hc/validation'
+import { validation } from '@anil-labs/validator'
 </script>
 
 <template>

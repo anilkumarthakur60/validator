@@ -7,7 +7,7 @@ const validator = Validator.make({ email: 'person@example.com' }, { email: 'requ
 const app = document.querySelector<HTMLDivElement>('#app')
 if (app) {
   app.innerHTML = `
-    <h1>@hc/validation</h1>
+    <h1>@anil-labs/validator</h1>
     <p>Library workspace. Run <code>npm run demo</code> for the interactive showcase.</p>
     <p>Sanity check — <code>email</code> validates: <strong>${validator.passes()}</strong></p>
   `

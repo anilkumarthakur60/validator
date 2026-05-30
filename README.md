@@ -1,4 +1,4 @@
-# @hc/validation
+# @anil-labs/validator
 
 An **expressive**, strictly-typed validation library for TypeScript.
 
@@ -15,7 +15,7 @@ An **expressive**, strictly-typed validation library for TypeScript.
 ## Install
 
 ```bash
-npm install @hc/validation
+npm install @anil-labs/validator
 ```
 
 Ships ESM + CJS with bundled type declarations. Requires Node ≥ 18.
@@ -27,7 +27,7 @@ Ships ESM + CJS with bundled type declarations. Requires Node ≥ 18.
 ### Dataset validation
 
 ```ts
-import { Validator } from '@hc/validation'
+import { Validator } from '@anil-labs/validator'
 
 const validator = Validator.make(
   {
@@ -55,7 +55,7 @@ if (validator.fails()) {
 
 ```vue
 <script setup lang="ts">
-import { validation } from '@hc/validation'
+import { validation } from '@anil-labs/validator'
 </script>
 
 <template>
@@ -68,7 +68,7 @@ import { validation } from '@hc/validation'
 ### Rule objects
 
 ```ts
-import { Validator, Rule, Password, FileRule } from '@hc/validation'
+import { Validator, Rule, Password, FileRule } from '@anil-labs/validator'
 
 Validator.make(data, {
   role: [Rule.in(['admin', 'editor'])],
@@ -101,7 +101,7 @@ if (await v.failsAsync()) {
 The engine is pure TypeScript with no DOM coupling. Example Express handler:
 
 ```ts
-import { Validator } from '@hc/validation'
+import { Validator } from '@anil-labs/validator'
 
 app.post('/users', async (req, res) => {
   const v = Validator.make(req.body, {
@@ -128,7 +128,7 @@ app.post('/users', async (req, res) => {
 validation.required().custom((v) => String(v).startsWith('HC-') || 'Must start with HC-')
 
 // 2. Rule object
-import type { ValidationRuleObject } from '@hc/validation'
+import type { ValidationRuleObject } from '@anil-labs/validator'
 class Uppercase implements ValidationRuleObject {
   validate(attribute: string, value: unknown, fail: (m: string) => void) {
     if (String(value) !== String(value).toUpperCase()) fail('The :attribute must be uppercase.')
@@ -136,7 +136,7 @@ class Uppercase implements ValidationRuleObject {
 }
 
 // 3. Global named rule
-import { registerRule, defaultMessages } from '@hc/validation'
+import { registerRule, defaultMessages } from '@anil-labs/validator'
 registerRule('slug', { validate: (ctx) => /^[a-z0-9-]+$/.test(String(ctx.value)) })
 defaultMessages.slug = 'The :attribute must be a valid slug.'
 

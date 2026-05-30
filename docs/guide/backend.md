@@ -6,7 +6,7 @@ The core engine has no DOM dependency, so it runs on any Node backend. Use the
 ## Express
 
 ```ts
-import { Validator } from '@hc/validation'
+import { Validator } from '@anil-labs/validator'
 
 app.post('/users', async (req, res) => {
   const v = Validator.make(req.body, {
@@ -30,7 +30,7 @@ A reusable pipe:
 
 ```ts
 import { PipeTransform, Injectable, UnprocessableEntityException } from '@nestjs/common'
-import { Validator, type RulesSchema } from '@hc/validation'
+import { Validator, type RulesSchema } from '@anil-labs/validator'
 
 @Injectable()
 export class ValidateBody implements PipeTransform {
@@ -52,7 +52,7 @@ export class ValidateBody implements PipeTransform {
 Register shared resolvers once at bootstrap:
 
 ```ts
-import { Validator } from '@hc/validation'
+import { Validator } from '@anil-labs/validator'
 
 Validator.setGlobalResolvers({
   unique: async (q) => (await db.count(q.table, { [q.column]: q.value })) === 0,

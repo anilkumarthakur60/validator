@@ -25,7 +25,7 @@ Validator.make(data, {
 ## The fluent `FileRule` builder
 
 ```ts
-import { FileRule, Rule } from '@hc/validation'
+import { FileRule, Rule } from '@anil-labs/validator'
 
 Validator.make(data, {
   attachment: [FileRule.types(['mp3', 'wav']).min('1kb').max('10mb')],
@@ -42,7 +42,7 @@ Sizes accept a number (KB) or a string with `kb`/`mb`/`gb`/`tb` suffixes.
 ## Image dimensions
 
 ```ts
-import { Rule } from '@hc/validation'
+import { Rule } from '@anil-labs/validator'
 
 Rule.dimensions()
   .minWidth(100)

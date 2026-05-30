@@ -2,7 +2,7 @@
 layout: home
 
 hero:
-  name: '@hc/validation'
+  name: '@anil-labs/validator'
   text: Expressive validation for TypeScript
   tagline: One strictly-typed engine, two APIs — full dataset validation and a chainable Quasar/Vue rule builder. 100% test coverage, zero `any`.
   actions:
@@ -34,7 +34,7 @@ features:
 ## At a glance
 
 ```ts
-import { Validator } from '@hc/validation'
+import { Validator } from '@anil-labs/validator'
 
 const validator = Validator.make(
   { email: 'not-an-email', users: [{ name: 'Ada' }, { name: '' }] },

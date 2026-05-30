@@ -1,4 +1,4 @@
-# Demo — @hc/validation
+# Demo — @anil-labs/validator
 
 A standalone **Vue 3 + TypeScript** app (Vite, `<script setup>`) that showcases
 the validation library end-to-end. The library is imported via the `@` alias,

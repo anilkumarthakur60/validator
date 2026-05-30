@@ -85,7 +85,7 @@ exception.message // "First message. (and N more errors)"
 ## Rule facade
 
 ```ts
-import { Rule } from '@hc/validation'
+import { Rule } from '@anil-labs/validator'
 
 Rule.in(values) / Rule.notIn(values)
 Rule.contains(values) / Rule.doesntContain(values)
@@ -221,7 +221,7 @@ interface ValidationResolvers {
 ## Fluent builder
 
 ```ts
-import { validation } from '@hc/validation'
+import { validation } from '@anil-labs/validator'
 
 validation.required().email().toRule() // (value) => true | string
 validation.extend(name, fn) // register a named rule
@@ -233,7 +233,7 @@ See [Fluent builder](/guide/fluent-builder) for the full method list.
 ## Helpers & utilities
 
 ```ts
-import { helpers, dotGet, dotHas, dotSet, expandWildcards, defaultMessages } from '@hc/validation'
+import { helpers, dotGet, dotHas, dotSet, expandWildcards, defaultMessages } from '@anil-labs/validator'
 
 helpers.isValidEmailRfc('a@b.com')
 dotGet({ a: { b: 1 } }, 'a.b') // 1

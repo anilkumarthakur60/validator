@@ -1,6 +1,6 @@
-# What is @hc/validation?
+# What is @anil-labs/validator?
 
-`@hc/validation` is a strictly-typed, framework-agnostic validation library for
+`@anil-labs/validator` is a strictly-typed, framework-agnostic validation library for
 TypeScript. It provides an expressive, string-based rule API — with human-friendly
 error messages, dot/`*` wildcard nesting, and conditional and cross-field rules.
 
@@ -22,7 +22,7 @@ error messages, dot/`*` wildcard nesting, and conditional and cross-field rules.
 ## The two APIs
 
 ```ts
-import { Validator, validation } from '@hc/validation'
+import { Validator, validation } from '@anil-labs/validator'
 
 // 1. Dataset validation (server or client)
 const v = Validator.make({ email: 'a@b.com' }, { email: 'required|email' })

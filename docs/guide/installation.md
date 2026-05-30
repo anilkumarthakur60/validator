@@ -1,11 +1,11 @@
 # Installation
 
 ```bash
-npm install @hc/validation
+npm install @anil-labs/validator
 # or
-pnpm add @hc/validation
+pnpm add @anil-labs/validator
 # or
-yarn add @hc/validation
+yarn add @anil-labs/validator
 ```
 
 The package ships **ESM and CommonJS** with bundled type declarations, so it
@@ -22,10 +22,10 @@ works in any modern toolchain.
 
 ```ts
 // ESM
-import { Validator, Rule, validation } from '@hc/validation'
+import { Validator, Rule, validation } from '@anil-labs/validator'
 
 // CommonJS
-const { Validator } = require('@hc/validation')
+const { Validator } = require('@anil-labs/validator')
 ```
 
 Everything is exported from the package root:
@@ -50,7 +50,7 @@ import {
   AnyOf,
   registerRule,
   defaultMessages,
-} from '@hc/validation'
+} from '@anil-labs/validator'
 ```
 
 Continue to [Quick start →](/guide/quickstart)

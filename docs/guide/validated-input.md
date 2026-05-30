@@ -40,7 +40,7 @@ for (const [key, value] of safe) {
 ## Throwing & catching
 
 ```ts
-import { ValidationException } from '@hc/validation'
+import { ValidationException } from '@anil-labs/validator'
 
 try {
   const data = validator.validate() // returns validated() or throws

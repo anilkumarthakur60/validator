@@ -1,8 +1,8 @@
 import { defineConfig } from 'vitepress'
 
-// VitePress site for @hc/validation. Run `npm run docs:dev`.
+// VitePress site for @anil-labs/validator. Run `npm run docs:dev`.
 export default defineConfig({
-  title: '@hc/validation',
+  title: '@anil-labs/validator',
   description: 'An expressive, strictly-typed validation library for TypeScript.',
   lastUpdated: true,
   cleanUrls: true,
@@ -17,7 +17,7 @@ export default defineConfig({
         {
           text: 'Introduction',
           items: [
-            { text: 'What is @hc/validation?', link: '/guide/introduction' },
+            { text: 'What is @anil-labs/validator?', link: '/guide/introduction' },
             { text: 'Installation', link: '/guide/installation' },
             { text: 'Quick start', link: '/guide/quickstart' },
           ],

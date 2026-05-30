@@ -102,7 +102,7 @@ Validator.make({ n: [1, 2, 3, 4] }, { n: 'array|max:3' }).errors().first('n')
 `defaultMessages` is exported and mutable — change copy app-wide at startup:
 
 ```ts
-import { defaultMessages } from '@hc/validation'
+import { defaultMessages } from '@anil-labs/validator'
 
 defaultMessages.required = 'This field cannot be empty.'
 defaultMessages.email = 'Please enter a valid email address.'

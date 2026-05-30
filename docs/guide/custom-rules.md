@@ -28,7 +28,7 @@ Implement `ValidationRuleObject`. Add `implicit: true` to make it run even when
 the value is empty/absent.
 
 ```ts
-import type { ValidationRuleObject } from '@hc/validation'
+import type { ValidationRuleObject } from '@anil-labs/validator'
 
 export class Uppercase implements ValidationRuleObject {
   validate(attribute: string, value: unknown, fail: (m: string) => void): void {
@@ -47,7 +47,7 @@ Implement `DataAwareRule` or `ValidatorAwareRule`; the engine injects them
 before validating:
 
 ```ts
-import type { DataAwareRule, ValidationRuleObject, ValidationData } from '@hc/validation'
+import type { DataAwareRule, ValidationRuleObject, ValidationData } from '@anil-labs/validator'
 
 export class MatchesConfirmation implements ValidationRuleObject, DataAwareRule {
   private data: ValidationData = {}
@@ -70,8 +70,8 @@ Register once at startup; then reference it by name like a built-in
 [`RuleContext`](/api#rulecontext):
 
 ```ts
-import { registerRule, defaultMessages } from '@hc/validation'
-import type { BuiltinDefinition } from '@hc/validation'
+import { registerRule, defaultMessages } from '@anil-labs/validator'
+import type { BuiltinDefinition } from '@anil-labs/validator'
 
 const slug: BuiltinDefinition = {
   validate: (ctx) => typeof ctx.value === 'string' && /^[a-z0-9-]+$/.test(ctx.value),
@@ -103,7 +103,7 @@ defaultMessages.min_words = 'The :attribute must have at least :min words.'
 For the Quasar/Vue [fluent builder](/guide/fluent-builder):
 
 ```ts
-import { validation } from '@hc/validation'
+import { validation } from '@anil-labs/validator'
 
 validation.extend('nepaliPhone', (value) =>
   /^(\+977)?9[78]\d{8}$/.test(String(value)) || 'Invalid Nepali phone number.',

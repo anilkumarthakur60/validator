@@ -108,7 +108,7 @@ onBeforeUnmount(() => {
       </button>
       <div class="topbar-brand">
         <span class="brand-mark sm">✓</span>
-        <strong>@hc/validation</strong>
+        <strong>@anil-labs/validator</strong>
       </div>
     </header>
 
@@ -126,7 +126,7 @@ onBeforeUnmount(() => {
         <div class="brand">
           <div class="brand-mark">✓</div>
           <div>
-            <h1>@hc/validation</h1>
+            <h1>@anil-labs/validator</h1>
             <p>Expressive validation for TypeScript</p>
           </div>
         </div>

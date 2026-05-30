@@ -4,7 +4,7 @@
 library — a faithful, strongly-typed dataset validator.
 
 ```ts
-import { Validator } from '@hc/validation'
+import { Validator } from '@anil-labs/validator'
 
 const validator = Validator.make(data, rules, customMessages, customAttributes)
 ```

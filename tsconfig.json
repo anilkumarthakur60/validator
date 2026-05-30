@@ -10,7 +10,7 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    /* tsup's d.ts builder injects the (TS6-deprecated) baseUrl to resolve paths. */
+    /* The d.ts bundler may inject the (TS6-deprecated) baseUrl to resolve paths. */
     "ignoreDeprecations": "6.0",
 
     /* Bundler mode */

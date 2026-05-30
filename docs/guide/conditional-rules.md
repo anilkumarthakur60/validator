@@ -68,7 +68,7 @@ v.sometimes('channels.*.address', 'url', (input, item) => item.type !== 'email')
 boolean or a closure — handy when the condition isn't another field:
 
 ```ts
-import { Rule } from '@hc/validation'
+import { Rule } from '@anil-labs/validator'
 
 Validator.make(data, {
   role_id: [Rule.requiredIf(() => user.isAdmin)],
