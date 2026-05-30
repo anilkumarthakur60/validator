@@ -6,7 +6,7 @@ import dts from 'vite-plugin-dts'
 // Build config for the publishable package (`npm run build`).
 //
 //  • `vite build` bundles src/lib/index.ts into dist/ as ESM + CJS.
-//  • vite-plugin-dts emits a single bundled declaration file (rollupTypes),
+//  • vite-plugin-dts emits a single bundled declaration file (bundleTypes),
 //    resolving the `@/*` tsconfig alias along the way.
 //  • Vite only ever produces an ESM-flavoured `.d.ts`; we copy it to `.d.cts`
 //    so the `require` entry in package.json#exports has matching CJS types
@@ -30,9 +30,9 @@ export default defineConfig({
       // (via @microsoft/api-extractor), resolving the `@/*` alias on the way.
       bundleTypes: true,
       tsconfigPath: './tsconfig.json',
-      // Vite only emits an ESM-flavoured `.d.ts`; mirror it to `.d.cts` for the
-      // CJS `require` entry. We write from the emitted content map so it works
-      // regardless of when the file is flushed to disk.
+      // Mirror the ESM-flavoured .d.ts to .d.cts for the CJS `require` entry
+      // in package.json#exports (what `attw` checks). Written from the emitted
+      // content map so it's independent of disk-flush timing.
       afterBuild: (emitted) => {
         for (const [file, content] of emitted) {
           if (file.endsWith('.d.ts')) {
@@ -52,10 +52,6 @@ export default defineConfig({
       entry: resolve('./src/lib/index.ts'),
       formats: ['es', 'cjs'],
       fileName: (format) => (format === 'es' ? 'index.js' : 'index.cjs'),
-    },
-    rollupOptions: {
-      // Zero runtime dependencies — nothing to externalise.
-      external: [],
     },
   },
 })

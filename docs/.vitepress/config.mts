@@ -39,8 +39,27 @@ export default defineConfig({
             { text: 'Validating passwords', link: '/guide/passwords' },
             { text: 'Custom rules', link: '/guide/custom-rules' },
             { text: 'Async & database rules', link: '/guide/async-rules' },
-            { text: 'Fluent builder (Quasar/Vue)', link: '/guide/fluent-builder' },
-            { text: 'Backend usage (Node)', link: '/guide/backend' },
+            { text: 'Fluent builder', link: '/guide/fluent-builder' },
+          ],
+        },
+        {
+          text: 'Frontend frameworks',
+          items: [
+            { text: 'Vue', link: '/guide/vue' },
+            { text: 'React', link: '/guide/react' },
+            { text: 'Svelte', link: '/guide/svelte' },
+            { text: 'SolidJS', link: '/guide/solid' },
+            { text: 'Angular', link: '/guide/angular' },
+          ],
+        },
+        {
+          text: 'Backend frameworks',
+          items: [
+            { text: 'Overview (Node)', link: '/guide/backend' },
+            { text: 'Express', link: '/guide/express' },
+            { text: 'Fastify', link: '/guide/fastify' },
+            { text: 'NestJS', link: '/guide/nestjs' },
+            { text: 'Hono (edge)', link: '/guide/hono' },
           ],
         },
         {

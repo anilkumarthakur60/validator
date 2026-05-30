@@ -55,7 +55,7 @@ const sections: Section[] = [
     id: 'playground',
     index: '06',
     title: 'Playground',
-    blurb: 'Type any rule string against any JSON value.',
+    blurb: 'Try a single rule or a whole-dataset schema — browse every built-in rule.',
     component: RulePlayground,
   },
 ]

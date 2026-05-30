@@ -1,8 +1,13 @@
-# Fluent builder (Quasar / Vue)
+# Fluent builder
 
-For single-field validation — like Quasar's `:rules` prop — use the chainable
-`validation` builder. It produces a `(value) => true | string` function, and
-composes the same engine as `Validator`, so behavior matches exactly.
+For single-field validation, use the chainable `validation` builder. It produces
+a `(value) => true | string` function — the shape most form libraries expect
+(Quasar's `:rules`, vee-validate, React Hook Form's `validate`, an Angular
+`ValidatorFn`, …) — and composes the same engine as `Validator`, so behavior
+matches exactly.
+
+> Framework wiring: [Vue](/guide/vue) · [React](/guide/react) ·
+> [Svelte](/guide/svelte) · [SolidJS](/guide/solid) · [Angular](/guide/angular).
 
 ```vue
 <script setup lang="ts">
