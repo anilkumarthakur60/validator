@@ -99,6 +99,11 @@ export type CustomAttributes = Record<string, string>
 /** A callback run after the main validation pass. */
 export type AfterCallback = (validator: Validator) => void | Promise<void>
 
+/** An invokable "after validation" object (parity with Laravel's `__invoke`). */
+export interface InvokableAfter {
+  __invoke(validator: Validator): void | Promise<void>
+}
+
 /** Signature shared by Quasar-style single-field rule functions. */
 export type FieldRuleFn = (value: unknown) => true | string
 

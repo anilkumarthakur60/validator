@@ -40,6 +40,21 @@ export class MessageBag {
     return this.get(key).length > 0
   }
 
+  /** Whether messages exist for at least one of the given keys. */
+  hasAny(keys: readonly string[]): boolean {
+    return keys.some((key) => this.has(key))
+  }
+
+  /** Whether the bag has NO messages for the key (or none at all). */
+  missing(key: string): boolean {
+    return !this.has(key)
+  }
+
+  /** Whether the bag holds any messages (alias of {@link isNotEmpty}). */
+  any(): boolean {
+    return this.isNotEmpty()
+  }
+
   /** The first message for a key, or the first overall when no key is given. */
   first(key?: string): string {
     if (key === undefined) {

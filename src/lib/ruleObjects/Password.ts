@@ -8,8 +8,16 @@
  */
 
 import { isString } from '@/lib/helpers'
-import type { FailFn, ValidationRuleObject, ValidatorAwareRule } from '@/lib/types'
+import type {
+  ClosureRule,
+  DataAwareRule,
+  FailFn,
+  ValidationRuleObject,
+  ValidatorAwareRule,
+} from '@/lib/types'
 import type { Validator } from '@/lib/core/Validator'
+
+type ExtraRule = ValidationRuleObject | ClosureRule
 
 export class Password implements ValidationRuleObject, ValidatorAwareRule {
   private minLength = 8
@@ -19,6 +27,7 @@ export class Password implements ValidationRuleObject, ValidatorAwareRule {
   private needsNumbers = false
   private needsSymbols = false
   private uncompromisedThreshold: number | null = null
+  private readonly extraRules: ExtraRule[] = []
   private validator: Validator | null = null
 
   private static defaultFactory: (() => Password) | null = null
@@ -74,7 +83,16 @@ export class Password implements ValidationRuleObject, ValidatorAwareRule {
     return this
   }
 
-  validate(_attribute: string, value: unknown, fail: FailFn): void | Promise<void> {
+  /** Attach additional rule objects/closures to run alongside the password checks. */
+  rules(rules: ExtraRule | readonly ExtraRule[]): this {
+    const list: readonly ExtraRule[] = Array.isArray(rules)
+      ? (rules as readonly ExtraRule[])
+      : [rules as ExtraRule]
+    this.extraRules.push(...list)
+    return this
+  }
+
+  validate(attribute: string, value: unknown, fail: FailFn): void | Promise<void> {
     if (!isString(value)) {
       fail('The :attribute field must be a valid string.')
       return
@@ -97,20 +115,43 @@ export class Password implements ValidationRuleObject, ValidatorAwareRule {
     if (this.needsSymbols && !/[^\p{L}\p{N}\s]/u.test(value)) {
       fail('The :attribute field must contain at least one symbol.')
     }
-    // The breach check is the only asynchronous part — stay synchronous otherwise.
+    const pending: Promise<void>[] = []
+
+    // The breach check is the only asynchronous core part.
     const threshold = this.uncompromisedThreshold
     const resolver = this.validator?.getResolvers().compromised
     if (threshold !== null && resolver) {
-      const password = value
-      return Promise.resolve(resolver(password)).then((count) => {
-        if (count > threshold) {
-          fail(
-            'The given :attribute has appeared in a data leak. Please choose a different :attribute.',
-          )
-        }
-      })
+      pending.push(
+        Promise.resolve(resolver(value)).then((count) => {
+          if (count > threshold) {
+            fail(
+              'The given :attribute has appeared in a data leak. Please choose a different :attribute.',
+            )
+          }
+        }),
+      )
     }
-    return undefined
+
+    for (const rule of this.extraRules) {
+      const outcome = this.runExtraRule(rule, attribute, value, fail)
+      if (outcome instanceof Promise) pending.push(outcome)
+    }
+
+    return pending.length > 0 ? Promise.all(pending).then(() => undefined) : undefined
+  }
+
+  private runExtraRule(
+    rule: ExtraRule,
+    attribute: string,
+    value: unknown,
+    fail: FailFn,
+  ): void | Promise<void> {
+    if (typeof rule === 'function') return rule(attribute, value, fail)
+    if (this.validator) {
+      if (isDataAware(rule)) rule.setData(this.validator.getData())
+      if (isValidatorAware(rule)) rule.setValidator(this.validator)
+    }
+    return rule.validate(attribute, value, fail)
   }
 
   /** A string usable for the HTML `passwordrules` attribute. */
@@ -123,3 +164,11 @@ export class Password implements ValidationRuleObject, ValidatorAwareRule {
     return parts.join('; ')
   }
 }
+
+const isDataAware = (rule: ValidationRuleObject): rule is ValidationRuleObject & DataAwareRule =>
+  'setData' in rule && typeof (rule as DataAwareRule).setData === 'function'
+
+const isValidatorAware = (
+  rule: ValidationRuleObject,
+): rule is ValidationRuleObject & ValidatorAwareRule =>
+  'setValidator' in rule && typeof (rule as ValidatorAwareRule).setValidator === 'function'

@@ -13,6 +13,9 @@ import { Dimensions } from '@/lib/ruleObjects/Dimensions'
 import { ExistsRule, UniqueRule } from '@/lib/ruleObjects/database'
 import { FileRule } from '@/lib/ruleObjects/FileRule'
 import { Password } from '@/lib/ruleObjects/Password'
+import { StringRule } from '@/lib/ruleObjects/StringRule'
+import { DateRule } from '@/lib/ruleObjects/DateRule'
+import { EmailRule } from '@/lib/ruleObjects/EmailRule'
 
 type Condition = boolean | (() => boolean)
 
@@ -108,6 +111,18 @@ export const Rule = {
 
   password(min = 8): Password {
     return Password.min(min)
+  },
+
+  string(): StringRule {
+    return new StringRule()
+  },
+
+  date(): DateRule {
+    return new DateRule()
+  },
+
+  email(): EmailRule {
+    return new EmailRule()
   },
 }
 

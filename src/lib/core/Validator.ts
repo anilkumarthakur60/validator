@@ -18,6 +18,7 @@ import {
 import { isFile, isPlainObject, stringifyValue } from '@/lib/helpers'
 import type {
   AfterCallback,
+  InvokableAfter,
   CustomAttributes,
   CustomMessages,
   FieldRuleDefinition,
@@ -48,10 +49,10 @@ interface SometimesSpec {
   readonly condition: (data: ValidationData, item: unknown) => boolean
 }
 
-/** Normalized rules for a single, fully-expanded attribute. */
 /** A parsed rule that the engine actually executes (forEach is resolved away). */
 type ExecutableRule = ParsedBuiltinRule | ParsedObjectRule | ParsedClosureRule
 
+/** Normalized rules for a single, fully-expanded attribute. */
 interface AttributeRules {
   readonly attribute: string
   readonly pattern: string
@@ -137,8 +138,19 @@ export class Validator {
     return this
   }
 
-  after(callback: AfterCallback): this {
-    this.afterCallbacks.push(callback)
+  /**
+   * Register "after validation" hook(s): a single callback, an array of
+   * callbacks, or invokable objects (`{ __invoke }`) — mirroring Laravel.
+   */
+  after(
+    callback: AfterCallback | InvokableAfter | readonly (AfterCallback | InvokableAfter)[],
+  ): this {
+    const entries: readonly (AfterCallback | InvokableAfter)[] = Array.isArray(callback)
+      ? (callback as readonly (AfterCallback | InvokableAfter)[])
+      : [callback as AfterCallback | InvokableAfter]
+    for (const entry of entries) {
+      this.afterCallbacks.push(typeof entry === 'function' ? entry : (v) => entry.__invoke(v))
+    }
     return this
   }
 
@@ -624,6 +636,7 @@ export class Validator {
     }
     const replacements: Record<string, Replaceable> = {
       attribute: replacerContext.displayAttribute,
+      input: this.getDisplayableValue(attribute, replacerContext.value),
       ...this.positionalReplacements(explicitKeys),
       ...(definition?.replace ? definition.replace(replacerContext) : {}),
     }

@@ -24,6 +24,10 @@ export { Enum } from '@/lib/ruleObjects/Enum'
 export type { EnumSource } from '@/lib/ruleObjects/Enum'
 export { Dimensions } from '@/lib/ruleObjects/Dimensions'
 export { FileRule } from '@/lib/ruleObjects/FileRule'
+export { StringRule } from '@/lib/ruleObjects/StringRule'
+export { DateRule } from '@/lib/ruleObjects/DateRule'
+export { EmailRule } from '@/lib/ruleObjects/EmailRule'
+export { CompositeRule } from '@/lib/ruleObjects/CompositeRule'
 export { ExistsRule, UniqueRule } from '@/lib/ruleObjects/database'
 export { AnyOf } from '@/lib/ruleObjects/AnyOf'
 
@@ -49,6 +53,7 @@ export type {
   CustomMessages,
   CustomAttributes,
   AfterCallback,
+  InvokableAfter,
   FailFn,
   FieldRuleFn,
   RuleContext,
