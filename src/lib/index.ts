@@ -12,6 +12,7 @@ export { MessageBag } from '@/lib/core/MessageBag'
 export { ValidatedInput } from '@/lib/core/ValidatedInput'
 export { ValidationException } from '@/lib/core/ValidationException'
 export { registerRule, getBuiltinRule, hasBuiltinRule } from '@/lib/core/registry'
+export type { BuiltinDefinition, RuleModule } from '@/lib/core/ruleDefinition'
 
 // ── Fluent single-field builder ─────────────────────────────
 export { validation, ValidationBuilder } from '@/lib/fluent/builder'

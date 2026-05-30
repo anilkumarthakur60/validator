@@ -20,6 +20,10 @@ coverage
 # TypeScript build info
 *.tsbuildinfo
 
+# VitePress
+docs/.vitepress/cache
+docs/.vitepress/dist
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

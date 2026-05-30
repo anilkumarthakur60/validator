@@ -12,7 +12,13 @@ import prettier from 'eslint-config-prettier'
 
 export default tseslint.config(
   {
-    ignores: ['dist/**', 'node_modules/**', 'coverage/**'],
+    ignores: [
+      'dist/**',
+      'node_modules/**',
+      'coverage/**',
+      'docs/.vitepress/cache/**',
+      'docs/.vitepress/dist/**',
+    ],
   },
 
   // ── Type-checked rules for all source/test TypeScript ──────
@@ -53,10 +59,22 @@ export default tseslint.config(
 
   // ── Config files & scripts: no project, no type-aware rules ─
   {
-    files: ['**/*.config.{ts,mts,cts,js,mjs,cjs}', 'eslint.config.js'],
+    files: [
+      '**/*.config.{ts,mts,cts,js,mjs,cjs}',
+      'eslint.config.js',
+      'docs/.vitepress/**/*.{ts,mts}',
+    ],
     extends: [tseslint.configs.disableTypeChecked],
     rules: {
       '@typescript-eslint/explicit-module-boundary-types': 'off',
+    },
+  },
+
+  // ── Demo app: a generic DOM query helper is idiomatic here ──
+  {
+    files: ['demo/**/*.ts'],
+    rules: {
+      '@typescript-eslint/no-unnecessary-type-parameters': 'off',
     },
   },
 

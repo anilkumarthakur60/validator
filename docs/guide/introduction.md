@@ -1,0 +1,61 @@
+# What is @hc/validation?
+
+`@hc/validation` is a validation library for TypeScript that mirrors
+[Laravel's validation](https://laravel.com/docs/validation) — the same rule
+names, the same error messages, dot/`*` wildcard nesting, conditional and
+cross-field rules — implemented as a strictly-typed, framework-agnostic engine.
+
+## Why
+
+- **Familiar.** If you know Laravel validation, you already know this. Rules
+  like `required|email|max:255` and `users.*.email` behave exactly as you'd
+  expect.
+- **Universal.** The core has no DOM dependency, so it runs the same on a Node
+  backend (Express, NestJS, Fastify), in the browser, in a web worker, or on
+  the edge.
+- **Two APIs, one engine.** Validate a whole payload with
+  [`Validator.make(data, rules)`](/guide/dataset-validation), or compose a
+  single-field rule for Quasar/Vue with the
+  [fluent builder](/guide/fluent-builder). Both share the same engine, so they
+  behave identically.
+- **Safe.** 100% TypeScript with **no `any`**, compiled under the strictest
+  settings, linted with type-aware rules, and covered by a **100%** test suite.
+
+## The two APIs
+
+```ts
+import { Validator, validation } from '@hc/validation'
+
+// 1. Dataset validation (server or client)
+const v = Validator.make({ email: 'a@b.com' }, { email: 'required|email' })
+v.passes() // true
+
+// 2. Fluent single-field builder (Quasar/Vue :rules)
+const rule = validation.required().email().toRule()
+rule('a@b.com') // true
+rule('nope') // "The value field must be a valid email address."
+```
+
+## What's covered
+
+Every rule in Laravel's
+[Available Validation Rules](/rules) list is implemented, plus:
+
+- `MessageBag`, `validated()`, `safe()`, custom messages / attributes / values
+- `:attribute`, `:input`, `:other`, `:value`, `:values`, size placeholders, and
+  array `:index` / `:position` / `:ordinal-position`
+- `sometimes`, `bail`, `nullable`, `exclude*`, the `sometimes()` method, and
+  `after()` hooks
+- Rule objects (`Rule.in`, `Rule.enum`, `Rule.anyOf`, `Rule.forEach`,
+  `Rule.exists`/`unique`, `Rule.dimensions`) and fluent builders (`Rule.string`,
+  `Rule.date`, `Rule.email`, `Password`, `FileRule`)
+
+## Not included (server-framework concerns)
+
+Because this is a standalone library, Laravel features that are tied to the HTTP
+layer are intentionally out of scope: Form Requests, `authorize()`, Blade
+`@error`, `old()` repopulation, session flashing, route-model binding, and
+`lang:publish`. You can build these on top using the primitives this library
+provides.
+
+Continue to [Installation →](/guide/installation)
