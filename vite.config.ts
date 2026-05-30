@@ -26,11 +26,13 @@ export default defineConfig({
   plugins: [
     dts({
       include: ['src/lib'],
-      // Bundle the whole declaration tree into a single dist/index.d.ts
-      // (via @microsoft/api-extractor), resolving the `@/*` alias on the way.
-      // `rollupTypes` is the vite-plugin-dts v4 option name (v5 calls it bundleTypes).
+      // tsconfig.build.json pins rootDir to src/lib so the intermediate declarations
+      // are rooted correctly; api-extractor then bundles them into a single
+      // dist/index.d.ts (rollupTypes). A single flat file has no internal relative
+      // imports, so it resolves cleanly under node16/nodenext (what `attw` checks) —
+      // multi-file output would emit extensionless imports that node16 rejects.
       rollupTypes: true,
-      tsconfigPath: './tsconfig.json',
+      tsconfigPath: './tsconfig.build.json',
       // Mirror the ESM-flavoured .d.ts to .d.cts for the CJS `require` entry
       // in package.json#exports (what `attw` checks). Written from the emitted
       // content map so it's independent of disk-flush timing.

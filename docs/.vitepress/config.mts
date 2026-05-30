@@ -194,7 +194,7 @@ export default defineConfig({
         },
       ],
     },
-    socialLinks: [{ icon: 'github', link: 'https://github.com/your-org/validation' }],
+    socialLinks: [{ icon: 'github', link: 'https://github.com/anilkumarthakur60/validator' }],
     search: { provider: 'local' },
     outline: 'deep',
   },

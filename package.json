@@ -13,6 +13,14 @@
     "schema"
   ],
   "license": "MIT",
+  "homepage": "https://github.com/anilkumarthakur60/validator#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anilkumarthakur60/validator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/anilkumarthakur60/validator/issues"
+  },
   "type": "module",
   "sideEffects": false,
   "main": "./dist/index.cjs",
