@@ -3,7 +3,7 @@ layout: home
 
 hero:
   name: '@hc/validation'
-  text: Laravel-compatible validation for TypeScript
+  text: Expressive validation for TypeScript
   tagline: One strictly-typed engine, two APIs — full dataset validation and a chainable Quasar/Vue rule builder. 100% test coverage, zero `any`.
   actions:
     - theme: brand
@@ -17,8 +17,8 @@ hero:
       link: /api
 
 features:
-  - title: Laravel parity
-    details: Same rule names, same messages, dot & * wildcard nesting, MessageBag, validated()/safe(), conditional and cross-field rules.
+  - title: Comprehensive rule set
+    details: 100+ built-in rules with human-friendly messages, dot & * wildcard nesting, MessageBag, validated()/safe(), conditional and cross-field rules.
   - title: Framework-agnostic
     details: A pure-TypeScript core that runs in the browser, Node (Express/NestJS/Fastify), workers, and edge runtimes.
   - title: Two APIs, one engine

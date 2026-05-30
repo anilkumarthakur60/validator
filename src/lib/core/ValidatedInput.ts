@@ -1,6 +1,5 @@
 /**
- * Wrapper around validated data, mirroring Laravel's
- * `Illuminate\Support\ValidatedInput`. Supports `only`/`except`/`merge`,
+ * Wrapper around validated data. Supports `only`/`except`/`merge`,
  * array-like access, and iteration.
  */
 

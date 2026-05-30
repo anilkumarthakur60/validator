@@ -55,7 +55,7 @@ const sections: Section[] = [
     id: 'playground',
     index: '06',
     title: 'Playground',
-    blurb: 'Type any Laravel rule string against any JSON value.',
+    blurb: 'Type any rule string against any JSON value.',
     component: RulePlayground,
   },
 ]
@@ -127,7 +127,7 @@ onBeforeUnmount(() => {
           <div class="brand-mark">✓</div>
           <div>
             <h1>@hc/validation</h1>
-            <p>Laravel-compatible validation for TypeScript</p>
+            <p>Expressive validation for TypeScript</p>
           </div>
         </div>
         <button

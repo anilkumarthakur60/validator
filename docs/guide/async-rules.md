@@ -1,6 +1,6 @@
 # Async & database rules
 
-Some Laravel rules check a database or network: `exists`, `unique`,
+Some rules check a database or network: `exists`, `unique`,
 `current_password`, the `dns` email style, and `Password.uncompromised()`.
 Because this library is framework-agnostic, those defer to **pluggable
 resolvers** that you provide.

@@ -1,5 +1,5 @@
 /**
- * Fluent email rule builder (Laravel's `Rule::email()`).
+ * Fluent email rule builder.
  *
  *   Rule.email().rfcCompliant().validateMxRecord().preventSpoofing()
  *

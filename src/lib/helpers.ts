@@ -3,7 +3,7 @@
  * Every function narrows `unknown` — callers never pass `any`.
  */
 
-/** A value Laravel treats as "empty" for presence rules. */
+/** A value treated as "empty" for presence rules. */
 export const isEmpty = (value: unknown): boolean =>
   value === null ||
   value === undefined ||
@@ -44,7 +44,7 @@ export const isInteger = (value: unknown): boolean =>
 
 export const toNumber = (value: unknown): number => Number(value)
 
-/** Laravel's boolean-castable set for the `boolean` rule. */
+/** The boolean-castable set for the `boolean` rule. */
 export const isBooleanLike = (value: unknown): boolean =>
   value === true || value === false || value === 1 || value === 0 || value === '1' || value === '0'
 
@@ -191,7 +191,7 @@ export const stringifyValue = (value: unknown): string => {
 }
 
 /**
- * Laravel-compatible "size" of a value:
+ * The "size" of a value:
  *  - string → character length
  *  - numeric → numeric value
  *  - array → element count

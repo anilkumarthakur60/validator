@@ -1,6 +1,6 @@
 # Available rules
 
-Every Laravel validation rule is implemented. Rules are written as
+Every built-in validation rule is implemented. Rules are written as
 `name` or `name:param1,param2`, combined with `|` or as array entries.
 
 [[toc]]

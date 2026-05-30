@@ -3,7 +3,7 @@ import { defineConfig } from 'vitepress'
 // VitePress site for @hc/validation. Run `npm run docs:dev`.
 export default defineConfig({
   title: '@hc/validation',
-  description: 'A Laravel-compatible, strictly-typed validation library for TypeScript.',
+  description: 'An expressive, strictly-typed validation library for TypeScript.',
   lastUpdated: true,
   cleanUrls: true,
   themeConfig: {

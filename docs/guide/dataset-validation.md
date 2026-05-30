@@ -1,7 +1,7 @@
 # Dataset validation
 
 `Validator.make(data, rules, messages?, attributes?)` is the heart of the
-library — a faithful port of Laravel's `Validator`.
+library — a faithful, strongly-typed dataset validator.
 
 ```ts
 import { Validator } from '@hc/validation'

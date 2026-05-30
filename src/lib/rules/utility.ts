@@ -1,6 +1,6 @@
 /**
  * Utility & comparison rules.
- * Laravel: confirmed, same, different, in, not_in, json, ip, ipv4, ipv6,
+ * Rules: confirmed, same, different, in, not_in, json, ip, ipv4, ipv6,
  *          mac_address, current_password, exists, unique.
  *
  * `exists`, `unique`, and `current_password` defer to pluggable async

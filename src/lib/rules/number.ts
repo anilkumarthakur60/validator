@@ -1,6 +1,6 @@
 /**
  * Numeric rules (excluding size rules, which live in `size.ts`).
- * Laravel: numeric, integer, decimal, digits, digits_between, max_digits,
+ * Rules: numeric, integer, decimal, digits, digits_between, max_digits,
  *          min_digits, multiple_of.
  */
 

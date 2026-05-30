@@ -1,11 +1,10 @@
 {
-  "name": "@hc/validation",
+  "name": "@anil-labs/validator",
   "version": "0.1.0",
-  "description": "A Laravel-compatible, strictly-typed validation library for TypeScript — framework-agnostic core plus a chainable Quasar/Vue rule builder.",
+  "description": "An expressive, strictly-typed validation library for TypeScript — framework-agnostic core plus a chainable Quasar/Vue rule builder.",
   "keywords": [
     "validation",
     "validator",
-    "laravel",
     "typescript",
     "vue",
     "quasar",

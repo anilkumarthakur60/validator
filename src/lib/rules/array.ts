@@ -1,6 +1,6 @@
 /**
  * Array rules.
- * Laravel: array, list, distinct, in_array, in_array_keys, contains,
+ * Rules: array, list, distinct, in_array, in_array_keys, contains,
  *          doesnt_contain.
  */
 

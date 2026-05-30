@@ -1,6 +1,5 @@
 /**
- * Container for validation error messages, mirroring Laravel's
- * `Illuminate\Support\MessageBag`.
+ * Container for validation error messages, keyed by attribute.
  */
 
 export class MessageBag {
@@ -99,7 +98,7 @@ export class MessageBag {
     return record
   }
 
-  /** Alias of {@link messages} matching Laravel's `toArray`. */
+  /** Alias of {@link messages}. */
   toArray(): Record<string, string[]> {
     return this.messages()
   }

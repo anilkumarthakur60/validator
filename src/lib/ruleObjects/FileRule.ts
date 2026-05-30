@@ -1,5 +1,5 @@
 /**
- * Fluent file rule object (Laravel's `Illuminate\Validation\Rules\File`).
+ * Fluent file rule object.
  *
  *   FileRule.types(['mp3', 'wav']).min('1kb').max('10mb')
  *   FileRule.image().max(2048).dimensions(Rule.dimensions().maxWidth(1000))

@@ -6,7 +6,7 @@ import type { FieldRuleFn } from '@/lib/types'
  * (`validation.required().email().toRule()`) into live validation state.
  *
  * The rule re-runs automatically whenever the value changes — `error` is the
- * empty string while valid, otherwise the Laravel-style message.
+ * empty string while valid, otherwise the failure message.
  */
 export interface Field<T> {
   value: Ref<T>

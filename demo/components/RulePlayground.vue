@@ -65,7 +65,7 @@ function applyPreset(preset: (typeof presets)[number]): void {
     </div>
 
     <div class="field">
-      <label for="pg-rules" class="field-label">Rules — Laravel pipe syntax</label>
+      <label for="pg-rules" class="field-label">Rules — pipe syntax</label>
       <input id="pg-rules" v-model="rulesInput" spellcheck="false" />
     </div>
 

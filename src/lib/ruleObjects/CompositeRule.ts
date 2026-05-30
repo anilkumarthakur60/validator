@@ -1,7 +1,7 @@
 /**
  * Base for fluent rule builders (`Rule.string()`, `Rule.date()`) that compose
  * several built-in checks and report each failure with its native message.
- * Conditionable via `when`/`unless`, mirroring Laravel's rule builders.
+ * Conditionable via `when`/`unless`.
  */
 
 import { requireBuiltinRule } from '@/lib/core/registry'

@@ -1,5 +1,5 @@
 /**
- * Default, Laravel-compatible validation messages and the placeholder formatter.
+ * Default validation messages and the placeholder formatter.
  *
  * `defaultMessages` is exported mutably so applications can override copy
  * globally, e.g. `defaultMessages.required = 'This field is required.'`.
@@ -18,7 +18,7 @@ export interface TypedMessage {
   readonly file: string
 }
 
-/** The four size contexts Laravel distinguishes. */
+/** The four size contexts the validator distinguishes. */
 export type SizeType = keyof TypedMessage
 
 export type MessageTemplate = string | TypedMessage

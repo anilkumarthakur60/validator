@@ -7,7 +7,7 @@ import { isAccepted, isDeclined, isEmpty, parseDate, stringifyValue } from '@/li
 import { dotGet } from '@/lib/core/data'
 import type { Replaceable, ReplacerContext } from '@/lib/types'
 
-/** Loose, Laravel-style equality between a field value and a string parameter. */
+/** Loose equality between a field value and a string parameter. */
 export const looseEquals = (value: unknown, parameter: string): boolean => {
   if (typeof value === 'boolean') {
     if (parameter === 'true' || parameter === '1') return value

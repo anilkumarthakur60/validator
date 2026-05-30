@@ -1,9 +1,9 @@
 # @hc/validation
 
-A **Laravel-compatible**, strictly-typed validation library for TypeScript.
+An **expressive**, strictly-typed validation library for TypeScript.
 
 - 🧩 **Framework-agnostic core** — works in Node (Express, NestJS, Fastify), the browser, workers, and edge runtimes.
-- 🎯 **Laravel parity** — same rule names, same messages, dot/`*` wildcard nesting, `MessageBag`, `validated()`/`safe()`, conditional & cross-field rules.
+- 🎯 **Comprehensive rule set** — 100+ built-in rules with human-friendly messages, dot/`*` wildcard nesting, `MessageBag`, `validated()`/`safe()`, conditional & cross-field rules.
 - 🪝 **Two APIs, one engine** — a full dataset `Validator.make(data, rules)` **and** a chainable single-field builder for Quasar/Vue `:rules`.
 - 🔒 **100% TypeScript, zero `any`** — compiled under the strictest settings, **100% test coverage**.
 - ⚡ **Async-ready** — pluggable resolvers for `exists`, `unique`, `current_password`, and `Password.uncompromised()`.
@@ -24,7 +24,7 @@ Ships ESM + CJS with bundled type declarations. Requires Node ≥ 18.
 
 ## Quick start
 
-### Dataset validation (Laravel-style)
+### Dataset validation
 
 ```ts
 import { Validator } from '@hc/validation'

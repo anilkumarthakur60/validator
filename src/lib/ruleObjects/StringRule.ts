@@ -1,5 +1,5 @@
 /**
- * Fluent string rule builder (Laravel's `Rule::string()`).
+ * Fluent string rule builder.
  *
  *   Rule.string().min(3).max(255).alphaDash(true)
  */

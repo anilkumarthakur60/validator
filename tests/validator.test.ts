@@ -12,7 +12,7 @@ describe('Validator — basics', () => {
     expect(v.validated()).toEqual({ title: 'Hello', body: 'World' })
   })
 
-  it('collects failures with Laravel-style messages', () => {
+  it('collects failures with human-friendly messages', () => {
     const v = Validator.make({ title: '' }, { title: 'required', body: 'required' })
     expect(v.fails()).toBe(true)
     expect(v.errors().first('title')).toBe('The title field is required.')

@@ -1,6 +1,5 @@
 /**
- * Thrown when `validate()`/`validateAsync()` fails, mirroring Laravel's
- * `Illuminate\Validation\ValidationException`.
+ * Thrown when `validate()`/`validateAsync()` fails.
  */
 
 import type { Validator } from '@/lib/core/Validator'
@@ -9,7 +8,7 @@ import type { MessageBag } from '@/lib/core/MessageBag'
 export class ValidationException extends Error {
   /** The validator instance that produced the failure. */
   readonly validator: Validator
-  /** HTTP-style status code (parity with Laravel's default). */
+  /** HTTP-style status code. */
   readonly status: number
   /** Optional named error bag. */
   readonly errorBag: string
@@ -23,7 +22,7 @@ export class ValidationException extends Error {
     Object.setPrototypeOf(this, ValidationException.prototype)
   }
 
-  /** All error messages keyed by attribute (parity with Laravel's `errors()`). */
+  /** All error messages keyed by attribute. */
   errors(): Record<string, string[]> {
     return this.validator.errors().messages()
   }

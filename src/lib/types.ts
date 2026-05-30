@@ -58,10 +58,10 @@ export interface ReplacerContext {
 export type MessageReplacer = (message: string, ctx: ReplacerContext) => string
 
 // ---------------------------------------------------------------------------
-// Public rule-object contracts (Laravel parity)
+// Public rule-object contracts
 // ---------------------------------------------------------------------------
 
-/** A class-based rule (Laravel's `Illuminate\Contracts\Validation\ValidationRule`). */
+/** A class-based rule. */
 export interface ValidationRuleObject {
   validate(attribute: string, value: unknown, fail: FailFn): void | Promise<void>
   /** When `true`, the rule runs even if the attribute is absent/empty. */
@@ -99,7 +99,7 @@ export type CustomAttributes = Record<string, string>
 /** A callback run after the main validation pass. */
 export type AfterCallback = (validator: Validator) => void | Promise<void>
 
-/** An invokable "after validation" object (parity with Laravel's `__invoke`). */
+/** An invokable "after validation" object. */
 export interface InvokableAfter {
   __invoke(validator: Validator): void | Promise<void>
 }

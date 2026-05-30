@@ -1,6 +1,6 @@
 /**
  * Presence, requirement, prohibition, and exclusion rules.
- * Laravel: required, required_*, filled, present, present_*, missing, missing_*,
+ * Rules: required, required_*, filled, present, present_*, missing, missing_*,
  *          prohibited, prohibited_*, prohibits, accepted, accepted_if,
  *          declined, declined_if.
  *

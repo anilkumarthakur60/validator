@@ -1,6 +1,5 @@
 /**
- * The dataset validator — a faithful, strongly-typed port of Laravel's
- * `Illuminate\Validation\Validator`.
+ * The dataset validator — a faithful, strongly-typed validation engine.
  *
  * It validates a whole data object against a rules schema, supporting dot and
  * `*` wildcard notation, cross-field/dependent rules, implicit rules, `bail`,
@@ -127,7 +126,7 @@ export class Validator {
     return this
   }
 
-  /** Configure user-friendly `:value` replacements (Laravel's `values` array). */
+  /** Configure user-friendly `:value` replacements. */
   setValueMap(map: Record<string, Record<string, string>>): this {
     this.valueMap = map
     return this
@@ -140,7 +139,7 @@ export class Validator {
 
   /**
    * Register "after validation" hook(s): a single callback, an array of
-   * callbacks, or invokable objects (`{ __invoke }`) — mirroring Laravel.
+   * callbacks, or invokable objects (`{ __invoke }`).
    */
   after(
     callback: AfterCallback | InvokableAfter | readonly (AfterCallback | InvokableAfter)[],
@@ -570,7 +569,7 @@ export class Validator {
     return passed
   }
 
-  /** Laravel's `isValidatable`: present-or-implicit, and nullable handling. */
+  /** Whether the field is validatable: present-or-implicit, with nullable handling. */
   private shouldValidate(entry: AttributeRules, value: unknown, implicit: boolean): boolean {
     if (entry.nullable && value === null && !implicit) return false
     if (typeof value === 'string' && value.trim() === '') return implicit

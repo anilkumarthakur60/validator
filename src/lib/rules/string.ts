@@ -1,6 +1,6 @@
 /**
  * String-format rules.
- * Laravel: string, alpha, alpha_dash, alpha_num, ascii, email, lowercase,
+ * Rules: string, alpha, alpha_dash, alpha_num, ascii, email, lowercase,
  *          uppercase, url, active_url, uuid, ulid, hex_color, starts_with,
  *          ends_with, doesnt_start_with, doesnt_end_with, regex, not_regex.
  */

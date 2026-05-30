@@ -1,6 +1,6 @@
 /**
  * Date rules.
- * Laravel: date, date_format, date_equals, before, before_or_equal, after,
+ * Rules: date, date_format, date_equals, before, before_or_equal, after,
  *          after_or_equal, timezone.
  *
  * Reference dates may be literal strings (incl. relative `today`/`tomorrow`),

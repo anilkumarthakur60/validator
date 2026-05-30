@@ -1,5 +1,5 @@
 /**
- * Fluent date rule builder (Laravel's `Rule::date()`).
+ * Fluent date rule builder.
  *
  *   Rule.date().format('Y-m-d').afterToday()
  *

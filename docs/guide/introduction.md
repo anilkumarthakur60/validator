@@ -1,15 +1,13 @@
 # What is @hc/validation?
 
-`@hc/validation` is a validation library for TypeScript that mirrors
-[Laravel's validation](https://laravel.com/docs/validation) — the same rule
-names, the same error messages, dot/`*` wildcard nesting, conditional and
-cross-field rules — implemented as a strictly-typed, framework-agnostic engine.
+`@hc/validation` is a strictly-typed, framework-agnostic validation library for
+TypeScript. It provides an expressive, string-based rule API — with human-friendly
+error messages, dot/`*` wildcard nesting, and conditional and cross-field rules.
 
 ## Why
 
-- **Familiar.** If you know Laravel validation, you already know this. Rules
-  like `required|email|max:255` and `users.*.email` behave exactly as you'd
-  expect.
+- **Familiar.** Expressive string rules like `required|email|max:255` and
+  `users.*.email` behave exactly as you'd expect.
 - **Universal.** The core has no DOM dependency, so it runs the same on a Node
   backend (Express, NestJS, Fastify), in the browser, in a web worker, or on
   the edge.
@@ -38,7 +36,7 @@ rule('nope') // "The value field must be a valid email address."
 
 ## What's covered
 
-Every rule in Laravel's
+Every rule in the
 [Available Validation Rules](/rules) list is implemented, plus:
 
 - `MessageBag`, `validated()`, `safe()`, custom messages / attributes / values
@@ -52,10 +50,10 @@ Every rule in Laravel's
 
 ## Not included (server-framework concerns)
 
-Because this is a standalone library, Laravel features that are tied to the HTTP
-layer are intentionally out of scope: Form Requests, `authorize()`, Blade
-`@error`, `old()` repopulation, session flashing, route-model binding, and
-`lang:publish`. You can build these on top using the primitives this library
-provides.
+Because this is a standalone library, server-framework features tied to the HTTP
+layer are intentionally out of scope: Form Requests, `authorize()`, template
+`@error` directives, `old()` repopulation, session flashing, route-model
+binding, and translation publishing. You can build these on top using the
+primitives this library provides.
 
 Continue to [Installation →](/guide/installation)

@@ -1,6 +1,6 @@
 /**
  * File rules.
- * Laravel: file, image, mimes, mimetypes, extensions, dimensions, encoding.
+ * Rules: file, image, mimes, mimetypes, extensions, dimensions, encoding.
  *
  * `dimensions` decodes the image (async) when a browser image decoder is
  * available; in non-browser contexts it cannot measure pixels and passes.

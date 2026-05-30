@@ -17,7 +17,7 @@ which maps to `../src`, so the demo always runs against the live source.
    spinner, and stale-response cancellation via `failsAsync()`.
 5. **Rule gallery** — a live cheat-sheet of builder methods across strings,
    numbers, dates, and network/format rules.
-6. **Playground** — type any Laravel pipe-syntax rule string against any JSON
+6. **Playground** — type any pipe-syntax rule string against any JSON
    value and watch it pass/fail in real time.
 
 ## Architecture

@@ -1,6 +1,5 @@
 /**
- * The `Rule` facade — fluent constructors mirroring Laravel's
- * `Illuminate\Validation\Rule`.
+ * The `Rule` facade — fluent constructors for the built-in rule objects.
  */
 
 import { isEmpty } from '@/lib/helpers'

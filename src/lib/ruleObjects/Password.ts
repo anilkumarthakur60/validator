@@ -1,5 +1,5 @@
 /**
- * The `Password` complexity rule object (Laravel parity).
+ * The `Password` complexity rule object.
  *
  *   Password.min(8).letters().mixedCase().numbers().symbols().uncompromised()
  *
