@@ -28,7 +28,8 @@ export default defineConfig({
       include: ['src/lib'],
       // Bundle the whole declaration tree into a single dist/index.d.ts
       // (via @microsoft/api-extractor), resolving the `@/*` alias on the way.
-      bundleTypes: true,
+      // `rollupTypes` is the vite-plugin-dts v4 option name (v5 calls it bundleTypes).
+      rollupTypes: true,
       tsconfigPath: './tsconfig.json',
       // Mirror the ESM-flavoured .d.ts to .d.cts for the CJS `require` entry
       // in package.json#exports (what `attw` checks). Written from the emitted

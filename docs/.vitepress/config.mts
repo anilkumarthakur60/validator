@@ -2,6 +2,10 @@ import { defineConfig } from 'vitepress'
 
 // VitePress site for @anil-labs/validator. Run `npm run docs:dev`.
 export default defineConfig({
+  // Docs build into the default docs/.vitepress/dist (lib → dist, demo → demo/dist).
+  // GitHub Pages serves a project site from /<repo>/ — set this to your repo name
+  // (use '/' for a user/org site or a custom domain).
+  base: '/validator/',
   title: '@anil-labs/validator',
   description: 'An expressive, strictly-typed validation library for TypeScript.',
   lastUpdated: true,
