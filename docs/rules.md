@@ -93,7 +93,7 @@ A valid hex color (`#fff`, `#ffffff`, `#ffffffff`).
 `in:foo,bar` or `Rule.in([...])`. Combined with `array`, every element must be
 in the list.
 
-### ip / ipv4 / ipv6
+### ip / ipv4 / ipv6 {#ip}
 
 A valid IP address (any / v4 / v6).
 
@@ -101,7 +101,7 @@ A valid IP address (any / v4 / v6).
 
 A valid JSON string.
 
-### lowercase / uppercase
+### lowercase / uppercase {#lowercase}
 
 Must be entirely lower- / upper-case.
 
@@ -164,7 +164,7 @@ A valid UUID. `uuid:4` requires a specific version.
 
 `digits_between:min,max` — digit count within range.
 
-### gt / gte / lt / lte
+### gt / gte / lt / lte {#gt}
 
 `gt:field|value` (and friends) — compare size against another field or a number.
 
@@ -172,11 +172,11 @@ A valid UUID. `uuid:4` requires a specific version.
 
 An integer. `integer:strict` rejects numeric strings.
 
-### max / min
+### max / min {#max}
 
 `max:n` / `min:n` — size at most / at least `n`; type-aware.
 
-### max_digits / min_digits
+### max_digits / min_digits {#max_digits}
 
 `max_digits:n` / `min_digits:n` — digit-count bounds.
 
@@ -228,12 +228,12 @@ An array with consecutive `0..n-1` keys.
 
 ## Dates
 
-### after / after_or_equal
+### after / after_or_equal {#after}
 
 `after:date|field` — must be after the date (literal, `today`/`tomorrow`/etc.,
 or another field). See fluent [`Rule.date()`](/api#rule-date).
 
-### before / before_or_equal
+### before / before_or_equal {#before}
 
 `before:date|field` — must be before the date.
 
@@ -331,7 +331,7 @@ Always remove the field from `validated()`.
 
 Must not be empty **when present**.
 
-### missing / missing_if / missing_unless / missing_with / missing_with_all
+### missing / missing_if / missing_unless / missing_with / missing_with_all {#missing}
 
 Field must be absent (optionally conditioned on other fields).
 
@@ -339,11 +339,11 @@ Field must be absent (optionally conditioned on other fields).
 
 The field may be `null` (skips later rules for `null`).
 
-### present / present_if / present_unless / present_with / present_with_all
+### present / present_if / present_unless / present_with / present_with_all {#present}
 
 Field must exist in the input (may be empty), optionally conditioned.
 
-### prohibited / prohibited_if / prohibited_if_accepted / prohibited_if_declined / prohibited_unless
+### prohibited / prohibited_if / prohibited_if_accepted / prohibited_if_declined / prohibited_unless {#prohibited}
 
 Field must be missing or empty, optionally conditioned.
 
@@ -355,12 +355,12 @@ Field must be missing or empty, optionally conditioned.
 
 Must be present and not empty.
 
-### required_if / required_if_accepted / required_if_declined / required_unless
+### required_if / required_if_accepted / required_if_declined / required_unless {#required_if}
 
 Conditionally required based on another field. (`Rule.requiredIf(bool|fn)` for
 logic-based conditions.)
 
-### required_with / required_with_all / required_without / required_without_all
+### required_with / required_with_all / required_without / required_without_all {#required_with}
 
 Required based on the presence of other fields.
 
