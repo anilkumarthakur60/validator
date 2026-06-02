@@ -41,6 +41,9 @@ export * as rules from '@/lib/rules/index'
 // ── Data utilities ──────────────────────────────────────────
 export { dotGet, dotHas, dotSet, expandWildcards, flattenKeys } from '@/lib/core/data'
 
+// ── Type inference ──────────────────────────────────────────
+export type { InferRules, InferField } from '@/lib/infer'
+
 // ── Types ───────────────────────────────────────────────────
 export type {
   ValidationData,

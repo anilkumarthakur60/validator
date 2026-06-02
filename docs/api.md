@@ -5,9 +5,12 @@
 ## Validator
 
 ```ts
-Validator.make(data, rules, messages?, attributes?): Validator
+Validator.make<const R>(data, rules: R, messages?, attributes?): Validator<InferRules<R>>
 Validator.setGlobalResolvers(resolvers): void
 ```
+
+When `rules` is a literal, the validated-data methods (`validated()`,
+`validate()`, `safe().all()`) are typed via [`InferRules`](/guide/type-inference).
 
 ### Configuration (chainable)
 
@@ -34,9 +37,19 @@ Validator.setGlobalResolvers(resolvers): void
 | Method | Returns |
 | --- | --- |
 | `errors()` / `messages()` | [`MessageBag`](#messagebag) |
-| `validated()` | validated subset of the data |
+| `validated()` | validated subset of the data (typed — see [Type inference](/guide/type-inference)) |
 | `safe()` | [`ValidatedInput`](#validatedinput) |
 | `getData()` | a copy of the input data |
+
+### Type inference {#inferrules}
+
+```ts
+import { type InferRules } from '@anil-labs/validator'
+
+type T = InferRules<typeof rules> // shape of the validated data
+```
+
+See the [Type inference guide](/guide/type-inference) for the full mapping.
 
 ## MessageBag {#messagebag}
 

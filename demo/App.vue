@@ -2,6 +2,7 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import LiveFields from './components/LiveFields.vue'
 import RegistrationForm from './components/RegistrationForm.vue'
+import TypeInference from './components/TypeInference.vue'
 import NestedArray from './components/NestedArray.vue'
 import AsyncUnique from './components/AsyncUnique.vue'
 import BuilderGallery from './components/BuilderGallery.vue'
@@ -31,29 +32,36 @@ const sections: Section[] = [
     component: RegistrationForm,
   },
   {
-    id: 'nested',
+    id: 'infer',
     index: '03',
+    title: 'Type inference',
+    blurb: 'validated() typed straight from the rule strings — no as const.',
+    component: TypeInference,
+  },
+  {
+    id: 'nested',
+    index: '04',
     title: 'Nested arrays',
     blurb: 'Wildcard rules (members.*.email) on dynamic rows.',
     component: NestedArray,
   },
   {
     id: 'async',
-    index: '04',
+    index: '05',
     title: 'Async rules',
     blurb: 'Resolver-backed unique check with debounced, awaited validation.',
     component: AsyncUnique,
   },
   {
     id: 'gallery',
-    index: '05',
+    index: '06',
     title: 'Rule gallery',
     blurb: 'A live cheat-sheet across strings, numbers, dates, and more.',
     component: BuilderGallery,
   },
   {
     id: 'playground',
-    index: '06',
+    index: '07',
     title: 'Playground',
     blurb: 'Try a single rule or a whole-dataset schema — browse every built-in rule.',
     component: RulePlayground,

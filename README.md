@@ -6,6 +6,7 @@ An **expressive**, strictly-typed validation library for TypeScript.
 - 🎯 **Comprehensive rule set** — 100+ built-in rules with human-friendly messages, dot/`*` wildcard nesting, `MessageBag`, `validated()`/`safe()`, conditional & cross-field rules.
 - 🪝 **Two APIs, one engine** — a full dataset `Validator.make(data, rules)` **and** a chainable single-field builder for Quasar/Vue `:rules`.
 - 🔒 **100% TypeScript, zero `any`** — compiled under the strictest settings, **100% test coverage**.
+- 🧠 **Type inference** — pass a rules literal and `validated()` returns a precisely-typed object (`InferRules`), no `as const` needed.
 - ⚡ **Async-ready** — pluggable resolvers for `exists`, `unique`, `current_password`, and `Password.uncompromised()`.
 
 > 📖 **Full documentation:** run `npm run docs:dev` (VitePress) or see the [`docs/`](./docs) directory.
@@ -50,6 +51,34 @@ if (validator.fails()) {
   const data = validator.validated()
 }
 ```
+
+### Type inference
+
+Pass the rules as a literal and `validated()` is fully typed — no `as const`, no
+separate interface:
+
+```ts
+const data = Validator.make(
+  { title: 'Hi', count: 5, author: { name: 'Ada' }, users: [{ email: 'a@b.com' }] },
+  {
+    title: 'required|string',
+    count: 'required|integer',
+    'author.name': 'required|string',
+    'users.*.email': 'required|email',
+    note: 'nullable|string',
+  },
+).validate()
+
+// data: {
+//   title: string; count: number; author: { name: string };
+//   users: { email: string }[]; note?: string | null
+// }
+data.users[0]?.email // ✅ typed
+```
+
+Use `InferRules<typeof rules>` to derive the type without running validation. The
+engine validates but doesn't coerce, so inferred types reflect each rule's
+intended type — see the [Type inference guide](./docs/guide/type-inference.md).
 
 ### Fluent builder (Quasar / Vue `:rules`)
 
