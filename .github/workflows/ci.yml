@@ -27,7 +27,7 @@ jobs:
         node: [20, 22, 24, 26]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # No `version:` — the packageManager field in package.json is the authority.
       - uses: pnpm/action-setup@v6
