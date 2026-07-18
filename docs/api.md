@@ -231,23 +231,56 @@ interface ValidationResolvers {
 }
 ```
 
+## Rule object classes
+
+Every builder on the `Rule` facade has a directly-exported class for advanced
+composition and typing:
+
+```ts
+import {
+  AnyOf, // Rule.anyOf(...) — passes when any branch passes
+  CompositeRule, // combine several rule objects into one
+  DateRule, // Rule.date()
+  Dimensions, // Rule.dimensions()
+  EmailRule, // Rule.email()
+  ExistsRule, // Rule.exists() — resolver-backed
+  StringRule, // Rule.string()
+  UniqueRule, // Rule.unique() — resolver-backed
+} from '@anil-labs/validator'
+```
+
 ## Fluent builder
 
 ```ts
-import { validation } from '@anil-labs/validator'
+import { validation, ValidationBuilder } from '@anil-labs/validator'
 
 validation.required().email().toRule() // (value) => true | string
 validation.extend(name, fn) // register a named rule
 validation.hasRule(name) / validation.removeRule(name) / validation.customRuleNames()
 ```
 
+`ValidationBuilder` is the exported class behind `validation`, useful for
+typing helpers that accept or return chains.
+
 See [Fluent builder](/guide/fluent-builder) for the full method list.
 
 ## Helpers & utilities
 
 ```ts
-import { helpers, dotGet, dotHas, dotSet, expandWildcards, defaultMessages } from '@anil-labs/validator'
+import { helpers, dotGet, dotHas, dotSet, expandWildcards, flattenKeys, defaultMessages } from '@anil-labs/validator'
 
 helpers.isValidEmailRfc('a@b.com')
 dotGet({ a: { b: 1 } }, 'a.b') // 1
+flattenKeys({ a: { b: 1 } }) // ['a.b'] — dotted leaf keys
 ```
+
+### Message formatting
+
+```ts
+import { formatMessage, defaultMessages, FALLBACK_MESSAGE } from '@anil-labs/validator'
+```
+
+`formatMessage(template, replacements)` performs the `:attribute` / `:min` /
+`:input`-style placeholder substitution used by the engine (values are
+inserted literally, so `$&`-style patterns in data can't corrupt messages).
+`FALLBACK_MESSAGE` is the template used when a rule has no message entry.
