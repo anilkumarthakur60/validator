@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { validation } from '@/lib/fluent/builder'
+import { validation } from '@anil-labs/validator'
 import { useField } from '../composables/useField'
 import CodeSnippet from './CodeSnippet.vue'
 

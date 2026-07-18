@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { Validator } from '@/lib/core/Validator'
-import type { DatabaseQuery } from '@/lib/types'
+import { Validator } from '@anil-labs/validator'
+import type { DatabaseQuery } from '@anil-labs/validator'
 import CodeSnippet from './CodeSnippet.vue'
 
 const TAKEN = new Set(['taken@example.com', 'admin@example.com', 'hello@example.com'])

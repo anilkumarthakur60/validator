@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { Validator } from '@/lib/core/Validator'
-import type { RulesSchema, ValidationData } from '@/lib/types'
-import {
+import { Validator } from '@anil-labs/validator'
+import type { RulesSchema, ValidationData } from '@anil-labs/validator'
+import { rules } from '@anil-labs/validator'
+const {
   arrayRules,
   booleanRules,
   dateRules,
@@ -12,7 +13,7 @@ import {
   sizeRules,
   stringRules,
   utilityRules,
-} from '@/lib/rules/index'
+} = rules
 import JsonView from './JsonView.vue'
 
 type Mode = 'single' | 'dataset'

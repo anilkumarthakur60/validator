@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { Validator } from '@/lib/core/Validator'
-import type { ValidationData } from '@/lib/types'
+import { Validator } from '@anil-labs/validator'
+import type { ValidationData } from '@anil-labs/validator'
 import CodeSnippet from './CodeSnippet.vue'
 import JsonView from './JsonView.vue'
 
@@ -12,7 +12,12 @@ interface FormShape {
   handle: string
 }
 
-const blank = (): FormShape => ({ title: 'Launch plan', count: '3', email: 'ada@example.com', handle: 'ada' })
+const blank = (): FormShape => ({
+  title: 'Launch plan',
+  count: '3',
+  email: 'ada@example.com',
+  handle: 'ada',
+})
 const form = reactive<FormShape>(blank())
 
 // A `const` rules literal — this is what lets `make` infer the output shape.
@@ -90,22 +95,42 @@ function firstError(field: string): string {
     <form class="card form" novalidate @submit.prevent="run">
       <div class="field">
         <label for="ti-title" class="field-label">Title (string)</label>
-        <input id="ti-title" v-model="form.title" type="text" :class="{ invalid: firstError('title') }" />
+        <input
+          id="ti-title"
+          v-model="form.title"
+          type="text"
+          :class="{ invalid: firstError('title') }"
+        />
         <span class="msg error">{{ firstError('title') || '&nbsp;' }}</span>
       </div>
       <div class="field">
         <label for="ti-count" class="field-label">Count (integer)</label>
-        <input id="ti-count" v-model="form.count" type="number" :class="{ invalid: firstError('count') }" />
+        <input
+          id="ti-count"
+          v-model="form.count"
+          type="number"
+          :class="{ invalid: firstError('count') }"
+        />
         <span class="msg error">{{ firstError('count') || '&nbsp;' }}</span>
       </div>
       <div class="field">
         <label for="ti-email" class="field-label">Email</label>
-        <input id="ti-email" v-model="form.email" type="email" :class="{ invalid: firstError('email') }" />
+        <input
+          id="ti-email"
+          v-model="form.email"
+          type="email"
+          :class="{ invalid: firstError('email') }"
+        />
         <span class="msg error">{{ firstError('email') || '&nbsp;' }}</span>
       </div>
       <div class="field">
         <label for="ti-handle" class="field-label">profile.handle (nested string)</label>
-        <input id="ti-handle" v-model="form.handle" type="text" :class="{ invalid: firstError('profile.handle') }" />
+        <input
+          id="ti-handle"
+          v-model="form.handle"
+          type="text"
+          :class="{ invalid: firstError('profile.handle') }"
+        />
         <span class="msg error">{{ firstError('profile.handle') || '&nbsp;' }}</span>
       </div>
 

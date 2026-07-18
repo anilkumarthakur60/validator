@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { Validator } from '@/lib/core/Validator'
-import type { RulesSchema, ValidationData } from '@/lib/types'
+import { Validator } from '@anil-labs/validator'
+import type { RulesSchema, ValidationData } from '@anil-labs/validator'
 import CodeSnippet from './CodeSnippet.vue'
 import JsonView from './JsonView.vue'
 

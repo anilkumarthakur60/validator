@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
-import { validation } from '@/lib/fluent/builder'
-import type { FieldRuleFn } from '@/lib/types'
+import { validation } from '@anil-labs/validator'
+import type { FieldRuleFn } from '@anil-labs/validator'
 
 interface Demo {
   label: string

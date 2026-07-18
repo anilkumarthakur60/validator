@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { Validator } from '@/lib/core/Validator'
+import { Validator } from '@anil-labs/validator'
 import CodeSnippet from './CodeSnippet.vue'
 import JsonView from './JsonView.vue'
 

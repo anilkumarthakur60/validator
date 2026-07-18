@@ -1,5 +1,5 @@
 import { computed, ref, type ComputedRef, type Ref } from 'vue'
-import type { FieldRuleFn } from '@/lib/types'
+import type { FieldRuleFn } from '@anil-labs/validator'
 
 /**
  * Wraps a single reactive value and a fluent-builder rule function
