@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["vite/client"],
+    "jsx": "preserve",
+    "noEmit": true
+  },
+  "include": ["main.ts", "env.d.ts", "**/*.vue", "composables/**/*.ts"]
+}

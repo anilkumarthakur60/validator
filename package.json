@@ -1,93 +1,55 @@
 {
-  "name": "@anil-labs/validator",
-  "version": "0.1.0",
-  "description": "An expressive, strictly-typed validation library for TypeScript — framework-agnostic core plus a chainable Quasar/Vue rule builder.",
-  "keywords": [
-    "validation",
-    "validator",
-    "typescript",
-    "vue",
-    "quasar",
-    "form",
-    "rules",
-    "schema"
-  ],
-  "license": "MIT",
-  "homepage": "https://github.com/anilkumarthakur60/validator#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/anilkumarthakur60/validator.git"
-  },
-  "bugs": {
-    "url": "https://github.com/anilkumarthakur60/validator/issues"
-  },
+  "name": "validator-monorepo",
+  "private": true,
+  "version": "0.0.0",
   "type": "module",
-  "sideEffects": false,
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      },
-      "require": {
-        "types": "./dist/index.d.cts",
-        "default": "./dist/index.cjs"
-      }
-    },
-    "./package.json": "./package.json"
-  },
-  "files": [
-    "dist",
-    "README.md",
-    "LICENSE"
-  ],
+  "description": "Monorepo for @anil-labs/validator — an expressive, framework-agnostic, strictly-typed validation library for TypeScript.",
+  "packageManager": "pnpm@10.33.0",
   "engines": {
-    "node": ">=18"
-  },
-  "publishConfig": {
-    "access": "public"
+    "node": ">=20"
   },
   "scripts": {
-    "dev": "vite",
-    "build": "tsup",
-    "demo": "vite --config demo/vite.config.ts",
-    "demo:build": "vite build --config demo/vite.config.ts",
-    "demo:typecheck": "vue-tsc --noEmit -p demo/tsconfig.json",
-    "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs",
-    "typecheck": "tsc --noEmit",
+    "build": "pnpm --filter \"./packages/*\" -r run build",
+    "build:examples": "pnpm --filter \"example-*\" -r run build",
+    "build:demos": "node scripts/build-demos.mjs",
+    "typecheck": "pnpm -r run typecheck",
+    "test": "pnpm --filter \"./packages/*\" -r run test",
+    "test:coverage": "pnpm --filter @anil-labs/validator run test:coverage",
+    "check": "pnpm lint && pnpm format:check && pnpm typecheck && pnpm test",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test": "vitest run --config vitest.config.ts",
-    "test:watch": "vitest --config vitest.config.ts",
-    "coverage": "vitest run --coverage --config vitest.config.ts",
-    "check:exports": "publint && attw --pack .",
-    "prepublishOnly": "npm run lint && npm run typecheck && npm run test && npm run build && npm run check:exports"
+    "docs:dev": "pnpm --filter docs run dev",
+    "docs:build": "pnpm --filter docs run build",
+    "docs:preview": "pnpm --filter docs run preview",
+    "example:vanilla": "pnpm --filter example-vanilla run dev",
+    "example:vue": "pnpm --filter example-vue run dev",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "pnpm build && changeset publish",
+    "clean": "pnpm -r exec rm -rf dist node_modules/.cache .tsbuildinfo",
+    "prepare": "husky || true"
   },
   "devDependencies": {
-    "@arethetypeswrong/cli": "^0.18.3",
+    "@changesets/cli": "^2.27.11",
     "@eslint/js": "^10.0.1",
     "@types/node": "^25.9.1",
-    "@vitejs/plugin-vue": "^6.0.7",
-    "@vitest/coverage-v8": "^4.1.7",
-    "@vue/language-core": "^3.3.2",
     "eslint": "^10.4.1",
     "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.2.11",
     "prettier": "^3.8.3",
-    "publint": "^0.3.21",
-    "tsup": "^8.5.1",
     "typescript": "~6.0.2",
-    "typescript-eslint": "^8.60.0",
-    "vite": "^8.0.12",
-    "vitepress": "^1.6.4",
-    "vitest": "^4.1.7",
-    "vue": "^3.5.35",
-    "vue-tsc": "^3.3.2"
+    "typescript-eslint": "^8.60.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,vue}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,css,scss,html,yml,yaml}": [
+      "prettier --write"
+    ]
   }
 }

@@ -1,192 +1,129 @@
-# @anil-labs/validator
+# validator — @anil-labs/validator
 
-An **expressive**, strictly-typed validation library for TypeScript.
+[![CI](https://github.com/anilkumarthakur60/validator/actions/workflows/ci.yml/badge.svg)](https://github.com/anilkumarthakur60/validator/actions/workflows/ci.yml)
+[![npm](https://img.shields.io/npm/v/%40anil-labs%2Fvalidator.svg)](https://www.npmjs.com/package/@anil-labs/validator)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
-- 🧩 **Framework-agnostic core** — works in Node (Express, NestJS, Fastify), the browser, workers, and edge runtimes.
-- 🎯 **Comprehensive rule set** — 100+ built-in rules with human-friendly messages, dot/`*` wildcard nesting, `MessageBag`, `validated()`/`safe()`, conditional & cross-field rules.
-- 🪝 **Two APIs, one engine** — a full dataset `Validator.make(data, rules)` **and** a chainable single-field builder for Quasar/Vue `:rules`.
-- 🔒 **100% TypeScript, zero `any`** — compiled under the strictest settings, **100% test coverage**.
-- 🧠 **Type inference** — pass a rules literal and `validated()` returns a precisely-typed object (`InferRules`), no `as const` needed.
-- ⚡ **Async-ready** — pluggable resolvers for `exists`, `unique`, `current_password`, and `Password.uncompromised()`.
+An expressive, strictly-typed, **framework-agnostic** validation library for
+TypeScript — Laravel-style string rules (`required|email|max:255`, dot & `*`
+wildcard nesting) with two APIs sharing one engine:
 
-> 📖 **Full documentation:** run `npm run docs:dev` (VitePress) or see the [`docs/`](./docs) directory.
+- **`Validator.make(data, rules)`** — validate a whole dataset (server or client).
+- **`validation`** — a chainable single-field rule builder for Quasar/Vue `:rules`.
 
----
+Full guides live in the [docs site](https://anilkumarthakur60.github.io/validator/)
+and the [package README](./packages/validator/README.md).
 
 ## Install
 
 ```bash
-npm install @anil-labs/validator
+npm i @anil-labs/validator
 ```
 
-Ships ESM + CJS with bundled type declarations. Requires Node ≥ 18.
+### CDN / no build step
 
----
+The package ships an IIFE bundle exposing the `Validator` global:
+
+```html
+<script src="https://unpkg.com/@anil-labs/validator"></script>
+<script>
+  const { Validator, validation } = window.Validator;
+</script>
+```
 
 ## Quick start
 
-### Dataset validation
-
 ```ts
-import { Validator } from '@anil-labs/validator'
+import { Validator, validation } from '@anil-labs/validator';
 
-const validator = Validator.make(
-  {
-    title: 'Hello world',
-    author: { name: 'Ada' },
-    users: [{ email: 'a@b.com' }, { email: 'oops' }],
-  },
-  {
-    title: 'required|string|max:255',
-    'author.name': ['required'],
-    'users.*.email': 'required|email',
-  },
-)
+// 1. Dataset validation
+const v = Validator.make(
+  { email: 'not-an-email', users: [{ name: '' }] },
+  { email: 'required|email', 'users.*.name': 'required|string|max:255' },
+);
+v.fails(); // true
+v.errors().first('email'); // "The email field must be a valid email address."
 
-if (validator.fails()) {
-  validator.errors().first('users.1.email')
-  // "The users.1.email field must be a valid email address."
-  validator.errors().messages() // { "users.1.email": [...] }
-} else {
-  const data = validator.validated()
-}
+// 2. Fluent single-field builder (Quasar/Vue :rules)
+const rule = validation.required().email().maxLength(255).toRule();
+rule('a@b.com'); // true
+rule('nope'); // "The value field must be a valid email address."
 ```
 
-### Type inference
+## What's in this repo
 
-Pass the rules as a literal and `validated()` is fully typed — no `as const`, no
-separate interface:
+| Directory            | Package                | What it is                                                       |
+| -------------------- | ---------------------- | ----------------------------------------------------------------- |
+| `packages/validator` | `@anil-labs/validator` | The library — ESM + CJS + IIFE CDN builds, bundled types.         |
+| `examples/vanilla`   | `example-vanilla`      | Plain HTML + Vite example using the library directly (private).   |
+| `examples/vue`       | `example-vue`          | Vue 3 + Vite showcase — forms, playground, async rules (private). |
+| `docs`               | `docs`                 | VitePress docs site — guides, rules reference, API (private).     |
 
-```ts
-const data = Validator.make(
-  { title: 'Hi', count: 5, author: { name: 'Ada' }, users: [{ email: 'a@b.com' }] },
-  {
-    title: 'required|string',
-    count: 'required|integer',
-    'author.name': 'required|string',
-    'users.*.email': 'required|email',
-    note: 'nullable|string',
-  },
-).validate()
+## Local development
 
-// data: {
-//   title: string; count: number; author: { name: string };
-//   users: { email: string }[]; note?: string | null
-// }
-data.users[0]?.email // ✅ typed
+Prerequisites: **Node ≥ 20** and **pnpm 10** (`corepack enable`).
+
+```bash
+git clone https://github.com/anilkumarthakur60/validator.git
+cd validator
+pnpm install --frozen-lockfile
+
+pnpm example:vanilla   # run the vanilla example
+pnpm example:vue       # run the Vue example
+pnpm docs:dev          # run the docs site
+
+pnpm build             # build the library (packages/validator/dist)
+pnpm check             # lint + format:check + typecheck + test in one go
+pnpm test:coverage     # vitest coverage run
 ```
 
-Use `InferRules<typeof rules>` to derive the type without running validation. The
-engine validates but doesn't coerce, so inferred types reflect each rule's
-intended type — see the [Type inference guide](./docs/guide/type-inference.md).
+## Project structure
 
-### Fluent builder (Quasar / Vue `:rules`)
-
-```vue
-<script setup lang="ts">
-import { validation } from '@anil-labs/validator'
-</script>
-
-<template>
-  <q-input v-model="email" :rules="[validation.required().email().toRule()]" />
-  <!-- .toRule() is optional — a chain is directly callable -->
-  <q-input v-model="age" :rules="[validation.required().integer().between(1, 120)]" />
-</template>
+```
+validator/
+├── packages/validator/          # @anil-labs/validator (the only published package)
+│   ├── src/
+│   │   ├── core/                #  Validator, MessageBag, ValidatedInput, parser, registry
+│   │   ├── fluent/              #  validation.* chainable builder
+│   │   ├── ruleObjects/         #  Rule.*, Password, FileRule, StringRule, DateRule, …
+│   │   └── rules/               #  built-in rule implementations
+│   └── tests/                   #  vitest suite
+├── examples/                    # runnable demos (private)
+│   ├── vanilla/                 #  plain HTML + Vite
+│   └── vue/                     #  Vue 3 + Vite
+├── docs/                        # VitePress site
+├── scripts/build-demos.mjs      # assembles examples → dist-demos/
+├── vercel.json                  # single Vercel project → build:demos → dist-demos
+├── .github/workflows/           # CI + Docs (Pages) + Release
+├── pnpm-workspace.yaml
+└── package.json
 ```
 
-### Rule objects
+## Deployment
 
-```ts
-import { Validator, Rule, Password, FileRule } from '@anil-labs/validator'
+Three independent targets; the only repo secret anywhere is `NPM_TOKEN`:
 
-Validator.make(data, {
-  role: [Rule.in(['admin', 'editor'])],
-  status: [Rule.enum(ServerStatus)],
-  username: ['required', Rule.anyOf([['email'], ['alpha_dash', 'min:6']])],
-  email: [Rule.email().rfcCompliant().preventSpoofing()],
-  title: [Rule.string().min(3).max(255)],
-  starts_at: [Rule.date().afterToday()],
-  password: ['required', 'confirmed', Password.min(8).mixedCase().numbers().symbols()],
-  avatar: [FileRule.image().max('2mb').dimensions(Rule.dimensions().maxWidth(1000))],
-})
-```
+- **Demos → Vercel (one project).** `pnpm build:demos` assembles the examples
+  into a static site under `dist-demos/`; the root `vercel.json` points a single
+  Vercel project at it. Vercel's native Git integration auto-deploys `main` and
+  posts preview URLs on PRs — no tokens or GitHub secrets.
+- **Docs → GitHub Pages.** `.github/workflows/docs.yml` builds the VitePress
+  site with `DOCS_BASE=/validator/` and deploys it on any push to `main`
+  touching `docs/**`. Enable once under Settings → Pages → Source: GitHub Actions.
+- **Releases → npm.** `.github/workflows/release.yml` runs
+  [Changesets](https://github.com/changesets/changesets): it opens/updates a
+  version PR, and publishes with provenance when it merges (needs `NPM_TOKEN`).
 
-### Async rules (backend / network)
+## Publishing to npm
 
-```ts
-const v = Validator.make(body, { email: 'required|email|unique:users' }).withResolvers({
-  unique: async (q) => (await db.count(q.table, { [q.column]: q.value })) === 0,
-})
+1. Land your change with a changeset: `pnpm changeset` (pick the bump, write the
+   summary). On `main`, the release workflow opens/updates a
+   **"chore: version packages"** PR.
+2. Merge that PR → the workflow builds and publishes `@anil-labs/validator` to
+   npm with provenance attestation.
 
-if (await v.failsAsync()) {
-  // 422 { errors: v.errors().messages() }
-}
-```
-
----
-
-## Using it on a Node backend
-
-The engine is pure TypeScript with no DOM coupling. Example Express handler:
-
-```ts
-import { Validator } from '@anil-labs/validator'
-
-app.post('/users', async (req, res) => {
-  const v = Validator.make(req.body, {
-    name: 'required|string|max:255',
-    email: 'required|email|unique:users',
-    password: 'required|min:8|confirmed',
-  }).withResolvers({
-    unique: async (q) => (await db.count(q.table, { [q.column]: q.value })) === 0,
-  })
-
-  if (await v.failsAsync()) return res.status(422).json({ errors: v.errors().messages() })
-  return res.status(201).json(await db.create(v.validated()))
-})
-```
-
-> Server notes: `dimensions` needs a browser image decoder, so it passes on Node (use `sharp` in a custom rule for real checks). File rules need the global `File` (Node ≥ 20).
-
----
-
-## Custom rules
-
-```ts
-// 1. Inline closure
-validation.required().custom((v) => String(v).startsWith('HC-') || 'Must start with HC-')
-
-// 2. Rule object
-import type { ValidationRuleObject } from '@anil-labs/validator'
-class Uppercase implements ValidationRuleObject {
-  validate(attribute: string, value: unknown, fail: (m: string) => void) {
-    if (String(value) !== String(value).toUpperCase()) fail('The :attribute must be uppercase.')
-  }
-}
-
-// 3. Global named rule
-import { registerRule, defaultMessages } from '@anil-labs/validator'
-registerRule('slug', { validate: (ctx) => /^[a-z0-9-]+$/.test(String(ctx.value)) })
-defaultMessages.slug = 'The :attribute must be a valid slug.'
-
-// 4. Quasar builder rule
-validation.extend('nepaliPhone', (v) => /^(\+977)?9[78]\d{8}$/.test(String(v)) || 'Invalid phone.')
-validation.required().rule('nepaliPhone')
-```
-
----
-
-## Scripts
-
-| Script | Purpose |
-| --- | --- |
-| `npm run build` | Build the publishable library (`dist/`) |
-| `npm test` / `npm run coverage` | Run the Vitest suite (100% coverage gate) |
-| `npm run lint` / `npm run typecheck` | Strict, type-aware lint + typecheck |
-| `npm run docs:dev` | VitePress documentation site |
-| `npm run demo` | Interactive demo app |
-| `npm run check:exports` | `publint` + `attw` package validation |
+Manual escape hatch: `pnpm version-packages` then `pnpm release`.
 
 ## License
 
-[MIT](./LICENSE)
+MIT.
