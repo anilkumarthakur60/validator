@@ -29,6 +29,14 @@ const warnOnce = (rule: string): void => {
 
 const lastSegment = (attribute: string): string => attribute.slice(attribute.lastIndexOf('.') + 1)
 
+/** Shared by `in`/`not_in`, so `not_in` is the exact negation of `in`. */
+const passesIn = ({ value, parameters, attribute, validator }: RuleContext): boolean => {
+  if (Array.isArray(value) && validator.hasRule(attribute, 'array')) {
+    return value.every((item) => !Array.isArray(item) && parameters.includes(String(item)))
+  }
+  return !Array.isArray(value) && parameters.includes(String(value))
+}
+
 const buildQuery = (ctx: RuleContext): DatabaseQuery => {
   const table = ctx.parameters[0] ?? ''
   const columnParam = ctx.parameters[1]
@@ -60,17 +68,11 @@ export const utilityRules: RuleModule = {
   },
 
   in: {
-    validate: ({ value, parameters, attribute, validator }) => {
-      if (Array.isArray(value) && validator.hasRule(attribute, 'array')) {
-        return value.every((item) => !Array.isArray(item) && parameters.includes(String(item)))
-      }
-      return !Array.isArray(value) && parameters.includes(String(value))
-    },
+    validate: passesIn,
   },
 
   not_in: {
-    validate: ({ value, parameters }) =>
-      !Array.isArray(value) && !parameters.includes(String(value)),
+    validate: (ctx) => !passesIn(ctx),
   },
 
   json: { validate: ({ value }) => isString(value) && isValidJson(value) },

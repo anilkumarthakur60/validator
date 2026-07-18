@@ -68,11 +68,40 @@ const inRange = (raw: string | undefined, min: number, max: number): boolean => 
   return num >= min && num <= max
 }
 
+const escapeLiteral = (char: string): string => char.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+/** The parsed year; two-digit years use PHP's 00–69 → 2000s mapping. */
+const resolveYear = (groups: Record<string, string | undefined>): number => {
+  const full = groups['Y']
+  if (full !== undefined) return Number(full)
+  const short = groups['y']
+  if (short === undefined) return 2000 // no year in the format: a leap year keeps 02-29 valid
+  return Number(short) + (Number(short) < 70 ? 2000 : 1900)
+}
+
+/** Reject structurally-valid but impossible dates (e.g. `2021-02-31`). */
+const isRealCalendarDate = (groups: Record<string, string | undefined>): boolean => {
+  const month = groups['m']
+  const day = groups['d']
+  if (month === undefined || day === undefined) return true
+  const date = new Date(2000, Number(month) - 1, Number(day))
+  date.setFullYear(resolveYear(groups))
+  return date.getMonth() === Number(month) - 1 && date.getDate() === Number(day)
+}
+
 const matchesFormat = (value: string, format: string): boolean => {
   let pattern = ''
+  let escaped = false
   for (const char of format) {
-    if (char === '\\') continue
-    pattern += FORMAT_TOKENS[char] ?? char.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    if (escaped) {
+      // A `\`-escaped format character is a literal, never a token.
+      pattern += escapeLiteral(char)
+      escaped = false
+    } else if (char === '\\') {
+      escaped = true
+    } else {
+      pattern += FORMAT_TOKENS[char] ?? escapeLiteral(char)
+    }
   }
   const match = new RegExp(`^${pattern}$`).exec(value)
   if (match === null) return false
@@ -83,7 +112,8 @@ const matchesFormat = (value: string, format: string): boolean => {
     inRange(groups['H'], 0, 23) &&
     inRange(groups['h'], 1, 12) &&
     inRange(groups['i'], 0, 59) &&
-    inRange(groups['s'], 0, 59)
+    inRange(groups['s'], 0, 59) &&
+    isRealCalendarDate(groups)
   )
 }
 

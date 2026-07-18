@@ -16,6 +16,7 @@ import {
   fieldListReplacer,
   isAcceptedValue,
   isDeclinedValue,
+  literalValuesReplacer,
   looseEquals,
   otherFieldReplacer,
   otherValue,
@@ -126,7 +127,9 @@ export const presenceRules: RuleModule = {
 
   required_array_keys: {
     implicit: true,
-    replace: fieldListReplacer,
+    // The parameters are literal array keys, not field references, so they
+    // must not go through the display-attribute transform.
+    replace: literalValuesReplacer,
     validate: ({ value, parameters }) => {
       if (typeof value !== 'object' || value === null || Array.isArray(value)) return false
       const keys = Object.keys(value)

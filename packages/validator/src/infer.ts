@@ -50,50 +50,46 @@ type Has<D, Name extends string> = Name extends Tokens<D> ? true : false
 
 /* ── leaf type from a field's rules ───────────────────────── */
 
-type BaseType<D> = Has<D, 'array'> extends true
-  ? unknown[]
-  : Has<D, 'boolean'> extends true
-    ? boolean
-    : Has<D, 'accepted'> extends true
+type BaseType<D> =
+  Has<D, 'array'> extends true
+    ? unknown[]
+    : Has<D, 'boolean'> extends true
       ? boolean
-      : Has<D, 'declined'> extends true
+      : Has<D, 'accepted'> extends true
         ? boolean
-        : Has<D, 'integer'> extends true
-          ? number
-          : Has<D, 'numeric'> extends true
+        : Has<D, 'declined'> extends true
+          ? boolean
+          : Has<D, 'integer'> extends true
             ? number
-            : Has<D, 'decimal'> extends true
+            : Has<D, 'numeric'> extends true
               ? number
-              : Has<D, 'string'> extends true
-                ? string
-                : Has<D, 'email'> extends true
+              : Has<D, 'decimal'> extends true
+                ? number
+                : Has<D, 'string'> extends true
                   ? string
-                  : Has<D, 'url'> extends true
+                  : Has<D, 'email'> extends true
                     ? string
-                    : Has<D, 'uuid'> extends true
+                    : Has<D, 'url'> extends true
                       ? string
-                      : Has<D, 'date'> extends true
+                      : Has<D, 'uuid'> extends true
                         ? string
-                        : Has<D, 'ip'> extends true
+                        : Has<D, 'date'> extends true
                           ? string
-                          : unknown
+                          : Has<D, 'ip'> extends true
+                            ? string
+                            : unknown
 
 /** The leaf TS type for a field, accounting for `nullable`. */
 type Leaf<D> = Has<D, 'nullable'> extends true ? BaseType<D> | null : BaseType<D>
 
 /** Whether the field is optional (no `required`/`present` rule). */
-type IsOptional<D> = Has<D, 'required'> extends true
-  ? false
-  : Has<D, 'present'> extends true
-    ? false
-    : true
+type IsOptional<D> =
+  Has<D, 'required'> extends true ? false : Has<D, 'present'> extends true ? false : true
 
 /* ── path expansion (dots + wildcards) ────────────────────── */
 
 /** Split a dotted key path into a tuple of segments. */
-type SplitPath<S extends string> = S extends `${infer H}.${infer T}`
-  ? [H, ...SplitPath<T>]
-  : [S]
+type SplitPath<S extends string> = S extends `${infer H}.${infer T}` ? [H, ...SplitPath<T>] : [S]
 
 /** Build a nested type from a segment list; `*` segments become arrays. */
 type FromSegments<Segs extends readonly string[], L, Opt extends boolean> = Segs extends [

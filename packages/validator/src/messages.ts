@@ -182,13 +182,15 @@ export const formatMessage = (
   let result = template
   for (const [key, raw] of Object.entries(replacements)) {
     const value = String(raw)
+    // Function-form replacements insert the value literally, so replacement
+    // patterns in user data (`$&`, `$'`, `$1`, …) never corrupt the message.
     result = result
-      .replace(new RegExp(`:${key.toUpperCase()}\\b`, 'g'), value.toUpperCase())
+      .replace(new RegExp(`:${key.toUpperCase()}\\b`, 'g'), () => value.toUpperCase())
       .replace(
         new RegExp(`:${capitalize(key)}\\b`, 'g'),
-        value.charAt(0).toUpperCase() + value.slice(1),
+        () => value.charAt(0).toUpperCase() + value.slice(1),
       )
-      .replace(new RegExp(`:${key}\\b`, 'g'), value)
+      .replace(new RegExp(`:${key}\\b`, 'g'), () => value)
   }
   return result
 }

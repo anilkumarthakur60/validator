@@ -125,7 +125,7 @@ describe(':input placeholder', () => {
   it('is replaced with the current value', () => {
     const v = Validator.make(
       { age: 200 },
-      { age: 'max:100' },
+      { age: 'numeric|max:100' },
       { 'age.max': 'The :attribute value :input is too large.' },
     )
     v.passes()

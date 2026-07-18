@@ -264,8 +264,9 @@ export class Validator<TValidated extends ValidationData = ValidationData> {
       if (names.has('array')) return 'array'
       for (const name of names) if (FILE_RULES.has(name)) return 'file'
     }
+    // Laravel parity: a raw number is only sized numerically when the field
+    // has a numeric-type rule; otherwise it falls through to string sizing.
     const value = dotGet(this.data, attribute)
-    if (typeof value === 'number') return 'numeric'
     if (Array.isArray(value)) return 'array'
     if (isFile(value)) return 'file'
     return 'string'

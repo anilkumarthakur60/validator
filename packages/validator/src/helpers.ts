@@ -3,11 +3,11 @@
  * Every function narrows `unknown` — callers never pass `any`.
  */
 
-/** A value treated as "empty" for presence rules. */
+/** A value treated as "empty" for presence rules (strings are trimmed, as in Laravel). */
 export const isEmpty = (value: unknown): boolean =>
   value === null ||
   value === undefined ||
-  value === '' ||
+  (typeof value === 'string' && value.trim() === '') ||
   (Array.isArray(value) && value.length === 0) ||
   (isFile(value) && value.name === '') ||
   (isCountableObject(value) && Object.keys(value).length === 0)
@@ -129,7 +129,10 @@ export const isValidMacAddress = (value: string): boolean =>
 
 export const isValidUuid = (value: string, version?: number): boolean => {
   const generic = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
-  if (!generic.test(value)) return value.toLowerCase() === '00000000-0000-0000-0000-000000000000'
+  if (!generic.test(value)) {
+    // The nil UUID carries no version, so it only satisfies a version-less check.
+    return version === undefined && value.toLowerCase() === '00000000-0000-0000-0000-000000000000'
+  }
   if (version === undefined) return true
   return value.charAt(14) === String(version)
 }
@@ -192,14 +195,16 @@ export const stringifyValue = (value: unknown): string => {
 
 /**
  * The "size" of a value:
- *  - string → character length
- *  - numeric → numeric value
+ *  - number → numeric value in a numeric context, else string-length (Laravel's `strlen`)
+ *  - boolean → Laravel's `strlen((string)$value)`: `true` → 1, `false` → 0
+ *  - string → character length (numeric strings → numeric value in a numeric context)
  *  - array → element count
  *  - countable object → key count
  *  - File → size in kilobytes
  */
 export const sizeOf = (value: unknown, isNumericContext = false): number => {
-  if (typeof value === 'number') return value
+  if (typeof value === 'number') return isNumericContext ? value : String(value).length
+  if (typeof value === 'boolean') return value ? 1 : 0
   if (typeof value === 'string') {
     return isNumericContext && isNumeric(value) ? Number(value) : Array.from(value).length
   }
@@ -209,11 +214,17 @@ export const sizeOf = (value: unknown, isNumericContext = false): number => {
   return 0
 }
 
-/** Count of decimal places in a numeric value's string form. */
+/** Count of decimal places in a numeric value, expanding scientific notation. */
 export const decimalPlaces = (value: unknown): number => {
   const str = String(value)
-  const dot = str.indexOf('.')
-  return dot === -1 ? 0 : str.length - dot - 1
+  const parts = /^[+-]?\d*(?:\.(\d*))?(?:[eE]([+-]?\d+))?$/.exec(str)
+  if (parts === null) {
+    const dot = str.indexOf('.')
+    return dot === -1 ? 0 : str.length - dot - 1
+  }
+  const fraction = parts[1] ?? ''
+  const exponent = Number(parts[2] ?? '0')
+  return Math.max(0, fraction.length - exponent)
 }
 
 /** Number of digits in an integer value (ignoring sign). */

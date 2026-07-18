@@ -6,6 +6,8 @@ describe('helpers — type predicates', () => {
     expect(h.isEmpty(null)).toBe(true)
     expect(h.isEmpty(undefined)).toBe(true)
     expect(h.isEmpty('')).toBe(true)
+    expect(h.isEmpty('   ')).toBe(true) // whitespace-only counts as empty (Laravel trims)
+    expect(h.isEmpty('\t\n')).toBe(true)
     expect(h.isEmpty([])).toBe(true)
     expect(h.isEmpty({})).toBe(true)
     expect(h.isEmpty(new File([], ''))).toBe(true)
@@ -104,6 +106,7 @@ describe('helpers — string formats', () => {
     expect(h.isValidUuid('9c858901-8a57-4791-81fe-4c455b099bc9', 4)).toBe(true)
     expect(h.isValidUuid('9c858901-8a57-4791-81fe-4c455b099bc9', 3)).toBe(false)
     expect(h.isValidUuid('00000000-0000-0000-0000-000000000000')).toBe(true)
+    expect(h.isValidUuid('00000000-0000-0000-0000-000000000000', 4)).toBe(false) // nil has no version
     expect(h.isValidUuid('nope')).toBe(false)
     expect(h.isValidUlid('01ARZ3NDEKTSV4RRFFQ69G5FAV')).toBe(true)
     expect(h.isValidUlid('short')).toBe(false)
@@ -135,19 +138,30 @@ describe('helpers — dates, sizes, numbers, stringify', () => {
   })
 
   it('sizeOf', () => {
-    expect(h.sizeOf(5)).toBe(5)
+    expect(h.sizeOf(5, true)).toBe(5)
+    expect(h.sizeOf(5)).toBe(1) // no numeric context → string length, as in Laravel
+    expect(h.sizeOf(1000000)).toBe(7)
     expect(h.sizeOf('12', true)).toBe(12)
     expect(h.sizeOf('café')).toBe(4)
+    expect(h.sizeOf('   ')).toBe(3) // sizing never trims
     expect(h.sizeOf([1, 2, 3])).toBe(3)
     expect(h.sizeOf({ a: 1, b: 2 })).toBe(2)
     expect(h.sizeOf(new File(['12345'], 'a'))).toBeCloseTo(5 / 1024)
-    expect(h.sizeOf(true)).toBe(0)
+    expect(h.sizeOf(true)).toBe(1) // PHP strlen((string)true) === 1
+    expect(h.sizeOf(false)).toBe(0) // PHP strlen((string)false) === 0
     expect(h.sizeOf('12', false)).toBe(2)
+    expect(h.sizeOf(null)).toBe(0)
   })
 
   it('decimalPlaces / digitCount / fileExtension', () => {
     expect(h.decimalPlaces('9.99')).toBe(2)
     expect(h.decimalPlaces(9)).toBe(0)
+    expect(h.decimalPlaces(1e-7)).toBe(7) // scientific notation is expanded
+    expect(h.decimalPlaces(1.5e-3)).toBe(4)
+    expect(h.decimalPlaces(1e21)).toBe(0)
+    expect(h.decimalPlaces('1.5e3')).toBe(0)
+    expect(h.decimalPlaces(' 1.25')).toBe(2) // non-canonical form → positional fallback
+    expect(h.decimalPlaces('0x1A')).toBe(0)
     expect(h.digitCount(-123)).toBe(3)
     expect(h.fileExtension(new File([], 'photo.PNG'))).toBe('png')
     expect(h.fileExtension(new File([], 'noext'))).toBe('')

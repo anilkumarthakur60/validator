@@ -5,7 +5,9 @@ import type { DataAwareRule, ValidationRuleObject, ValidatorAwareRule } from '@/
 
 describe('Validator — size type resolution (value-based)', () => {
   it('picks the message wording from the value type when no type rule is present', () => {
-    const numeric = Validator.make({ f: 5 }, { f: 'max:3' })
+    // A bare number is sized as a string (Laravel parity): only a numeric-type
+    // rule switches the field to numeric sizing and wording.
+    const numeric = Validator.make({ f: 5 }, { f: 'numeric|max:3' })
     numeric.passes()
     expect(numeric.errors().first('f')).toBe('The f field must not be greater than 3.')
 

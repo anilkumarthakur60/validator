@@ -5,6 +5,7 @@
 
 import type { ClosureRule, FieldRuleDefinition, RuleEntry, ValidationRuleObject } from '@/types'
 import { type ForEachLike, isForEach } from '@/ruleObjects/markers'
+import { hasBuiltinRule } from '@/core/registry'
 
 /** A parsed built-in rule, e.g. `{ name: 'max', parameters: ['255'] }`. */
 export interface ParsedBuiltinRule {
@@ -30,10 +31,7 @@ export interface ParsedForEachRule {
 }
 
 export type ParsedRule =
-  | ParsedBuiltinRule
-  | ParsedObjectRule
-  | ParsedClosureRule
-  | ParsedForEachRule
+  ParsedBuiltinRule | ParsedObjectRule | ParsedClosureRule | ParsedForEachRule
 
 /** Rules whose parameters must not be comma-split (they may contain commas). */
 const UNSPLIT_PARAMETER_RULES = new Set(['regex', 'not_regex'])
@@ -79,11 +77,61 @@ const isRuleObject = (entry: unknown): entry is ValidationRuleObject =>
   'validate' in entry &&
   typeof entry.validate === 'function'
 
+/** The normalized rule name of a segment (`'max:3'` → `'max'`). */
+const ruleNameOf = (segment: string): string => {
+  const colon = segment.indexOf(':')
+  return normalizeRuleName(colon === -1 ? segment : segment.slice(0, colon))
+}
+
+const isRegexSegment = (segment: string): boolean =>
+  segment.includes(':') && UNSPLIT_PARAMETER_RULES.has(ruleNameOf(segment))
+
+/** Whether a `/.../flags`-delimited pattern is still missing its closing `/`. */
+const isUnclosedPattern = (segment: string): boolean => {
+  const pattern = segment.slice(segment.indexOf(':') + 1)
+  if (!pattern.startsWith('/')) return false
+  return !/^\/(?:[^\\/]|\\.)*\/[a-z]*$/.test(pattern)
+}
+
+/** Whether a pipe-split segment belongs to the preceding regex segment's pattern. */
+const absorbsSegment = (previous: string, segment: string): boolean => {
+  if (isUnclosedPattern(previous)) return true
+  const pattern = previous.slice(previous.indexOf(':') + 1)
+  // Undelimited pattern: absorb anything that doesn't name a known rule.
+  return !pattern.startsWith('/') && !hasBuiltinRule(ruleNameOf(segment))
+}
+
+/**
+ * Re-join pipe-split segments that belong to a preceding `regex:`/`not_regex:`
+ * pattern, so `'regex:/^a|b$/'` keeps its `|` intact. A `/.../`-delimited
+ * pattern absorbs segments while its closing `/` is missing; an undelimited
+ * pattern absorbs segments that don't name a known rule. A pattern left
+ * unclosed after merging is a hard error (array syntax sidesteps the split).
+ */
+const mergeRegexSegments = (segments: readonly string[]): string[] => {
+  const merged: string[] = []
+  for (const segment of segments) {
+    const previous = merged.length > 0 ? merged[merged.length - 1] : undefined
+    if (previous !== undefined && isRegexSegment(previous) && absorbsSegment(previous, segment)) {
+      merged[merged.length - 1] = `${previous}|${segment}`
+    } else {
+      merged.push(segment)
+    }
+  }
+  const unclosed = merged.find((segment) => isRegexSegment(segment) && isUnclosedPattern(segment))
+  if (unclosed !== undefined) {
+    throw new Error(
+      `[validation] Could not parse "${unclosed}" from a pipe-delimited rule string. ` +
+        `Use array syntax for regex patterns containing "|", e.g. ['regex:/^a|b$/'].`,
+    )
+  }
+  return merged
+}
+
 /** Parse a single field's rule definition into a flat list of parsed rules. */
 export const parseFieldRules = (definition: FieldRuleDefinition): ParsedRule[] => {
   if (typeof definition === 'string') {
-    return definition
-      .split('|')
+    return mergeRegexSegments(definition.split('|'))
       .filter((part) => part.length > 0)
       .map(parseRuleString)
   }

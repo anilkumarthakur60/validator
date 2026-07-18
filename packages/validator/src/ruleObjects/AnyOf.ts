@@ -3,12 +3,7 @@
  * provided rulesets. Each ruleset is validated with an isolated sub-validator.
  */
 
-import type {
-  FailFn,
-  FieldRuleDefinition,
-  ValidationRuleObject,
-  ValidatorAwareRule,
-} from '@/types'
+import type { FailFn, FieldRuleDefinition, ValidationRuleObject, ValidatorAwareRule } from '@/types'
 import { Validator } from '@/core/Validator'
 
 export class AnyOf implements ValidationRuleObject, ValidatorAwareRule {

@@ -71,12 +71,7 @@ describe('InferRules — typed validated() output', () => {
   })
 
   it('safe().all() is typed too', () => {
-    const all = Validator.make(
-      { code: 'AB12' },
-      { code: 'required|string' },
-    )
-      .safe()
-      .all()
+    const all = Validator.make({ code: 'AB12' }, { code: 'required|string' }).safe().all()
     const code: string = all.code
     expect(code).toBe('AB12')
   })

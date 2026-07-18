@@ -6,9 +6,9 @@
 import type { ValidationData } from '@/types'
 import { dotGet, dotHas, dotSet } from '@/core/data'
 
-export class ValidatedInput<T extends ValidationData = ValidationData>
-  implements Iterable<[string, unknown]>
-{
+export class ValidatedInput<T extends ValidationData = ValidationData> implements Iterable<
+  [string, unknown]
+> {
   private readonly input: T
 
   constructor(input: T) {
