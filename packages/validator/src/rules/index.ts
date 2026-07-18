@@ -1,0 +1,10 @@
+/** Raw built-in rule modules, exposed for advanced/custom usage. */
+export { presenceRules } from '@/rules/presence'
+export { stringRules } from '@/rules/string'
+export { numberRules } from '@/rules/number'
+export { sizeRules } from '@/rules/size'
+export { dateRules } from '@/rules/date'
+export { booleanRules } from '@/rules/boolean'
+export { arrayRules } from '@/rules/array'
+export { fileRules } from '@/rules/file'
+export { utilityRules } from '@/rules/utility'

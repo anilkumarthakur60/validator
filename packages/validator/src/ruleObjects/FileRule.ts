@@ -1,0 +1,132 @@
+/**
+ * Fluent file rule object.
+ *
+ *   FileRule.types(['mp3', 'wav']).min('1kb').max('10mb')
+ *   FileRule.image().max(2048).dimensions(Rule.dimensions().maxWidth(1000))
+ *
+ * Composes built-in file checks and reports each failure with its native
+ * message.
+ */
+
+import { isFile } from '@/helpers'
+import type { FailFn, RuleContext, ValidationRuleObject, ValidatorAwareRule } from '@/types'
+import type { Validator } from '@/core/Validator'
+import { requireBuiltinRule } from '@/core/registry'
+import { type Dimensions } from '@/ruleObjects/Dimensions'
+
+interface BuiltinCheck {
+  readonly name: string
+  readonly parameters: readonly string[]
+}
+
+/** Convert a size (number of kb, or `"10mb"`) into kilobytes. */
+const toKilobytes = (size: number | string): number => {
+  if (typeof size === 'number') return size
+  const match = /^(\d+(?:\.\d+)?)\s*(kb|mb|gb|tb)?$/i.exec(size.trim())
+  if (!match) return Number(size)
+  const amount = Number(match[1])
+  const unit = (match[2] ?? 'kb').toLowerCase()
+  const multiplier =
+    unit === 'tb' ? 1_073_741_824 : unit === 'gb' ? 1_048_576 : unit === 'mb' ? 1024 : 1
+  return amount * multiplier
+}
+
+export class FileRule implements ValidationRuleObject, ValidatorAwareRule {
+  private readonly checks: BuiltinCheck[] = []
+  private dimensionsRule: Dimensions | null = null
+  private isImage = false
+  private allowSvg = false
+  private validator: Validator | null = null
+
+  static types(extensions: readonly string[]): FileRule {
+    const rule = new FileRule()
+    rule.checks.push({ name: 'mimes', parameters: [...extensions] })
+    return rule
+  }
+
+  static image(options: { allowSvg?: boolean } = {}): FileRule {
+    const rule = new FileRule()
+    rule.isImage = true
+    rule.allowSvg = options.allowSvg ?? false
+    return rule
+  }
+
+  static default(): FileRule {
+    return new FileRule()
+  }
+
+  setValidator(validator: Validator): void {
+    this.validator = validator
+  }
+
+  extensions(extensions: readonly string[]): this {
+    this.checks.push({ name: 'extensions', parameters: [...extensions] })
+    return this
+  }
+
+  min(size: number | string): this {
+    this.checks.push({ name: 'min', parameters: [String(toKilobytes(size))] })
+    return this
+  }
+
+  max(size: number | string): this {
+    this.checks.push({ name: 'max', parameters: [String(toKilobytes(size))] })
+    return this
+  }
+
+  size(size: number | string): this {
+    this.checks.push({ name: 'size', parameters: [String(toKilobytes(size))] })
+    return this
+  }
+
+  encoding(encoding: string): this {
+    this.checks.push({ name: 'encoding', parameters: [encoding] })
+    return this
+  }
+
+  dimensions(rule: Dimensions): this {
+    this.dimensionsRule = rule
+    return this
+  }
+
+  async validate(attribute: string, value: unknown, fail: FailFn): Promise<void> {
+    const validator = this.validator
+    if (validator === null) return
+    if (!isFile(value)) {
+      fail('The :attribute field must be a file.')
+      return
+    }
+    if (this.isImage) {
+      const imageCtx = this.context(validator, attribute, value, this.allowSvg ? ['allow_svg'] : [])
+      if (!(await requireBuiltinRule('image').validate(imageCtx))) {
+        fail('The :attribute field must be an image.')
+      }
+    }
+    for (const check of this.checks) {
+      const passed = await requireBuiltinRule(check.name).validate(
+        this.context(validator, attribute, value, check.parameters),
+      )
+      if (!passed) fail(validator.buildBuiltinMessage(attribute, check.name, check.parameters))
+    }
+    if (this.dimensionsRule) {
+      this.dimensionsRule.setValidator(validator)
+      await this.dimensionsRule.validate(attribute, value, fail)
+    }
+  }
+
+  private context(
+    validator: Validator,
+    attribute: string,
+    value: unknown,
+    parameters: readonly string[],
+  ): RuleContext {
+    return {
+      attribute,
+      attributePattern: attribute,
+      value,
+      parameters,
+      data: validator.getData(),
+      validator,
+    }
+  }
+}

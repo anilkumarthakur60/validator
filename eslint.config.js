@@ -13,9 +13,10 @@ import prettier from 'eslint-config-prettier'
 export default tseslint.config(
   {
     ignores: [
-      'dist/**',
-      'node_modules/**',
-      'coverage/**',
+      '**/dist/**',
+      'dist-demos/**',
+      '**/node_modules/**',
+      '**/coverage/**',
       'docs/.vitepress/cache/**',
       'docs/.vitepress/dist/**',
     ],
@@ -70,9 +71,9 @@ export default tseslint.config(
     },
   },
 
-  // ── Demo app: a generic DOM query helper is idiomatic here ──
+  // ── Example apps: a generic DOM query helper is idiomatic here ──
   {
-    files: ['demo/**/*.ts'],
+    files: ['examples/**/*.ts'],
     rules: {
       '@typescript-eslint/no-unnecessary-type-parameters': 'off',
     },
