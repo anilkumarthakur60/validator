@@ -40,3 +40,6 @@ lerna-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+# Vercel project link metadata (created by `vercel` CLI)
+.vercel
