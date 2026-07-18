@@ -149,6 +149,7 @@ export default defineConfig({
           text: 'Core concepts',
           items: [
             { text: 'Dataset validation', link: '/guide/dataset-validation' },
+            { text: 'Type inference', link: '/guide/type-inference' },
             { text: 'Error messages', link: '/guide/error-messages' },
             { text: 'Working with validated input', link: '/guide/validated-input' },
             { text: 'Conditional rules', link: '/guide/conditional-rules' },

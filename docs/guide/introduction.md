@@ -18,6 +18,9 @@ error messages, dot/`*` wildcard nesting, and conditional and cross-field rules.
   behave identically.
 - **Safe.** 100% TypeScript with **no `any`**, compiled under the strictest
   settings, linted with type-aware rules, and covered by a **100%** test suite.
+- **Inferred.** Pass a rules literal and `validated()` returns a precisely-typed
+  object — no `as const`, no separate interface. See
+  [Type inference](/guide/type-inference).
 
 ## The two APIs
 

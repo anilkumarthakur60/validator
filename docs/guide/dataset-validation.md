@@ -16,6 +16,11 @@ const validator = Validator.make(data, rules, customMessages, customAttributes)
 | `messages` | `Record<string, string>` | Custom messages (optional) |
 | `attributes` | `Record<string, string>` | Display names (optional) |
 
+::: tip Typed output
+When `rules` is a literal, `validated()` / `validate()` / `safe().all()` are
+**typed** from the rule strings — see [Type inference](/guide/type-inference).
+:::
+
 ## Defining rules
 
 Rules may be a pipe string or an array (use the array form when a rule contains

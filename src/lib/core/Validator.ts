@@ -28,6 +28,7 @@ import type {
   ValidationData,
   ValidationResolvers,
 } from '@/lib/types'
+import type { InferRules } from '@/lib/infer'
 import { MessageBag } from '@/lib/core/MessageBag'
 import { ValidatedInput } from '@/lib/core/ValidatedInput'
 import { ValidationException } from '@/lib/core/ValidationException'
@@ -66,7 +67,7 @@ interface AttributeRules {
 
 let globalResolvers: ValidationResolvers = {}
 
-export class Validator {
+export class Validator<TValidated extends ValidationData = ValidationData> {
   private readonly data: ValidationData
   private readonly schema: RulesSchema
   private customMessages: CustomMessages
@@ -94,13 +95,20 @@ export class Validator {
     this.resolvers = { ...globalResolvers }
   }
 
-  /** Create a validator instance (parity with `Validator::make`). */
-  static make(
+  /**
+   * Create a validator instance (parity with `Validator::make`).
+   *
+   * The `const` rules parameter lets TypeScript capture the rule strings as
+   * literals and infer the validated-data shape, so `validated()`/`safe()`/
+   * `validate()` are typed (see {@link InferRules}). Passing a non-literal
+   * `RulesSchema` simply falls back to `ValidationData`.
+   */
+  static make<const R extends RulesSchema>(
     data: ValidationData,
-    rules: RulesSchema,
+    rules: R,
     messages: CustomMessages = {},
     attributes: CustomAttributes = {},
-  ): Validator {
+  ): Validator<InferRules<R>> {
     return new Validator(data, rules, messages, attributes)
   }
 
@@ -179,7 +187,7 @@ export class Validator {
   }
 
   /** Validate; throw {@link ValidationException} on failure, else return validated data. */
-  validate(): ValidationData {
+  validate(): TValidated {
     if (this.fails()) throw new ValidationException(this)
     return this.validated()
   }
@@ -195,7 +203,7 @@ export class Validator {
     return !(await this.passesAsync())
   }
 
-  async validateAsync(): Promise<ValidationData> {
+  async validateAsync(): Promise<TValidated> {
     if (await this.failsAsync()) throw new ValidationException(this)
     return this.validated()
   }
@@ -210,7 +218,7 @@ export class Validator {
     return this.bag
   }
 
-  validated(): ValidationData {
+  validated(): TValidated {
     let result: ValidationData = {}
     // `requireNormalized()` yields unique attributes, so no de-dup is needed.
     for (const entry of this.requireNormalized()) {
@@ -218,10 +226,10 @@ export class Validator {
       if (!dotHas(this.data, entry.attribute)) continue
       result = dotSet(result, entry.attribute, dotGet(this.data, entry.attribute))
     }
-    return result
+    return result as TValidated
   }
 
-  safe(): ValidatedInput {
+  safe(): ValidatedInput<TValidated> {
     return new ValidatedInput(this.validated())
   }
 
