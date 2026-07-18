@@ -119,7 +119,10 @@ A valid MAC address.
 
 ### regex
 
-`regex:/pattern/` — must match a PHP-style delimited pattern.
+`regex:/pattern/` — must match a PHP-style delimited pattern. Patterns
+containing `|` are safest in array syntax (`['required', 'regex:/^a|b$/']`);
+in pipe strings the parser re-merges most such patterns and throws a clear
+error when it cannot.
 
 ### same
 
@@ -144,7 +147,8 @@ A valid URL. `url:http,https` restricts the protocol.
 
 ### uuid
 
-A valid UUID. `uuid:4` requires a specific version.
+A valid UUID. `uuid:4` requires a specific version — the nil UUID
+(`00000000-…`) only passes the bare `uuid` rule, never a versioned one.
 
 ## Numbers
 
@@ -174,7 +178,9 @@ An integer. `integer:strict` rejects numeric strings.
 
 ### max / min {#max}
 
-`max:n` / `min:n` — size at most / at least `n`; type-aware.
+`max:n` / `min:n` — size at most / at least `n`; type-aware. Numbers are sized
+by numeric value only when the field also has a numeric-type rule (`numeric`,
+`integer`, `decimal`); otherwise values are sized as string length, like Laravel.
 
 ### max_digits / min_digits {#max_digits}
 
@@ -247,7 +253,9 @@ A valid, parseable date.
 
 ### date_format
 
-`date_format:Y-m-d` — matches one of the given PHP-style formats.
+`date_format:Y-m-d` — matches one of the given PHP-style formats. Impossible
+calendar dates (e.g. `2021-02-31`) are rejected, and `\`-escaped characters in
+the format are treated as literals.
 
 ### timezone
 
@@ -353,7 +361,8 @@ Field must be missing or empty, optionally conditioned.
 
 ### required
 
-Must be present and not empty.
+Must be present and not empty. Whitespace-only strings count as empty
+(Laravel's trim semantics).
 
 ### required_if / required_if_accepted / required_if_declined / required_unless {#required_if}
 
