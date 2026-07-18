@@ -1,5 +1,7 @@
 node_modules
-dist
+**/dist
+dist-demos
 coverage
-package-lock.json
+docs/.vitepress/cache
+pnpm-lock.yaml
 *.md

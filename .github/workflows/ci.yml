@@ -9,48 +9,66 @@ on:
 permissions:
   contents: read
 
+# Cancel earlier runs on the same branch/PR — only the latest matters.
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   verify:
-    name: Verify (Node ${{ matrix.node }})
+    name: Lint • Build • Test (Node ${{ matrix.node }})
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
+        # 20, 22 & 24 are LTS lines; 26 is the current release, tested for
+        # forward compatibility. engines requires Node >=20.
         node: [20, 22, 24, 26]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
 
-      - name: Set up Node ${{ matrix.node }}
-        uses: actions/setup-node@v4
+    steps:
+      - uses: actions/checkout@v4
+
+      # No `version:` — the packageManager field in package.json is the authority.
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
-          cache: npm
+          cache: pnpm
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Install
+        run: pnpm install --frozen-lockfile
 
-      - name: Lint (type-aware ESLint)
-        run: npm run lint
+      - name: Lint
+        run: pnpm lint
 
-      - name: Check formatting
-        run: npm run format:check
+      - name: Format check
+        run: pnpm format:check
 
-      - name: Typecheck (library + tests)
-        run: npm run typecheck
+      # Build first: the Vue example resolves @anil-labs/validator through its
+      # built dist types, so typecheck and tests need the package compiled.
+      - name: Build packages
+        run: pnpm build
 
-      - name: Typecheck (demo)
-        run: npm run demo:typecheck
+      - name: Typecheck
+        run: pnpm typecheck
 
-      - name: Run tests with coverage (100% thresholds enforced)
-        run: npm run coverage
+      - name: Test
+        run: pnpm test
 
-      - name: Build library workspace
-        run: npm run build
+      # Validates package.json exports/types resolution (publint) and
+      # TypeScript resolution across module systems (arethetypeswrong).
+      - name: Package checks (publint + arethetypeswrong)
+        run: pnpm --filter @anil-labs/validator run check:exports
 
-      - name: Build demo
-        run: npm run demo:build
+      # Smoke-test that the built package loads in plain Node — both require()
+      # and import() — and that the IIFE CDN bundle was emitted.
+      - name: Node import smoke test
+        run: |
+          node -e "require('./packages/validator/dist/index.cjs')"
+          node --input-type=module -e "import('./packages/validator/dist/index.js').then(() => {})"
+          test -f packages/validator/dist/index.global.js
+
+      - name: Build examples
+        run: pnpm build:examples

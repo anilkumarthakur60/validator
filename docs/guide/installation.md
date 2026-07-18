@@ -11,9 +11,26 @@ yarn add @anil-labs/validator
 The package ships **ESM and CommonJS** with bundled type declarations, so it
 works in any modern toolchain.
 
+## CDN / no build step
+
+An IIFE bundle is published too, exposing everything on the `window.Validator`
+global — handy for plain HTML pages and quick prototypes:
+
+```html
+<script src="https://unpkg.com/@anil-labs/validator"></script>
+<script>
+  const { Validator, validation } = window.Validator
+
+  const v = Validator.make({ email: 'a@b.com' }, { email: 'required|email' })
+  v.passes() // true
+</script>
+```
+
+(Also available from jsDelivr: `https://cdn.jsdelivr.net/npm/@anil-labs/validator`.)
+
 ## Requirements
 
-- **Node ≥ 18** for server usage. File rules (`file`, `image`, `mimes`, `size`)
+- **Node ≥ 20** for server usage. File rules (`file`, `image`, `mimes`, `size`)
   rely on the global `File`, which is stable from **Node 20**.
 - Any bundler (Vite, webpack, esbuild, Rollup) or TypeScript ≥ 5 for the
   browser.
