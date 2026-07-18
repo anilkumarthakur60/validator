@@ -1,6 +1,6 @@
 {
   "name": "@anil-labs/validator",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "An expressive, strictly-typed, framework-agnostic validation library for TypeScript — a Laravel-style dataset validator plus a chainable single-field rule builder.",
   "keywords": [
     "validation",
@@ -64,11 +64,11 @@
     "check:exports": "publint && attw --pack ."
   },
   "devDependencies": {
-    "@arethetypeswrong/cli": "^0.18.3",
-    "@vitest/coverage-v8": "^4.1.7",
+    "@arethetypeswrong/cli": "^0.18.5",
+    "@vitest/coverage-v8": "^4.1.10",
     "publint": "^0.3.21",
     "tsup": "^8.5.1",
-    "typescript": "~6.0.2",
-    "vitest": "^4.1.7"
+    "typescript": "~6.0.3",
+    "vitest": "^4.1.10"
   }
 }
