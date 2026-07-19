@@ -1,6 +1,6 @@
 {
   "name": "@anil-labs/validator",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "An expressive, strictly-typed, framework-agnostic validation library for TypeScript — a Laravel-style dataset validator plus a chainable single-field rule builder.",
   "keywords": [
     "validation",
