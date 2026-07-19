@@ -1,5 +1,10 @@
 # @anil-labs/validator
 
+[![npm](https://img.shields.io/npm/v/%40anil-labs%2Fvalidator.svg)](https://www.npmjs.com/package/@anil-labs/validator)
+[![CI](https://github.com/anilkumarthakur60/validator/actions/workflows/ci.yml/badge.svg)](https://github.com/anilkumarthakur60/validator/actions/workflows/ci.yml)
+[![bundle size](https://img.shields.io/badge/bundle-~15%20KB%20min%2Bbrotli-blue)](https://github.com/anilkumarthakur60/validator/blob/main/.size-limit.cjs)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+
 An **expressive**, strictly-typed validation library for TypeScript.
 
 - 🧩 **Framework-agnostic core** — works in Node (Express, NestJS, Fastify), the browser, workers, and edge runtimes.
