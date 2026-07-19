@@ -33,6 +33,7 @@ import { MessageBag } from '@/core/MessageBag'
 import { ValidatedInput } from '@/core/ValidatedInput'
 import { ValidationException } from '@/core/ValidationException'
 import { dotGet, dotHas, dotSet, expandWildcards, replaceWildcardParameter } from '@/core/data'
+import { setMissingResolverBehavior, type MissingResolverBehavior } from '@/core/resolverPolicy'
 import { FILE_RULES, getBuiltinRule, NUMERIC_RULES, requireBuiltinRule } from '@/core/registry'
 import {
   parseFieldRules,
@@ -45,7 +46,7 @@ import {
 /** Conditional rule registered via {@link Validator.sometimes}. */
 interface SometimesSpec {
   readonly attributes: readonly string[]
-  readonly rules: ParsedRule[]
+  readonly rules: readonly ParsedRule[]
   readonly condition: (data: ValidationData, item: unknown) => boolean
 }
 
@@ -115,6 +116,18 @@ export class Validator<TValidated extends ValidationData = ValidationData> {
   /** Register resolvers globally for every subsequently-created validator. */
   static setGlobalResolvers(resolvers: ValidationResolvers): void {
     globalResolvers = { ...resolvers }
+  }
+
+  /**
+   * Configure what happens when a resolver-backed rule (`exists`, `unique`,
+   * `active_url`, `current_password`) runs without its resolver configured:
+   *
+   *  - `'pass'` (default) — the rule passes, with a one-time console warning.
+   *  - `'fail'` — the field fails validation with the rule's normal message.
+   *  - `'throw'` — an `Error` is thrown naming the rule and missing resolver.
+   */
+  static onMissingResolver(behavior: MissingResolverBehavior): void {
+    setMissingResolverBehavior(behavior)
   }
 
   // ── configuration ───────────────────────────────────────

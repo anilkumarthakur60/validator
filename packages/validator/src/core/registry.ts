@@ -41,9 +41,22 @@ export const requireBuiltinRule = (name: string): BuiltinDefinition => {
 
 export const hasBuiltinRule = (name: string): boolean => registry.has(name)
 
+/**
+ * Listeners notified whenever the registry changes. Rule-string parsing
+ * depends on the registered rule names (regex-pattern re-joining), so the
+ * parser subscribes here to invalidate its memo cache.
+ */
+const mutationListeners = new Set<() => void>()
+
+/** Subscribe to registry mutations (registration or overwrite of a rule). */
+export const onRegistryMutation = (listener: () => void): void => {
+  mutationListeners.add(listener)
+}
+
 /** Register (or override) a globally-available built-in rule. */
 export const registerRule = (name: string, definition: BuiltinDefinition): void => {
   registry.set(name, definition)
+  for (const listener of mutationListeners) listener()
 }
 
 /** Size-sensitive rules whose message wording depends on the value type. */

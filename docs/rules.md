@@ -82,7 +82,10 @@ See also the fluent [`Rule.email()`](/api#rule-email).
 
 ### enum
 
-`Rule.enum(values)` — must be one of an array or TS enum's values.
+`Rule.enum(values)` — must be one of an array or TS enum's values. Comparison
+is loose by default (`String(a) === String(b)`, Laravel `in_array` parity), so
+a numeric enum also matches its string form; `Rule.enum(values).strict()`
+requires an exact type-and-value match (`===`).
 
 ### hex_color
 
@@ -91,7 +94,8 @@ A valid hex color (`#fff`, `#ffffff`, `#ffffffff`).
 ### in
 
 `in:foo,bar` or `Rule.in([...])`. Combined with `array`, every element must be
-in the list.
+in the list. Comparison is loose by default; `Rule.in([...]).strict()` (and
+`Rule.notIn([...]).strict()`) require an exact `===` match.
 
 ### ip / ipv4 / ipv6 {#ip}
 
@@ -259,7 +263,11 @@ the format are treated as literals.
 
 ### timezone
 
-A valid timezone identifier (e.g. `Asia/Kathmandu`).
+A valid timezone identifier (e.g. `Asia/Kathmandu`), case-insensitively.
+`timezone:all` is the same check; `timezone:<Region>` (e.g. `timezone:Africa`,
+`timezone:America`) additionally requires the identifier to live in that
+region. Laravel's `timezone:per_country,CC` variant needs a country database
+and is **not** supported — it throws an error instead of silently passing.
 
 ## Files
 

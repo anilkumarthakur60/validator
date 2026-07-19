@@ -61,6 +61,29 @@ describe('InferRules — typed validated() output', () => {
     expect(nickname).toBeUndefined()
   })
 
+  it('infers a string-literal union from an in: rule', () => {
+    const data = Validator.make(
+      { status: 'active', level: 2, mode: null },
+      {
+        status: 'required|in:active,inactive',
+        level: 'required|integer|in:1,2',
+        mode: ['nullable', 'in:dark,light'],
+      },
+    ).validate()
+
+    // ── compile-time ──
+    const status: 'active' | 'inactive' = data.status
+    // A numeric-type rule takes precedence over the literal union.
+    const level: number = data.level
+    // Array-syntax definitions and `nullable` compose with the union.
+    const mode: 'dark' | 'light' | null | undefined = data.mode
+
+    // ── runtime ──
+    expect(status).toBe('active')
+    expect(level).toBe(2)
+    expect(mode).toBeNull()
+  })
+
   it('falls back to ValidationData for a non-literal schema', () => {
     const schema: Record<string, string> = { a: 'required|string' }
     const v = Validator.make({ a: 'x' }, schema)

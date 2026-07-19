@@ -159,5 +159,34 @@ export const dateRules: RuleModule = {
       compare(value, parameters[0], data, (a, b) => a >= b),
   },
 
-  timezone: { validate: ({ value }) => isString(value) && isValidTimezone(value) },
+  timezone: {
+    validate: ({ value, parameters }) => isString(value) && passesTimezone(value, parameters),
+  },
+}
+
+/** The canonical identifier list, or `null` where `Intl.supportedValuesOf` is unavailable. */
+const supportedTimezones = (): readonly string[] | null => {
+  const intl: { supportedValuesOf?: (key: 'timeZone') => string[] } = Intl
+  return typeof intl.supportedValuesOf === 'function' ? intl.supportedValuesOf('timeZone') : null
+}
+
+/**
+ * `timezone` / `timezone:all` accept any identifier `Intl` recognizes (case-
+ * insensitively); `timezone:<Region>` (e.g. `timezone:Africa`) additionally
+ * requires the region prefix. Laravel's `timezone:per_country,CC` variant
+ * needs a country database and is not supported.
+ */
+const passesTimezone = (value: string, parameters: readonly string[]): boolean => {
+  const group = (parameters[0] ?? 'all').toLowerCase()
+  if (group === 'all') return isValidTimezone(value)
+  if (group === 'per_country') {
+    throw new Error(
+      '[validation] "timezone:per_country" is not supported: mapping timezones to ' +
+        'countries requires a country database. Use "timezone" or "timezone:<Region>" instead.',
+    )
+  }
+  const zones = supportedTimezones()
+  const lower = value.toLowerCase()
+  const known = zones ? zones.some((zone) => zone.toLowerCase() === lower) : isValidTimezone(value)
+  return known && lower.startsWith(`${group}/`)
 }

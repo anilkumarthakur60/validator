@@ -10,6 +10,7 @@ import { AnyOf } from '@/ruleObjects/AnyOf'
 import { Enum, type EnumSource } from '@/ruleObjects/Enum'
 import { Dimensions } from '@/ruleObjects/Dimensions'
 import { ExistsRule, UniqueRule } from '@/ruleObjects/database'
+import { InRule } from '@/ruleObjects/InRule'
 import { FileRule } from '@/ruleObjects/FileRule'
 import { Password } from '@/ruleObjects/Password'
 import { StringRule } from '@/ruleObjects/StringRule'
@@ -38,12 +39,12 @@ const REQUIRED = 'The :attribute field is required.'
 const PROHIBITED = 'The :attribute field is prohibited.'
 
 export const Rule = {
-  in(values: readonly unknown[]): RuleEntry {
-    return makeBuiltinRuleObject('in', values.map(String))
+  in(values: readonly unknown[]): InRule {
+    return new InRule(values, 'in')
   },
 
-  notIn(values: readonly unknown[]): RuleEntry {
-    return makeBuiltinRuleObject('not_in', values.map(String))
+  notIn(values: readonly unknown[]): InRule {
+    return new InRule(values, 'not_in')
   },
 
   contains(values: readonly unknown[]): RuleEntry {

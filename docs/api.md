@@ -7,6 +7,7 @@
 ```ts
 Validator.make<const R>(data, rules: R, messages?, attributes?): Validator<InferRules<R>>
 Validator.setGlobalResolvers(resolvers): void
+Validator.onMissingResolver(behavior: 'pass' | 'fail' | 'throw'): void
 ```
 
 When `rules` is a literal, the validated-data methods (`validated()`,
@@ -230,6 +231,23 @@ interface ValidationResolvers {
   currentPassword?(password: string, guard?: string): boolean | Promise<boolean>
 }
 ```
+
+### Missing-resolver behavior
+
+By default, a resolver-backed rule (`exists`, `unique`, `active_url`,
+`current_password`) whose resolver is not configured **passes** with a one-time
+console warning. `Validator.onMissingResolver` hardens that globally:
+
+```ts
+import { Validator, type MissingResolverBehavior } from '@anil-labs/validator'
+
+Validator.onMissingResolver('fail') // the field fails with the rule's normal message
+Validator.onMissingResolver('throw') // an Error names the rule and the missing resolver
+Validator.onMissingResolver('pass') // default: pass with a one-time warning
+```
+
+With `'throw'`, `unique` without a resolver raises:
+`[validation] No "unique" resolver is configured for the "unique" rule. Register one with Validator.setGlobalResolvers() or withResolvers().`
 
 ## Rule object classes
 

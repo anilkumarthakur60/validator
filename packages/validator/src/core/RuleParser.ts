@@ -5,7 +5,7 @@
 
 import type { ClosureRule, FieldRuleDefinition, RuleEntry, ValidationRuleObject } from '@/types'
 import { type ForEachLike, isForEach } from '@/ruleObjects/markers'
-import { hasBuiltinRule } from '@/core/registry'
+import { hasBuiltinRule, onRegistryMutation } from '@/core/registry'
 
 /** A parsed built-in rule, e.g. `{ name: 'max', parameters: ['255'] }`. */
 export interface ParsedBuiltinRule {
@@ -128,13 +128,53 @@ const mergeRegexSegments = (segments: readonly string[]): string[] => {
   return merged
 }
 
-/** Parse a single field's rule definition into a flat list of parsed rules. */
-export const parseFieldRules = (definition: FieldRuleDefinition): ParsedRule[] => {
-  if (typeof definition === 'string') {
-    return mergeRegexSegments(definition.split('|'))
+// ── string-definition memo cache ──────────────────────────
+//
+// Re-validating (e.g. per keystroke) re-parses the same rule strings over and
+// over, so parses of STRING definitions are memoized. Object/closure entries
+// are never cached (they may capture state). Cached parses are deep-frozen —
+// they are shared across callers, so immutability is enforced at runtime.
+
+const PARSE_CACHE_CAPACITY = 500
+const parseCache = new Map<string, readonly ParsedRule[]>()
+
+/** Drop all memoized parses (a registry change can alter how strings parse). */
+export const clearRuleParseCache = (): void => {
+  parseCache.clear()
+}
+
+onRegistryMutation(clearRuleParseCache)
+
+/** Deep-freeze a parsed rule list so shared cache entries cannot be mutated. */
+const freezeParsed = (rules: readonly ParsedBuiltinRule[]): readonly ParsedRule[] =>
+  Object.freeze(
+    rules.map((rule) =>
+      Object.freeze({ ...rule, parameters: Object.freeze([...rule.parameters]) }),
+    ),
+  )
+
+const parseStringDefinition = (definition: string): readonly ParsedRule[] => {
+  const cached = parseCache.get(definition)
+  if (cached) return cached
+  const parsed = freezeParsed(
+    mergeRegexSegments(definition.split('|'))
       .filter((part) => part.length > 0)
-      .map(parseRuleString)
+      .map(parseRuleString),
+  )
+  if (parseCache.size >= PARSE_CACHE_CAPACITY) {
+    // FIFO eviction: a Map iterates in insertion order, so drop the oldest key.
+    for (const oldest of parseCache.keys()) {
+      parseCache.delete(oldest)
+      break
+    }
   }
+  parseCache.set(definition, parsed)
+  return parsed
+}
+
+/** Parse a single field's rule definition into a flat list of parsed rules. */
+export const parseFieldRules = (definition: FieldRuleDefinition): readonly ParsedRule[] => {
+  if (typeof definition === 'string') return parseStringDefinition(definition)
   if (Array.isArray(definition)) return (definition as readonly RuleEntry[]).map(parseEntry)
   // A single rule object / closure / forEach used directly as the definition.
   return [parseEntry(definition as RuleEntry)]

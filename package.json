@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "description": "Monorepo for @anil-labs/validator — an expressive, framework-agnostic, strictly-typed validation library for TypeScript.",
+  "description": "Monorepo for @anil-labs/validator \u2014 an expressive, framework-agnostic, strictly-typed validation library for TypeScript.",
   "packageManager": "pnpm@10.33.0",
   "engines": {
     "node": ">=20"
@@ -29,17 +29,22 @@
     "version-packages": "changeset version",
     "release": "pnpm build && changeset publish",
     "clean": "pnpm -r exec rm -rf dist node_modules/.cache .tsbuildinfo",
-    "prepare": "husky || true"
+    "prepare": "husky || true",
+    "size": "size-limit"
   },
   "devDependencies": {
     "@changesets/cli": "^2.31.1",
     "@eslint/js": "^10.0.1",
+    "@size-limit/esbuild": "^12.1.0",
+    "@size-limit/file": "^12.1.0",
+    "@size-limit/preset-small-lib": "^12.1.0",
     "@types/node": "^26.1.1",
     "eslint": "^10.7.0",
     "eslint-config-prettier": "^10.1.8",
     "husky": "^9.1.7",
     "lint-staged": "^17.1.0",
     "prettier": "^3.9.5",
+    "size-limit": "^12.1.0",
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.64.0"
   },

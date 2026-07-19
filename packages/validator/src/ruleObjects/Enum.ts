@@ -13,9 +13,20 @@ const toValues = (source: EnumSource): unknown[] =>
 
 export class Enum implements ValidationRuleObject {
   private allowed: unknown[]
+  private strictMode = false
 
   constructor(source: EnumSource) {
     this.allowed = toValues(source)
+  }
+
+  /**
+   * Require an exact type-and-value match (`===`) instead of the default
+   * loose comparison (`String(a) === String(b)`, Laravel `in_array` parity),
+   * so a numeric enum no longer matches its string form.
+   */
+  strict(strict = true): this {
+    this.strictMode = strict
+    return this
   }
 
   only(values: readonly unknown[]): this {
@@ -38,7 +49,7 @@ export class Enum implements ValidationRuleObject {
 
   validate(_attribute: string, value: unknown, fail: FailFn): void {
     const matches = this.allowed.some(
-      (allowed) => allowed === value || String(allowed) === String(value),
+      (allowed) => allowed === value || (!this.strictMode && String(allowed) === String(value)),
     )
     if (!matches) fail('The selected :attribute is invalid.')
   }

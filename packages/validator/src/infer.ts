@@ -10,6 +10,8 @@
  *  - base type per field: `string|email|url|uuid|date|ip → string`,
  *    `integer|numeric|decimal → number`, `boolean|accepted|declined → boolean`,
  *    `array → unknown[]`, otherwise `unknown`.
+ *  - `in:a,b,c` narrows a string-typed field to the literal union
+ *    `'a' | 'b' | 'c'` (unless a numeric/boolean/array rule takes precedence).
  *  - `nullable` widens the leaf with `| null`.
  *  - a field is optional unless its rules include `required` (or `present`).
  *  - dotted keys (`author.name`) become nested objects; `*` segments
@@ -36,14 +38,25 @@ type SplitUnion<S extends string, D extends string> = S extends `${infer H}${D}$
 /** The rule name of a token, dropping any `:params` suffix. */
 type TokenName<T extends string> = T extends `${infer N}:${string}` ? N : T
 
-/** The set of rule names present in a single rule-definition value. */
-type Tokens<D> = D extends string
-  ? TokenName<SplitUnion<D, '|'>>
+/** The raw rule tokens (still carrying `:params`) of a rule-definition value. */
+type RawTokens<D> = D extends string
+  ? SplitUnion<D, '|'>
   : D extends readonly (infer E)[]
     ? E extends string
-      ? TokenName<SplitUnion<E, '|'>>
+      ? SplitUnion<E, '|'>
       : never
     : never
+
+/** The set of rule names present in a single rule-definition value. */
+type Tokens<D> = TokenName<RawTokens<D>>
+
+/**
+ * The string-literal union of an `in:a,b,c` rule's values, or `never` when no
+ * `in:` rule is present. Values are taken verbatim (the type level cannot
+ * trim whitespace), so write `in:a,b,c` without spaces for exact literals.
+ */
+type InLiterals<D> =
+  RawTokens<D> extends infer T ? (T extends `in:${infer P}` ? SplitUnion<P, ','> : never) : never
 
 /** Whether the rule definition `D` contains the rule `Name`. */
 type Has<D, Name extends string> = Name extends Tokens<D> ? true : false
@@ -65,19 +78,21 @@ type BaseType<D> =
               ? number
               : Has<D, 'decimal'> extends true
                 ? number
-                : Has<D, 'string'> extends true
-                  ? string
-                  : Has<D, 'email'> extends true
+                : [InLiterals<D>] extends [never]
+                  ? Has<D, 'string'> extends true
                     ? string
-                    : Has<D, 'url'> extends true
+                    : Has<D, 'email'> extends true
                       ? string
-                      : Has<D, 'uuid'> extends true
+                      : Has<D, 'url'> extends true
                         ? string
-                        : Has<D, 'date'> extends true
+                        : Has<D, 'uuid'> extends true
                           ? string
-                          : Has<D, 'ip'> extends true
+                          : Has<D, 'date'> extends true
                             ? string
-                            : unknown
+                            : Has<D, 'ip'> extends true
+                              ? string
+                              : unknown
+                  : InLiterals<D>
 
 /** The leaf TS type for a field, accounting for `nullable`. */
 type Leaf<D> = Has<D, 'nullable'> extends true ? BaseType<D> | null : BaseType<D>
