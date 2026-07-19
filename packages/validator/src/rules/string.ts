@@ -17,6 +17,7 @@ import {
   isValidUrl,
   isValidUuid,
 } from '@/helpers'
+import { missingResolverOutcome } from '@/core/resolverPolicy'
 import type { RuleModule } from '@/core/ruleDefinition'
 import { literalValuesReplacer } from '@/rules/_shared'
 
@@ -113,7 +114,8 @@ export const stringRules: RuleModule = {
         return false
       }
       const resolver = validator.getResolvers().activeUrl
-      return resolver ? Promise.resolve(resolver(host)) : true
+      if (!resolver) return missingResolverOutcome('active_url', 'activeUrl')
+      return Promise.resolve(resolver(host))
     },
   },
 

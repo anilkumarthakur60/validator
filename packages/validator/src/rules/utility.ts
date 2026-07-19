@@ -4,7 +4,8 @@
  *          mac_address, current_password, exists, unique.
  *
  * `exists`, `unique`, and `current_password` defer to pluggable async
- * resolvers; when no resolver is configured they pass with a one-time warning.
+ * resolvers; when no resolver is configured the missing-resolver policy
+ * decides the outcome (see `Validator.onMissingResolver`).
  */
 
 import {
@@ -16,16 +17,10 @@ import {
   isValidMacAddress,
 } from '@/helpers'
 import { dotGet } from '@/core/data'
+import { missingResolverOutcome } from '@/core/resolverPolicy'
 import type { DatabaseQuery, RuleContext } from '@/types'
 import type { RuleModule } from '@/core/ruleDefinition'
 import { otherFieldReplacer } from '@/rules/_shared'
-
-const warned = new Set<string>()
-const warnOnce = (rule: string): void => {
-  if (warned.has(rule)) return
-  warned.add(rule)
-  console.warn(`[validation] No resolver configured for "${rule}"; the rule passes by default.`)
-}
 
 const lastSegment = (attribute: string): string => attribute.slice(attribute.lastIndexOf('.') + 1)
 
@@ -84,10 +79,7 @@ export const utilityRules: RuleModule = {
   current_password: {
     validate: ({ value, parameters, validator }) => {
       const resolver = validator.getResolvers().currentPassword
-      if (!resolver) {
-        warnOnce('current_password')
-        return true
-      }
+      if (!resolver) return missingResolverOutcome('current_password', 'currentPassword')
       return isString(value) ? Promise.resolve(resolver(value, parameters[0])) : false
     },
   },
@@ -95,10 +87,7 @@ export const utilityRules: RuleModule = {
   exists: {
     validate: (ctx) => {
       const resolver = ctx.validator.getResolvers().exists
-      if (!resolver) {
-        warnOnce('exists')
-        return true
-      }
+      if (!resolver) return missingResolverOutcome('exists', 'exists')
       return Promise.resolve(resolver(buildQuery(ctx)))
     },
   },
@@ -106,10 +95,7 @@ export const utilityRules: RuleModule = {
   unique: {
     validate: (ctx) => {
       const resolver = ctx.validator.getResolvers().unique
-      if (!resolver) {
-        warnOnce('unique')
-        return true
-      }
+      if (!resolver) return missingResolverOutcome('unique', 'unique')
       return Promise.resolve(resolver(buildQuery(ctx)))
     },
   },

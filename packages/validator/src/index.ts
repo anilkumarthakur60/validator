@@ -13,6 +13,7 @@ export { ValidatedInput } from '@/core/ValidatedInput'
 export { ValidationException } from '@/core/ValidationException'
 export { registerRule, getBuiltinRule, hasBuiltinRule } from '@/core/registry'
 export type { BuiltinDefinition, RuleModule } from '@/core/ruleDefinition'
+export type { MissingResolverBehavior } from '@/core/resolverPolicy'
 
 // ── Fluent single-field builder ─────────────────────────────
 export { validation, ValidationBuilder } from '@/fluent/builder'
@@ -30,6 +31,7 @@ export { DateRule } from '@/ruleObjects/DateRule'
 export { EmailRule } from '@/ruleObjects/EmailRule'
 export { CompositeRule } from '@/ruleObjects/CompositeRule'
 export { ExistsRule, UniqueRule } from '@/ruleObjects/database'
+export { InRule } from '@/ruleObjects/InRule'
 export { AnyOf } from '@/ruleObjects/AnyOf'
 
 // ── Messages & helpers (for customization / i18n) ───────────
