@@ -1,6 +1,6 @@
 # Using with Vue
 
-The fluent builder returns a `(value) => true | string` function — the exact
+The fluent builder returns a `(value) => true | string` function  the exact
 shape Quasar's `:rules` and most Vue form libraries expect. The dataset
 `Validator` handles whole-form validation. Nothing Vue-specific to install.
 

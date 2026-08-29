@@ -2,7 +2,7 @@
  * Shared, fully-typed contracts for the validation library.
  *
  * The library is strictly typed: values under validation are always `unknown`
- * and narrowed inside rules — there is no `any` anywhere in the codebase.
+ * and narrowed inside rules  there is no `any` anywhere in the codebase.
  */
 
 import type { Validator } from '@/core/Validator'
@@ -111,19 +111,19 @@ export type FieldRuleFn = (value: unknown) => true | string
 // Async resolvers (database / network rules in a frontend context)
 // ---------------------------------------------------------------------------
 
-/** Resolver for `exists` — return whether the value(s) exist in the store. */
+/** Resolver for `exists`  return whether the value(s) exist in the store. */
 export type ExistsResolver = (query: DatabaseQuery) => boolean | Promise<boolean>
 
-/** Resolver for `unique` — return whether the value is unique in the store. */
+/** Resolver for `unique`  return whether the value is unique in the store. */
 export type UniqueResolver = (query: DatabaseQuery) => boolean | Promise<boolean>
 
-/** Resolver for `Password.uncompromised()` — return the breach count for a password. */
+/** Resolver for `Password.uncompromised()`  return the breach count for a password. */
 export type CompromisedResolver = (password: string) => number | Promise<number>
 
 /** Resolver for `active_url` DNS checks. */
 export type ActiveUrlResolver = (host: string) => boolean | Promise<boolean>
 
-/** Resolver for `current_password` — return whether it matches the user's password. */
+/** Resolver for `current_password`  return whether it matches the user's password. */
 export type CurrentPasswordResolver = (
   password: string,
   guard?: string,

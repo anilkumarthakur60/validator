@@ -3,7 +3,7 @@ import { Validator } from '@/core/Validator'
 import { ValidationException } from '@/core/ValidationException'
 import type { DataAwareRule, ValidationRuleObject, ValidatorAwareRule } from '@/types'
 
-describe('Validator — size type resolution (value-based)', () => {
+describe('Validator  size type resolution (value-based)', () => {
   it('picks the message wording from the value type when no type rule is present', () => {
     // A bare number is sized as a string (Laravel parity): only a numeric-type
     // rule switches the field to numeric sizing and wording.
@@ -25,7 +25,7 @@ describe('Validator — size type resolution (value-based)', () => {
   })
 })
 
-describe('Validator — display helpers (public)', () => {
+describe('Validator  display helpers (public)', () => {
   it('getDisplayableValue', () => {
     const v = Validator.make({}, {}).setValueMap({ k: { x: 'X' } })
     expect(v.getDisplayableValue('k', 'x')).toBe('X')
@@ -57,7 +57,7 @@ describe('Validator — display helpers (public)', () => {
   })
 })
 
-describe('Validator — message placeholders', () => {
+describe('Validator  message placeholders', () => {
   it(':value uses the other field value (mapped + boolean)', () => {
     const mapped = Validator.make({ pt: 'cc', cc: '' }, { cc: 'required_if:pt,cc' }).setValueMap({
       pt: { cc: 'credit card' },
@@ -96,7 +96,7 @@ describe('Validator — message placeholders', () => {
   })
 })
 
-describe('Validator — exclusion variants', () => {
+describe('Validator  exclusion variants', () => {
   it('exclude / exclude_with / exclude_without / exclude_unless / exclude_if(no value)', () => {
     expect(Validator.make({ f: 'bad' }, { f: 'exclude|integer' }).passes()).toBe(true)
     expect(Validator.make({ f: 'bad', o: 1 }, { f: 'exclude_with:o|integer' }).passes()).toBe(true)
@@ -109,7 +109,7 @@ describe('Validator — exclusion variants', () => {
   })
 })
 
-describe('Validator — async paths & rule objects', () => {
+describe('Validator  async paths & rule objects', () => {
   it('validate() / validateAsync() return and throw', async () => {
     expect(Validator.make({ a: 'x' }, { a: 'required' }).validate()).toEqual({ a: 'x' })
     expect(() => Validator.make({}, { a: 'required' }).validate()).toThrow(ValidationException)
@@ -198,7 +198,7 @@ describe('Validator — async paths & rule objects', () => {
   })
 })
 
-describe('Validator — sometimes(), after(), wildcard dependent params', () => {
+describe('Validator  sometimes(), after(), wildcard dependent params', () => {
   it('sometimes() with array items', () => {
     const data = {
       channels: [
@@ -252,7 +252,7 @@ describe('Validator — sometimes(), after(), wildcard dependent params', () => 
   })
 })
 
-describe('Validator — global resolvers + config setters', () => {
+describe('Validator  global resolvers + config setters', () => {
   afterEach(() => {
     Validator.setGlobalResolvers({})
   })

@@ -1,5 +1,5 @@
 /**
- * The `Rule` facade — fluent constructors for the built-in rule objects.
+ * The `Rule` facade  fluent constructors for the built-in rule objects.
  */
 
 import { isEmpty } from '@/helpers'

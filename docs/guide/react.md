@@ -1,7 +1,7 @@
 # Using with React
 
 The core is framework-agnostic, and the fluent builder produces a plain
-`(value) => true | string` function — which is exactly the shape React forms
+`(value) => true | string` function  which is exactly the shape React forms
 (and React Hook Form) want. There's nothing React-specific to install.
 
 Two patterns, same as everywhere else:
@@ -36,7 +36,7 @@ export function useField(initial: string, rule: FieldRuleFn) {
 
 ```tsx
 function SignupFields() {
-  // Build the rule once — building has cost, and cross-field rules capture
+  // Build the rule once  building has cost, and cross-field rules capture
   // sibling values at build time.
   const emailRule = useMemo(() => validation.required().email().toRule(), [])
   const email = useField('', emailRule)
@@ -93,7 +93,7 @@ export function SignupForm() {
       return
     }
     setErrors({})
-    // v.validated() is the trimmed, rule-checked payload — send that.
+    // v.validated() is the trimmed, rule-checked payload  send that.
     void api.signup(v.validated())
   }
 
@@ -118,7 +118,7 @@ export function SignupForm() {
 ## React Hook Form
 
 A builder chain is directly callable and returns `true | string`, which is
-exactly React Hook Form's `validate` contract — so you can pass it straight in,
+exactly React Hook Form's `validate` contract  so you can pass it straight in,
 no adapter needed:
 
 ```tsx
@@ -203,9 +203,9 @@ See [Async & database rules](/guide/async-rules) for the resolver contracts.
 ## Notes
 
 - **Build rules once.** Memoize fluent chains (`useMemo`) or define schemas at
-  module scope — don't rebuild them every render.
+  module scope  don't rebuild them every render.
 - **Cross-field rules** capture the *other* value at build time, so for
   `confirmed`/`same`/`requiredIf` either rebuild when the dependency changes, or
   validate the whole form with `Validator.make` (which always sees current data).
-- Everything here is plain TypeScript — it works the same in Next.js (client
+- Everything here is plain TypeScript  it works the same in Next.js (client
   components), Remix, and React Native.

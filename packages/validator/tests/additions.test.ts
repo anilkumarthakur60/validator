@@ -133,7 +133,7 @@ describe(':input placeholder', () => {
   })
 })
 
-describe('after() — array + invokable', () => {
+describe('after()  array + invokable', () => {
   it('accepts an array of callbacks and invokable objects', () => {
     const v = Validator.make({ x: 1 }, { x: 'integer' })
     v.after([
@@ -151,7 +151,7 @@ describe('after() — array + invokable', () => {
   })
 })
 
-describe('MessageBag — any / hasAny / missing', () => {
+describe('MessageBag  any / hasAny / missing', () => {
   it('works', () => {
     const bag = new MessageBag({ a: ['x'] })
     expect(bag.any()).toBe(true)
@@ -163,7 +163,7 @@ describe('MessageBag — any / hasAny / missing', () => {
   })
 })
 
-describe('Password.rules() — extra rules', () => {
+describe('Password.rules()  extra rules', () => {
   it('runs closure, plain object, data/validator-aware, and async extras', async () => {
     const closure = Validator.make(
       { p: 'abcdefgh' },

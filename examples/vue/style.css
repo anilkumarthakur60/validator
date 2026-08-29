@@ -66,7 +66,7 @@ body.sheet-locked {
   overflow-y: auto;
 }
 
-/* Mobile top bar + sheet chrome — hidden on desktop, shown ≤900px. */
+/* Mobile top bar + sheet chrome  hidden on desktop, shown ≤900px. */
 .topbar {
   display: none;
 }

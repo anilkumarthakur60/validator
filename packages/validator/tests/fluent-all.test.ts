@@ -11,7 +11,7 @@ const check = (chain: Builder, good: unknown, bad: unknown): void => {
 
 const file = (name: string, type = ''): File => new File(['x'], name, { type })
 
-describe('fluent — modifiers & presence', () => {
+describe('fluent  modifiers & presence', () => {
   it('nullable / bail / stopAfterFirstError / sometimes', () => {
     expect(validation.nullable().email().toRule()('')).toBe(true)
     expect(validation.bail().required().email().toRule()('')).toBe('The value field is required.')
@@ -27,7 +27,7 @@ describe('fluent — modifiers & presence', () => {
   })
 })
 
-describe('fluent — strings', () => {
+describe('fluent  strings', () => {
   it('basic string formats', () => {
     check(validation.string(), 'x', 1)
     check(validation.alpha(), 'abc', 'a1')
@@ -67,7 +67,7 @@ describe('fluent — strings', () => {
   })
 })
 
-describe('fluent — numbers & dates', () => {
+describe('fluent  numbers & dates', () => {
   it('numeric family', () => {
     check(validation.numeric(), 5, 'x')
     check(validation.numeric(true), 5, '5')
@@ -109,7 +109,7 @@ describe('fluent — numbers & dates', () => {
   })
 })
 
-describe('fluent — booleans, arrays, files', () => {
+describe('fluent  booleans, arrays, files', () => {
   it('booleans', () => {
     check(validation.boolean(), '1', 'x')
     check(validation.boolean(true), true, '1')
@@ -139,7 +139,7 @@ describe('fluent — booleans, arrays, files', () => {
   })
 })
 
-describe('fluent — comparison, conditional, misc', () => {
+describe('fluent  comparison, conditional, misc', () => {
   it('comparison + cross-field', () => {
     check(validation.same('x'), 'x', 'y')
     check(validation.different('x'), 'y', 'x')
@@ -175,7 +175,7 @@ describe('fluent — comparison, conditional, misc', () => {
   })
 })
 
-describe('fluent — terminal, config, extension', () => {
+describe('fluent  terminal, config, extension', () => {
   it('getRuleFn / attribute / withMessages / empty message fallback', () => {
     expect(validation.required().getRuleFn()('x')).toBe(true)
     expect(validation.attribute('Email').required().toRule()('')).toBe(

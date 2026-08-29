@@ -1,7 +1,7 @@
 import { Validator } from '@anil-labs/validator'
 
 // The same engine works for whole-dataset validation (below) and for
-// per-field rules — no framework required.
+// per-field rules  no framework required.
 const mustFind = <T extends Element>(selector: string): T => {
   const el = document.querySelector<T>(selector)
   if (!el) throw new Error(`Demo markup is missing "${selector}"`)

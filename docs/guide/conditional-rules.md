@@ -2,8 +2,8 @@
 
 ## Skip validation for certain values
 
-`exclude_if` / `exclude_unless` skip a field — and drop it from
-`validated()` — based on another field:
+`exclude_if` / `exclude_unless` skip a field  and drop it from
+`validated()`  based on another field:
 
 ```ts
 Validator.make(data, {
@@ -65,7 +65,7 @@ v.sometimes('channels.*.address', 'url', (input, item) => item.type !== 'email')
 
 `Rule.requiredIf`, `Rule.requiredUnless`, `Rule.prohibitedIf`,
 `Rule.prohibitedUnless`, `Rule.excludeIf`, and `Rule.excludeUnless` accept a
-boolean or a closure — handy when the condition isn't another field:
+boolean or a closure  handy when the condition isn't another field:
 
 ```ts
 import { Rule } from '@anil-labs/validator'

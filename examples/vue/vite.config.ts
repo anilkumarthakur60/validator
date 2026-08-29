@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
-// Standalone Vue demo — consumes the published `@anil-labs/validator` package
+// Standalone Vue demo  consumes the published `@anil-labs/validator` package
 // (linked via the pnpm workspace). Run with `pnpm example:vue` from the root.
 export default defineConfig({
   plugins: [vue()],

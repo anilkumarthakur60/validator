@@ -41,5 +41,5 @@ Validator.setGlobalResolvers({
 })
 ```
 
-For typed bodies, declare your TS types separately — this validator works on the
+For typed bodies, declare your TS types separately  this validator works on the
 runtime payload and returns `validated()` as the trusted object.

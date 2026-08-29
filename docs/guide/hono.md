@@ -1,6 +1,6 @@
 # Hono (edge & runtimes)
 
-The core has zero Node dependencies, so it runs on Hono anywhere — Cloudflare
+The core has zero Node dependencies, so it runs on Hono anywhere  Cloudflare
 Workers, Deno, Bun, Vercel/Netlify edge, and Node.
 
 ## A validation middleware
@@ -36,7 +36,7 @@ app.post('/users', validate({ email: 'required|email', password: 'required|min:8
 ## Resolvers on the edge
 
 Register async resolvers per request (edge runtimes discourage module-level
-globals) — pass them with `withResolvers` inside the middleware:
+globals)  pass them with `withResolvers` inside the middleware:
 
 ```ts
 const v = Validator.make(body, schema).withResolvers({

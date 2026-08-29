@@ -7,12 +7,12 @@
 
 An **expressive**, strictly-typed validation library for TypeScript.
 
-- 🧩 **Framework-agnostic core** — works in Node (Express, NestJS, Fastify), the browser, workers, and edge runtimes.
-- 🎯 **Comprehensive rule set** — 100+ built-in rules with human-friendly messages, dot/`*` wildcard nesting, `MessageBag`, `validated()`/`safe()`, conditional & cross-field rules.
-- 🪝 **Two APIs, one engine** — a full dataset `Validator.make(data, rules)` **and** a chainable single-field builder for Quasar/Vue `:rules`.
-- 🔒 **100% TypeScript, zero `any`** — compiled under the strictest settings, **100% test coverage**.
-- 🧠 **Type inference** — pass a rules literal and `validated()` returns a precisely-typed object (`InferRules`), no `as const` needed.
-- ⚡ **Async-ready** — pluggable resolvers for `exists`, `unique`, `current_password`, and `Password.uncompromised()`.
+- 🧩 **Framework-agnostic core**  works in Node (Express, NestJS, Fastify), the browser, workers, and edge runtimes.
+- 🎯 **Comprehensive rule set**  100+ built-in rules with human-friendly messages, dot/`*` wildcard nesting, `MessageBag`, `validated()`/`safe()`, conditional & cross-field rules.
+- 🪝 **Two APIs, one engine**  a full dataset `Validator.make(data, rules)` **and** a chainable single-field builder for Quasar/Vue `:rules`.
+- 🔒 **100% TypeScript, zero `any`**  compiled under the strictest settings, **100% test coverage**.
+- 🧠 **Type inference**  pass a rules literal and `validated()` returns a precisely-typed object (`InferRules`), no `as const` needed.
+- ⚡ **Async-ready**  pluggable resolvers for `exists`, `unique`, `current_password`, and `Password.uncompromised()`.
 
 > 📖 **Full documentation:** run `pnpm docs:dev` (VitePress) or see the [`docs/`](https://github.com/anilkumarthakur60/validator/tree/main/docs) directory.
 
@@ -26,7 +26,7 @@ npm install @anil-labs/validator
 
 Ships ESM + CJS with bundled type declarations. Requires Node ≥ 20.
 
-### CDN — no build step
+### CDN  no build step
 
 The package also ships a minified IIFE with every export on a `Validator` global:
 
@@ -73,7 +73,7 @@ if (validator.fails()) {
 
 ### Type inference
 
-Pass the rules as a literal and `validated()` is fully typed — no `as const`, no
+Pass the rules as a literal and `validated()` is fully typed  no `as const`, no
 separate interface:
 
 ```ts
@@ -97,7 +97,7 @@ data.users[0]?.email // ✅ typed
 
 Use `InferRules<typeof rules>` to derive the type without running validation. The
 engine validates but doesn't coerce, so inferred types reflect each rule's
-intended type — see the [Type inference guide](./docs/guide/type-inference.md).
+intended type  see the [Type inference guide](./docs/guide/type-inference.md).
 
 ### Fluent builder (Quasar / Vue `:rules`)
 
@@ -108,7 +108,7 @@ import { validation } from '@anil-labs/validator'
 
 <template>
   <q-input v-model="email" :rules="[validation.required().email().toRule()]" />
-  <!-- .toRule() is optional — a chain is directly callable -->
+  <!-- .toRule() is optional  a chain is directly callable -->
   <q-input v-model="age" :rules="[validation.required().integer().between(1, 120)]" />
 </template>
 ```

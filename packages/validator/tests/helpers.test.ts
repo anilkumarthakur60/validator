@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import * as h from '@/helpers'
 
-describe('helpers — type predicates', () => {
+describe('helpers  type predicates', () => {
   it('isEmpty', () => {
     expect(h.isEmpty(null)).toBe(true)
     expect(h.isEmpty(undefined)).toBe(true)
@@ -57,7 +57,7 @@ describe('helpers — type predicates', () => {
   })
 })
 
-describe('helpers — string formats', () => {
+describe('helpers  string formats', () => {
   it('email variants', () => {
     expect(h.isValidEmailRfc('a@b.com')).toBe(true)
     expect(h.isValidEmailRfc('a@b')).toBe(false)
@@ -123,7 +123,7 @@ describe('helpers — string formats', () => {
   })
 })
 
-describe('helpers — dates, sizes, numbers, stringify', () => {
+describe('helpers  dates, sizes, numbers, stringify', () => {
   it('parseDate / isValidDate', () => {
     expect(h.parseDate(new Date('2024-01-01'))).toBeTypeOf('number')
     expect(h.parseDate(new Date('invalid'))).toBeNull()

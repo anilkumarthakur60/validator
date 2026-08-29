@@ -1,6 +1,6 @@
 # Working with validated input
 
-After validation you usually want just the data that actually had rules — not
+After validation you usually want just the data that actually had rules  not
 the entire payload. Two methods give you that.
 
 ## validated()
@@ -15,7 +15,7 @@ const validator = Validator.make(
   { title: 'required', body: 'required' },
 )
 
-validator.validated() // { title: 'Hi', body: 'Yo' } — `extra` dropped
+validator.validated() // { title: 'Hi', body: 'Yo' }  `extra` dropped
 ```
 
 ## safe()

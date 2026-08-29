@@ -35,7 +35,7 @@ substituted with the current element's index automatically.
 
 ```ts
 Validator.make({ user: { name: 'Ada', admin: true } }, {
-  user: 'array:name,username', // fails — `admin` is not allowed
+  user: 'array:name,username', // fails  `admin` is not allowed
 })
 ```
 

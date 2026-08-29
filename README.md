@@ -1,15 +1,15 @@
-# validator — @anil-labs/validator
+# validator  @anil-labs/validator
 
 [![CI](https://github.com/anilkumarthakur60/validator/actions/workflows/ci.yml/badge.svg)](https://github.com/anilkumarthakur60/validator/actions/workflows/ci.yml)
 [![npm](https://img.shields.io/npm/v/%40anil-labs%2Fvalidator.svg)](https://www.npmjs.com/package/@anil-labs/validator)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
 An expressive, strictly-typed, **framework-agnostic** validation library for
-TypeScript — Laravel-style string rules (`required|email|max:255`, dot & `*`
+TypeScript  Laravel-style string rules (`required|email|max:255`, dot & `*`
 wildcard nesting) with two APIs sharing one engine:
 
-- **`Validator.make(data, rules)`** — validate a whole dataset (server or client).
-- **`validation`** — a chainable single-field rule builder for Quasar/Vue `:rules`.
+- **`Validator.make(data, rules)`**  validate a whole dataset (server or client).
+- **`validation`**  a chainable single-field rule builder for Quasar/Vue `:rules`.
 
 Full guides live in the [docs site](https://anilkumarthakur60.github.io/validator/)
 and the [package README](./packages/validator/README.md).
@@ -54,10 +54,10 @@ rule('nope'); // "The value field must be a valid email address."
 
 | Directory            | Package                | What it is                                                       |
 | -------------------- | ---------------------- | ----------------------------------------------------------------- |
-| `packages/validator` | `@anil-labs/validator` | The library — ESM + CJS + IIFE CDN builds, bundled types.         |
+| `packages/validator` | `@anil-labs/validator` | The library  ESM + CJS + IIFE CDN builds, bundled types.         |
 | `examples/vanilla`   | `example-vanilla`      | Plain HTML + Vite example using the library directly (private).   |
-| `examples/vue`       | `example-vue`          | Vue 3 + Vite showcase — forms, playground, async rules (private). |
-| `docs`               | `docs`                 | VitePress docs site — guides, rules reference, API (private).     |
+| `examples/vue`       | `example-vue`          | Vue 3 + Vite showcase  forms, playground, async rules (private). |
+| `docs`               | `docs`                 | VitePress docs site  guides, rules reference, API (private).     |
 
 ## Local development
 
@@ -106,7 +106,7 @@ Three independent targets; the only repo secret anywhere is `NPM_TOKEN`:
 - **Demos → Vercel (one project).** `pnpm build:demos` assembles the examples
   into a static site under `dist-demos/`; the root `vercel.json` points a single
   Vercel project at it. Vercel's native Git integration auto-deploys `main` and
-  posts preview URLs on PRs — no tokens or GitHub secrets.
+  posts preview URLs on PRs  no tokens or GitHub secrets.
 - **Docs → GitHub Pages.** `.github/workflows/docs.yml` builds the VitePress
   site with `DOCS_BASE=/validator/` and deploys it on any push to `main`
   touching `docs/**`. Enable once under Settings → Pages → Source: GitHub Actions.

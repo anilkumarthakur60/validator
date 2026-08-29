@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { Validator } from '@/core/Validator'
 import { ValidationException } from '@/core/ValidationException'
 
-describe('Validator — basics', () => {
+describe('Validator  basics', () => {
   it('passes valid data and exposes validated()', () => {
     const v = Validator.make(
       { title: 'Hello', body: 'World', extra: 'drop' },
@@ -74,7 +74,7 @@ describe('Validator — basics', () => {
   })
 })
 
-describe('Validator — nested & wildcards', () => {
+describe('Validator  nested & wildcards', () => {
   it('validates dot-notation fields', () => {
     const v = Validator.make({ author: { name: '' } }, { 'author.name': 'required' })
     expect(v.fails()).toBe(true)
@@ -108,7 +108,7 @@ describe('Validator — nested & wildcards', () => {
   })
 })
 
-describe('Validator — exclusion & conditional', () => {
+describe('Validator  exclusion & conditional', () => {
   it('exclude_if removes a field and skips its rules', () => {
     const v = Validator.make(
       { has_appointment: false, appointment_date: 'not-a-date' },
@@ -138,7 +138,7 @@ describe('Validator — exclusion & conditional', () => {
   })
 })
 
-describe('Validator — custom messages & attributes', () => {
+describe('Validator  custom messages & attributes', () => {
   it('uses attribute.rule and custom attribute names', () => {
     const v = Validator.make(
       { email: '' },
@@ -162,7 +162,7 @@ describe('Validator — custom messages & attributes', () => {
   })
 })
 
-describe('Validator — async rules', () => {
+describe('Validator  async rules', () => {
   it('runs unique/exists resolvers asynchronously', async () => {
     const unique = vi.fn(() => Promise.resolve(false))
     const v = Validator.make(

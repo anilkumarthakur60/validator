@@ -3,7 +3,7 @@
  *
  * Given a `Validator.make(data, rules)` call where `rules` is captured as a
  * `const` literal, {@link InferRules} maps the (Laravel-style) rule strings to
- * the TypeScript shape of the validated data — so `validated()`/`safe()` return
+ * the TypeScript shape of the validated data  so `validated()`/`safe()` return
  * a precisely-typed object instead of `Record<string, unknown>`.
  *
  * Supported inference:
@@ -20,7 +20,7 @@
  * Non-string rule entries (rule objects / closures) contribute no token
  * information and fall back to `unknown`, which is always safe.
  *
- * Note: the engine validates but does not coerce — inferred types reflect each
+ * Note: the engine validates but does not coerce  inferred types reflect each
  * rule's *intended* type. This is exact for already-typed inputs (e.g. JSON
  * payloads); for string-form inputs (HTML forms) a numeric/boolean field's
  * runtime value may still be a string, so cast at the edge if needed.

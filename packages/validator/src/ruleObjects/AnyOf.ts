@@ -1,5 +1,5 @@
 /**
- * `Rule.anyOf([...])` — passes when the value satisfies any one of the
+ * `Rule.anyOf([...])`  passes when the value satisfies any one of the
  * provided rulesets. Each ruleset is validated with an isolated sub-validator.
  */
 

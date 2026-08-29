@@ -147,9 +147,9 @@ function firstError(field: string): string {
     <div class="card output">
       <CodeSnippet :code="schemaCode" label="Schema" />
       <template v-if="submitted">
-        <h4 v-if="validated">✓ Passed — validated()</h4>
+        <h4 v-if="validated">✓ Passed  validated()</h4>
         <JsonView v-if="validated" :data="validated" tone="ok" />
-        <h4 v-else>✗ Failed — errors().messages()</h4>
+        <h4 v-else>✗ Failed  errors().messages()</h4>
         <JsonView v-if="!validated" :data="errors" tone="error" />
       </template>
       <p v-else class="hint">

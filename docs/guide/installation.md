@@ -14,7 +14,7 @@ works in any modern toolchain.
 ## CDN / no build step
 
 An IIFE bundle is published too, exposing everything on the `window.Validator`
-global — handy for plain HTML pages and quick prototypes:
+global  handy for plain HTML pages and quick prototypes:
 
 ```html
 <script src="https://unpkg.com/@anil-labs/validator"></script>

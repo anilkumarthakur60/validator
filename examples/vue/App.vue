@@ -21,7 +21,7 @@ const sections: Section[] = [
     id: 'live',
     index: '01',
     title: 'Fluent builder',
-    blurb: 'Chainable, Quasar-style :rules — validates as you type.',
+    blurb: 'Chainable, Quasar-style :rules  validates as you type.',
     component: LiveFields,
   },
   {
@@ -35,7 +35,7 @@ const sections: Section[] = [
     id: 'infer',
     index: '03',
     title: 'Type inference',
-    blurb: 'validated() typed straight from the rule strings — no as const.',
+    blurb: 'validated() typed straight from the rule strings  no as const.',
     component: TypeInference,
   },
   {
@@ -63,7 +63,7 @@ const sections: Section[] = [
     id: 'playground',
     index: '07',
     title: 'Playground',
-    blurb: 'Try a single rule or a whole-dataset schema — browse every built-in rule.',
+    blurb: 'Try a single rule or a whole-dataset schema  browse every built-in rule.',
     component: RulePlayground,
   },
 ]
@@ -172,7 +172,7 @@ onBeforeUnmount(() => {
 
     <main class="content">
       <header class="content-head">
-        <span class="kicker">{{ active.index }} — Demo</span>
+        <span class="kicker">{{ active.index }}  Demo</span>
         <h2>{{ active.title }}</h2>
         <p>{{ active.blurb }}</p>
       </header>

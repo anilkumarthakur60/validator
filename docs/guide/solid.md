@@ -70,7 +70,7 @@ export function SignupForm() {
 }
 ```
 
-Build rules once (outside the component, or memoized) — cross-field rules
+Build rules once (outside the component, or memoized)  cross-field rules
 capture sibling values at build time, so prefer `Validator.make` for reactive
 cross-field checks. SolidStart server functions can use the async API with
 [resolvers](/guide/async-rules).

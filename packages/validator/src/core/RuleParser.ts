@@ -132,7 +132,7 @@ const mergeRegexSegments = (segments: readonly string[]): string[] => {
 //
 // Re-validating (e.g. per keystroke) re-parses the same rule strings over and
 // over, so parses of STRING definitions are memoized. Object/closure entries
-// are never cached (they may capture state). Cached parses are deep-frozen —
+// are never cached (they may capture state). Cached parses are deep-frozen 
 // they are shared across callers, so immutability is enforced at runtime.
 
 const PARSE_CACHE_CAPACITY = 500

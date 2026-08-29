@@ -20,7 +20,7 @@ const blank = (): FormShape => ({
 })
 const form = reactive<FormShape>(blank())
 
-// A `const` rules literal — this is what lets `make` infer the output shape.
+// A `const` rules literal  this is what lets `make` infer the output shape.
 const schema = {
   title: 'required|string|max:255',
   count: 'required|integer|min:1',
@@ -35,7 +35,7 @@ const code = `const data = Validator.make(input, {
   'profile.handle': 'required|string',
 }).validated()
 
-// inferred — no \`as const\`, no interface:
+// inferred  no \`as const\`, no interface:
 // {
 //   title: string
 //   count: number
@@ -66,8 +66,8 @@ function run(): void {
   const v = Validator.make(buildData(), schema)
   if (v.passes()) {
     const data = v.validated()
-    // ── typed access — enforced by `npm run demo:typecheck` ──
-    summary.value = `${data.title.toUpperCase()} — ${data.count.toFixed(0)} item(s) · @${data.profile.handle}`
+    // ── typed access  enforced by `npm run demo:typecheck` ──
+    summary.value = `${data.title.toUpperCase()}  ${data.count.toFixed(0)} item(s) · @${data.profile.handle}`
     output.value = data
     errors.value = {}
   } else {
@@ -144,12 +144,12 @@ function firstError(field: string): string {
       <CodeSnippet :code="code" label="Inferred type" />
       <template v-if="submitted">
         <template v-if="output">
-          <h4>✓ Passed — typed validated()</h4>
+          <h4>✓ Passed  typed validated()</h4>
           <p class="hint">{{ summary }}</p>
           <JsonView :data="output" tone="ok" />
         </template>
         <template v-else>
-          <h4>✗ Failed — errors().messages()</h4>
+          <h4>✗ Failed  errors().messages()</h4>
           <JsonView :data="errors" tone="error" />
         </template>
       </template>

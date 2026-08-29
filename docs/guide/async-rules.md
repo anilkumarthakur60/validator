@@ -36,7 +36,7 @@ interface DatabaseQuery {
   table: string
   column: string // defaults to the field's last segment
   value: unknown
-  values: readonly unknown[] // value(s) — array when validating arrays
+  values: readonly unknown[] // value(s)  array when validating arrays
   attribute: string
   ignore?: { id: unknown; column: string } // from Rule.unique().ignore()
   wheres: ReadonlyArray<{ column: string; value: unknown }> // from .where()
@@ -74,7 +74,7 @@ Rule.unique('users').withoutTrashed('archived_at')
 
 If **no** resolver is configured, `exists`/`unique`/`current_password`
 **pass** (with a one-time console warning) so a missing resolver never blocks a
-form. When a resolver *is* configured the rule becomes asynchronous — always use
+form. When a resolver *is* configured the rule becomes asynchronous  always use
 `passesAsync()` / `failsAsync()` / `validateAsync()`.
 
 ::: tip

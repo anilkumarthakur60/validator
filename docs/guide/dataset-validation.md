@@ -1,7 +1,7 @@
 # Dataset validation
 
 `Validator.make(data, rules, messages?, attributes?)` is the heart of the
-library — a faithful, strongly-typed dataset validator.
+library  a faithful, strongly-typed dataset validator.
 
 ```ts
 import { Validator } from '@anil-labs/validator'
@@ -18,7 +18,7 @@ const validator = Validator.make(data, rules, customMessages, customAttributes)
 
 ::: tip Typed output
 When `rules` is a literal, `validated()` / `validate()` / `safe().all()` are
-**typed** from the rule strings — see [Type inference](/guide/type-inference).
+**typed** from the rule strings  see [Type inference](/guide/type-inference).
 :::
 
 ## Defining rules
@@ -48,7 +48,7 @@ failure.
 | `validated()` | the validated subset of `data` |
 | `safe()` | [`ValidatedInput`](/api#validatedinput) |
 
-Async equivalents — use these whenever a rule needs a
+Async equivalents  use these whenever a rule needs a
 [resolver](/guide/async-rules):
 
 | Sync | Async |
@@ -87,7 +87,7 @@ v.fails() // stops after the first failing attribute
 
 ## After hooks
 
-Run extra logic once the main pass completes — accepts a callback, an array, or
+Run extra logic once the main pass completes  accepts a callback, an array, or
 invokable objects (`{ __invoke }`):
 
 ```ts

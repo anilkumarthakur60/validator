@@ -5,7 +5,7 @@ import type { FieldRuleFn } from '@anil-labs/validator'
  * Wraps a single reactive value and a fluent-builder rule function
  * (`validation.required().email().toRule()`) into live validation state.
  *
- * The rule re-runs automatically whenever the value changes — `error` is the
+ * The rule re-runs automatically whenever the value changes  `error` is the
  * empty string while valid, otherwise the failure message.
  */
 export interface Field<T> {

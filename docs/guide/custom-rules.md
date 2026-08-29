@@ -60,7 +60,7 @@ export class MatchesConfirmation implements ValidationRuleObject, DataAwareRule 
 }
 ```
 
-A rule object's `validate` may return a `Promise` for async checks — run it via
+A rule object's `validate` may return a `Promise` for async checks  run it via
 `validateAsync()`/`passesAsync()`.
 
 ## 3. Global named rules (`registerRule`)

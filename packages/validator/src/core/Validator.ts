@@ -1,5 +1,5 @@
 /**
- * The dataset validator — a faithful, strongly-typed validation engine.
+ * The dataset validator  a faithful, strongly-typed validation engine.
  *
  * It validates a whole data object against a rules schema, supporting dot and
  * `*` wildcard notation, cross-field/dependent rules, implicit rules, `bail`,
@@ -122,9 +122,9 @@ export class Validator<TValidated extends ValidationData = ValidationData> {
    * Configure what happens when a resolver-backed rule (`exists`, `unique`,
    * `active_url`, `current_password`) runs without its resolver configured:
    *
-   *  - `'pass'` (default) — the rule passes, with a one-time console warning.
-   *  - `'fail'` — the field fails validation with the rule's normal message.
-   *  - `'throw'` — an `Error` is thrown naming the rule and missing resolver.
+   *  - `'pass'` (default)  the rule passes, with a one-time console warning.
+   *  - `'fail'`  the field fails validation with the rule's normal message.
+   *  - `'throw'`  an `Error` is thrown naming the rule and missing resolver.
    */
   static onMissingResolver(behavior: MissingResolverBehavior): void {
     setMissingResolverBehavior(behavior)

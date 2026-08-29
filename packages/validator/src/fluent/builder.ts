@@ -8,7 +8,7 @@
  *   <q-input :rules="[validation.required().email().toRule()]" />
  *
  * Internally every chain composes the real {@link Validator} engine against a
- * single synthetic field, so behavior matches the dataset API exactly —
+ * single synthetic field, so behavior matches the dataset API exactly 
  * including cross-field rules, which capture sibling values at build time.
  */
 

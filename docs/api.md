@@ -38,7 +38,7 @@ When `rules` is a literal, the validated-data methods (`validated()`,
 | Method | Returns |
 | --- | --- |
 | `errors()` / `messages()` | [`MessageBag`](#messagebag) |
-| `validated()` | validated subset of the data (typed — see [Type inference](/guide/type-inference)) |
+| `validated()` | validated subset of the data (typed  see [Type inference](/guide/type-inference)) |
 | `safe()` | [`ValidatedInput`](#validatedinput) |
 | `getData()` | a copy of the input data |
 
@@ -256,14 +256,14 @@ composition and typing:
 
 ```ts
 import {
-  AnyOf, // Rule.anyOf(...) — passes when any branch passes
+  AnyOf, // Rule.anyOf(...)  passes when any branch passes
   CompositeRule, // combine several rule objects into one
   DateRule, // Rule.date()
   Dimensions, // Rule.dimensions()
   EmailRule, // Rule.email()
-  ExistsRule, // Rule.exists() — resolver-backed
+  ExistsRule, // Rule.exists()  resolver-backed
   StringRule, // Rule.string()
-  UniqueRule, // Rule.unique() — resolver-backed
+  UniqueRule, // Rule.unique()  resolver-backed
 } from '@anil-labs/validator'
 ```
 
@@ -289,7 +289,7 @@ import { helpers, dotGet, dotHas, dotSet, expandWildcards, flattenKeys, defaultM
 
 helpers.isValidEmailRfc('a@b.com')
 dotGet({ a: { b: 1 } }, 'a.b') // 1
-flattenKeys({ a: { b: 1 } }) // ['a.b'] — dotted leaf keys
+flattenKeys({ a: { b: 1 } }) // ['a.b']  dotted leaf keys
 ```
 
 ### Message formatting

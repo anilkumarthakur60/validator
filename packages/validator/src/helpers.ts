@@ -1,6 +1,6 @@
 /**
  * Pure, side-effect-free predicates and value helpers used across rules.
- * Every function narrows `unknown` — callers never pass `any`.
+ * Every function narrows `unknown`  callers never pass `any`.
  */
 
 /** A value treated as "empty" for presence rules (strings are trimmed, as in Laravel). */

@@ -26,7 +26,7 @@ const demos = [
     slug: 'vanilla',
     filter: 'example-vanilla',
     label: 'Vanilla TS',
-    desc: 'Framework-free signup form — Validator.make + errors().messages() on plain DOM.',
+    desc: 'Framework-free signup form  Validator.make + errors().messages() on plain DOM.',
   },
   {
     slug: 'vue',
@@ -64,8 +64,8 @@ const html = `<!doctype html>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@anil-labs/validator — live demos</title>
-    <meta name="description" content="Live demos of @anil-labs/validator — an expressive, framework-agnostic, strictly-typed validation library for TypeScript." />
+    <title>@anil-labs/validator  live demos</title>
+    <meta name="description" content="Live demos of @anil-labs/validator  an expressive, framework-agnostic, strictly-typed validation library for TypeScript." />
     <style>
       :root { color-scheme: dark; }
       * { box-sizing: border-box; }
@@ -115,7 +115,7 @@ const html = `<!doctype html>
     <main>
       <div class="hero">
         <h1>@anil-labs/validator</h1>
-        <p class="tag">An expressive, framework-agnostic, strictly-typed validation library for TypeScript — Laravel-style rules, a fluent builder, and full type inference. Pick a demo:</p>
+        <p class="tag">An expressive, framework-agnostic, strictly-typed validation library for TypeScript  Laravel-style rules, a fluent builder, and full type inference. Pick a demo:</p>
       </div>
       <div class="grid">${cards}
       </div>

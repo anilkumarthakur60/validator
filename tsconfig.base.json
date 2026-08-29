@@ -14,7 +14,7 @@
     "noEmit": true,
     "isolatedModules": true,
 
-    /* Strictness — maximum */
+    /* Strictness  maximum */
     "strict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,

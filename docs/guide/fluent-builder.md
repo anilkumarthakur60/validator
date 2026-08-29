@@ -1,9 +1,9 @@
 # Fluent builder
 
 For single-field validation, use the chainable `validation` builder. It produces
-a `(value) => true | string` function — the shape most form libraries expect
+a `(value) => true | string` function  the shape most form libraries expect
 (Quasar's `:rules`, vee-validate, React Hook Form's `validate`, an Angular
-`ValidatorFn`, …) — and composes the same engine as `Validator`, so behavior
+`ValidatorFn`, …)  and composes the same engine as `Validator`, so behavior
 matches exactly.
 
 > Framework wiring: [Vue](/guide/vue) · [React](/guide/react) ·
@@ -17,7 +17,7 @@ import { validation } from '@anil-labs/validator'
 <template>
   <q-input v-model="email" :rules="[validation.required().email().toRule()]" />
 
-  <!-- .toRule() is optional — a chain is directly callable -->
+  <!-- .toRule() is optional  a chain is directly callable -->
   <q-input v-model="age" :rules="[validation.required().integer().between(1, 120)]" />
 </template>
 ```
@@ -60,7 +60,7 @@ The builder mirrors the dataset rules, e.g.:
 - **Misc:** `ip`, `ipv4`, `ipv6`, `json`, `macAddress`, `size`, `password`,
   `strongPassword`, `asPhoneNumber`, `notEmpty`
 
-Cross-field rules capture the **other value at build time** — pass the actual
+Cross-field rules capture the **other value at build time**  pass the actual
 value (reactive in a component):
 
 ```ts

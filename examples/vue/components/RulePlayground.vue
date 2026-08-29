@@ -224,13 +224,13 @@ function applyDatasetPreset(p: (typeof datasetPresets)[number]): void {
       </div>
 
       <div class="field">
-        <label for="pg-rules" class="field-label">Rules — pipe syntax</label>
+        <label for="pg-rules" class="field-label">Rules  pipe syntax</label>
         <input id="pg-rules" v-model="rulesInput" spellcheck="false" />
       </div>
 
       <div class="field">
         <label for="pg-value" class="field-label">
-          Value — JSON (e.g. <code>"hi"</code>, <code>42</code>, <code>[1,2]</code>,
+          Value  JSON (e.g. <code>"hi"</code>, <code>42</code>, <code>[1,2]</code>,
           <code>{"a":1}</code>)
         </label>
         <input id="pg-value" v-model="valueInput" spellcheck="false" />
@@ -273,11 +273,11 @@ function applyDatasetPreset(p: (typeof datasetPresets)[number]): void {
 
       <div class="pg-grid">
         <div class="field">
-          <label for="pg-data" class="field-label">Data — JSON object</label>
+          <label for="pg-data" class="field-label">Data  JSON object</label>
           <textarea id="pg-data" v-model="dataInput" spellcheck="false" rows="9" />
         </div>
         <div class="field">
-          <label for="pg-schema" class="field-label">Schema — field → rules</label>
+          <label for="pg-schema" class="field-label">Schema  field → rules</label>
           <textarea id="pg-schema" v-model="schemaInput" spellcheck="false" rows="9" />
         </div>
       </div>
@@ -287,8 +287,8 @@ function applyDatasetPreset(p: (typeof datasetPresets)[number]): void {
         :class="datasetOutcome.parseError ? 'error' : datasetOutcome.ok ? 'ok' : 'fail'"
       >
         <template v-if="datasetOutcome.parseError">⚠ {{ datasetOutcome.parseError }}</template>
-        <template v-else-if="datasetOutcome.ok">✓ passes — validated() below</template>
-        <template v-else>✗ fails — errors() below</template>
+        <template v-else-if="datasetOutcome.ok">✓ passes  validated() below</template>
+        <template v-else>✗ fails  errors() below</template>
       </div>
 
       <template v-if="!datasetOutcome.parseError">
@@ -307,7 +307,7 @@ function applyDatasetPreset(p: (typeof datasetPresets)[number]): void {
     <details class="catalog">
       <summary>
         Rule catalog
-        <span class="count">{{ ruleCount }} built-in rules — click to insert</span>
+        <span class="count">{{ ruleCount }} built-in rules  click to insert</span>
       </summary>
       <div class="cat-body">
         <section v-for="group in catalog" :key="group.title" class="cat-group">

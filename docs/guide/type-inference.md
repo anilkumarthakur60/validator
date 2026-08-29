@@ -1,7 +1,7 @@
 # Type inference
 
 When you pass a rules schema as a literal, `Validator.make` infers the shape of
-the validated data — so `validated()`, `validate()`, and `safe().all()` return a
+the validated data  so `validated()`, `validate()`, and `safe().all()` return a
 **precisely-typed object** instead of `Record<string, unknown>`.
 
 ```ts
@@ -38,7 +38,7 @@ data.users[0]?.email // ✅ typed
 data.count.toFixed(2) // ✅ typed
 ```
 
-No `as const` is required — `make` uses a `const` type parameter to capture the
+No `as const` is required  `make` uses a `const` type parameter to capture the
 rule strings as literals.
 
 ## What gets inferred
@@ -53,17 +53,17 @@ rule strings as literals.
 
 Plus:
 
-- **Optionality** — a field is optional (`field?:`) unless its rules include
+- **Optionality**  a field is optional (`field?:`) unless its rules include
   `required` (or `present`).
-- **`nullable`** — widens the leaf with `| null`.
-- **Dot paths** — `author.name` becomes `{ author: { name: … } }`.
-- **Wildcards** — `users.*.email` becomes `{ users: { email: … }[] }`.
+- **`nullable`**  widens the leaf with `| null`.
+- **Dot paths**  `author.name` becomes `{ author: { name: … } }`.
+- **Wildcards**  `users.*.email` becomes `{ users: { email: … }[] }`.
 - **Rule objects / closures** contribute no token info and infer `unknown`
   (always safe).
 
 ## Inferring the type by itself
 
-Use `InferRules` to derive the type without running validation — handy for typing
+Use `InferRules` to derive the type without running validation  handy for typing
 a function parameter, a store, or an API contract:
 
 ```ts
@@ -88,7 +88,7 @@ register(v.validated()) // ✅ types line up
 
 ## A note on coercion
 
-The engine **validates but does not coerce** — `validated()` returns your
+The engine **validates but does not coerce**  `validated()` returns your
 original values. Inferred types therefore reflect each rule's *intended* type:
 
 - For already-typed inputs (JSON payloads, server data) the inference is exact.

@@ -16,7 +16,7 @@ const firstError = (value: unknown, rule: RulesSchema['f']): string => {
   return v.errors().first('f')
 }
 
-describe('presence — whitespace-only strings are empty (Laravel trims)', () => {
+describe('presence  whitespace-only strings are empty (Laravel trims)', () => {
   it('required / filled reject whitespace-only strings', () => {
     expect(ok('   ', 'required')).toBe(false)
     expect(ok('\t\n', 'required')).toBe(false)
@@ -38,7 +38,7 @@ describe('presence — whitespace-only strings are empty (Laravel trims)', () =>
   })
 })
 
-describe('sizing — numbers without a numeric-type rule use string length', () => {
+describe('sizing  numbers without a numeric-type rule use string length', () => {
   it('a raw number is sized by its string form', () => {
     expect(ok(1000000, 'min:10')).toBe(false)
     expect(ok(5, 'max:3')).toBe(true) // '5' is one character
@@ -53,7 +53,7 @@ describe('sizing — numbers without a numeric-type rule use string length', () 
   })
 })
 
-describe('rule parsing — pipe strings with regex patterns containing "|"', () => {
+describe('rule parsing  pipe strings with regex patterns containing "|"', () => {
   it('re-merges a delimited pattern split on "|"', () => {
     const rules = parseFieldRules('required|regex:/^a|b$/|max:5')
     expect(rules).toHaveLength(3)
@@ -84,7 +84,7 @@ describe('rule parsing — pipe strings with regex patterns containing "|"', () 
   })
 })
 
-describe('messages — replacement values are inserted literally', () => {
+describe('messages  replacement values are inserted literally', () => {
   it('formatMessage ignores replacement patterns in values', () => {
     expect(formatMessage('Got :input.', { input: '$&' })).toBe('Got $&.')
     expect(formatMessage('Got :input.', { input: "$'" })).toBe("Got $'.")
@@ -97,7 +97,7 @@ describe('messages — replacement values are inserted literally', () => {
   })
 })
 
-describe('required_array_keys — :values lists literal keys', () => {
+describe('required_array_keys  :values lists literal keys', () => {
   it('does not run keys through the display-attribute transform', () => {
     expect(firstError({ first_name: 'a' }, 'required_array_keys:first_name,last_name')).toBe(
       'The f field must contain entries for: first_name, last_name.',
@@ -105,7 +105,7 @@ describe('required_array_keys — :values lists literal keys', () => {
   })
 })
 
-describe('date_format — calendar validity and escaped literals', () => {
+describe('date_format  calendar validity and escaped literals', () => {
   it('rejects impossible calendar dates', () => {
     expect(ok('2021-02-31', 'date_format:Y-m-d')).toBe(false)
     expect(ok('2021-04-31', 'date_format:Y-m-d')).toBe(false)
@@ -129,14 +129,14 @@ describe('date_format — calendar validity and escaped literals', () => {
   })
 })
 
-describe('uuid — the nil UUID satisfies no explicit version', () => {
+describe('uuid  the nil UUID satisfies no explicit version', () => {
   it('bare uuid accepts nil, uuid:<n> rejects it', () => {
     expect(ok('00000000-0000-0000-0000-000000000000', 'uuid')).toBe(true)
     expect(ok('00000000-0000-0000-0000-000000000000', 'uuid:4')).toBe(false)
   })
 })
 
-describe('not_in — the exact negation of in', () => {
+describe('not_in  the exact negation of in', () => {
   it('passes array values whose items are outside the list', () => {
     expect(ok(['z'], 'not_in:a,b')).toBe(true)
     expect(ok(['z'], ['array', 'not_in:a,b'])).toBe(true)
@@ -153,7 +153,7 @@ describe('not_in — the exact negation of in', () => {
   })
 })
 
-describe('sizing — booleans follow PHP strlen((string)$value)', () => {
+describe('sizing  booleans follow PHP strlen((string)$value)', () => {
   it('true sizes as 1, false as 0', () => {
     expect(ok(true, 'min:1')).toBe(true)
     expect(ok(false, 'min:1')).toBe(false)
@@ -161,7 +161,7 @@ describe('sizing — booleans follow PHP strlen((string)$value)', () => {
   })
 })
 
-describe('decimal — scientific notation is expanded', () => {
+describe('decimal  scientific notation is expanded', () => {
   it('counts true decimal places', () => {
     expect(ok(1e-7, 'decimal:7')).toBe(true)
     expect(ok(1e-7, 'decimal:0,2')).toBe(false)

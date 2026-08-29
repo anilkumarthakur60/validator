@@ -1,7 +1,7 @@
 # What is @anil-labs/validator?
 
 `@anil-labs/validator` is a strictly-typed, framework-agnostic validation library for
-TypeScript. It provides an expressive, string-based rule API — with human-friendly
+TypeScript. It provides an expressive, string-based rule API  with human-friendly
 error messages, dot/`*` wildcard nesting, and conditional and cross-field rules.
 
 ## Why
@@ -19,7 +19,7 @@ error messages, dot/`*` wildcard nesting, and conditional and cross-field rules.
 - **Safe.** 100% TypeScript with **no `any`**, compiled under the strictest
   settings, linted with type-aware rules, and covered by a **100%** test suite.
 - **Inferred.** Pass a rules literal and `validated()` returns a precisely-typed
-  object — no `as const`, no separate interface. See
+  object  no `as const`, no separate interface. See
   [Type inference](/guide/type-inference).
 
 ## The two APIs

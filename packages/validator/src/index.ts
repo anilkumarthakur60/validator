@@ -1,9 +1,9 @@
 /**
- * @anil-labs/validator — an expressive, strictly-typed validation library.
+ * @anil-labs/validator  an expressive, strictly-typed validation library.
  *
  * Two complementary APIs share one engine:
- *  - {@link Validator} — full dataset validation (`Validator.make(data, rules)`).
- *  - {@link validation} — a chainable single-field builder for Quasar `:rules`.
+ *  - {@link Validator}  full dataset validation (`Validator.make(data, rules)`).
+ *  - {@link validation}  a chainable single-field builder for Quasar `:rules`.
  */
 
 // ── Dataset validator core ──────────────────────────────────

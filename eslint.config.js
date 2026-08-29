@@ -1,9 +1,9 @@
-// Flat ESLint config — fully type-aware, maximum strictness.
+// Flat ESLint config  fully type-aware, maximum strictness.
 //
 //  • typescript-eslint `strictTypeChecked` + `stylisticTypeChecked` (uses the
 //    TypeScript type checker, so rules like no-unsafe-* and no-floating-promises
 //    apply across the codebase).
-//  • `no-explicit-any` is a hard error — `any` is never allowed.
+//  • `no-explicit-any` is a hard error  `any` is never allowed.
 //  • Prettier owns formatting; eslint-config-prettier turns off conflicting rules.
 
 import js from '@eslint/js'
@@ -37,12 +37,12 @@ export default tseslint.config(
       },
     },
     rules: {
-      // `any` is forbidden everywhere — no escape hatch.
+      // `any` is forbidden everywhere  no escape hatch.
       '@typescript-eslint/no-explicit-any': 'error',
       // The only tolerated unused identifier is a `_`-prefixed *argument* that a
       // signature contract forces us to keep (e.g. `validate(attribute, value, fail)`
       // implementations that don't read `attribute`). Unused locals and unused
-      // caught errors remain hard errors — no escape hatch there.
+      // caught errors remain hard errors  no escape hatch there.
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       // Require explicit return types on exported/public functions.
       '@typescript-eslint/explicit-module-boundary-types': 'error',
@@ -79,6 +79,6 @@ export default tseslint.config(
     },
   },
 
-  // Prettier last — disables all stylistic rules that would conflict.
+  // Prettier last  disables all stylistic rules that would conflict.
   prettier,
 )

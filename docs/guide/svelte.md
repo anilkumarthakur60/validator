@@ -1,6 +1,6 @@
 # Using with Svelte
 
-Plain functions and a framework-agnostic core make Svelte integration trivial —
+Plain functions and a framework-agnostic core make Svelte integration trivial 
 no adapter needed.
 
 ## Single field (Svelte 5 runes)
@@ -26,7 +26,7 @@ no adapter needed.
 ```
 
 > Svelte 4? Use a `writable` store and a reactive `$:` statement instead of
-> `$state`/`$derived` — the rule call is identical.
+> `$state`/`$derived`  the rule call is identical.
 
 ## Whole-form validation
 
@@ -64,7 +64,7 @@ no adapter needed.
 
 ## SvelteKit form actions (server)
 
-The same engine runs on the server — validate inside an action and return the
+The same engine runs on the server  validate inside an action and return the
 errors with `fail()`:
 
 ```ts

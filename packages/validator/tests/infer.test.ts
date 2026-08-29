@@ -8,10 +8,10 @@ import type { InferRules } from '@/infer'
  * `tsc --noEmit` in CI enforces it), and the runtime assertions confirm values.
  */
 
-describe('InferRules — typed validated() output', () => {
+describe('InferRules  typed validated() output', () => {
   it('infers scalar, nullable, optional, nested and wildcard fields', () => {
     // Inputs conform to each rule's intended type (the engine validates but
-    // does not coerce — so a numeric field fed a string stays a string).
+    // does not coerce  so a numeric field fed a string stays a string).
     const data = Validator.make(
       {
         title: 'Hello',

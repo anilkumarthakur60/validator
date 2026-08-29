@@ -16,7 +16,7 @@ import { defaultMessages, formatMessage, FALLBACK_MESSAGE } from '@/messages'
 import { parseFieldRules, normalizeRuleName } from '@/core/RuleParser'
 import { getBuiltinRule, hasBuiltinRule, registerRule } from '@/core/registry'
 
-describe('data — dot access', () => {
+describe('data  dot access', () => {
   const data = { a: { b: [{ c: 1 }, { c: 2 }] }, 'v1.0': 'x', n: null }
   it('splitPath honors escaped dots', () => {
     expect(splitPath('a.b')).toEqual(['a', 'b'])
@@ -46,7 +46,7 @@ describe('data — dot access', () => {
   })
 })
 
-describe('data — wildcards', () => {
+describe('data  wildcards', () => {
   it('expands arrays and objects', () => {
     const data = { users: [{ e: 'a' }, { e: 'b' }], cfg: { x: 1, y: 2 } }
     expect(expandWildcards(data, 'users.*.e').map((x) => x.attribute)).toEqual([

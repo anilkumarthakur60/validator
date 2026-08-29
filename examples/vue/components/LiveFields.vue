@@ -3,7 +3,7 @@ import { validation } from '@anil-labs/validator'
 import { useField } from '../composables/useField'
 import CodeSnippet from './CodeSnippet.vue'
 
-// Each chain is directly callable, so `.toRule()` is optional — we call it here
+// Each chain is directly callable, so `.toRule()` is optional  we call it here
 // to get a plain `(value) => true | string` function for the composable.
 const email = useField('', validation.required().email().attribute('email').toRule())
 

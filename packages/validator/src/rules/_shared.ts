@@ -60,7 +60,7 @@ export const otherFieldReplacer = (ctx: ReplacerContext): Record<string, Replace
   other: ctx.validator.getDisplayableAttribute(ctx.parameters[0] ?? ''),
 })
 
-/** `:date` replacer — literal when the param is a date, else the field's name. */
+/** `:date` replacer  literal when the param is a date, else the field's name. */
 export const dateReplacer = (ctx: ReplacerContext): Record<string, Replaceable> => {
   const parameter = ctx.parameters[0] ?? ''
   return {
