@@ -38,15 +38,15 @@
     "@size-limit/esbuild": "^12.1.0",
     "@size-limit/file": "^12.1.0",
     "@size-limit/preset-small-lib": "^12.1.0",
-    "@types/node": "^26.5.1",
-    "eslint": "^10.10.0",
+    "@types/node": "^26.6.2",
+    "eslint": "^10.11.0",
     "eslint-config-prettier": "^10.1.8",
     "husky": "^9.1.7",
     "lint-staged": "^17.5.1",
-    "prettier": "^3.9.6",
+    "prettier": "^3.9.8",
     "size-limit": "^12.1.0",
     "typescript": "~6.0.3",
-    "typescript-eslint": "^8.70.0"
+    "typescript-eslint": "^8.70.1"
   },
   "lint-staged": {
     "*.{ts,tsx,js,vue}": [
