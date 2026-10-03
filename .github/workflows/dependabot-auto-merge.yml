@@ -1,41 +1,50 @@
 name: Dependabot auto-merge
 
-# Auto-approves and enables auto-merge for Dependabot PRs that are patch or
-# minor version bumps. Major bumps are left for manual review.
+# Runs after CI finishes on a Dependabot PR and merges it if CI passed.
+# Patch and minor updates only; major updates are left open for manual review.
 #
-# Prerequisites (one-time, in repo settings):
-#   • Settings → General → "Allow auto-merge"  ✔
-#   • (Recommended) Branch protection on `main` requiring the CI checks, so
-#     auto-merge waits for CI to pass before merging.
-
-on: pull_request
+# Merging here (instead of `gh pr merge --auto`) avoids needing branch
+# protection with required status checks on the default branch.
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
 
 permissions:
   contents: write
   pull-requests: write
 
 jobs:
-  dependabot:
-    name: Auto-merge Dependabot PR
+  auto-merge:
+    name: Auto-merge
     runs-on: ubuntu-latest
-    if: github.actor == 'dependabot[bot]'
+    if: >-
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      startsWith(github.event.workflow_run.head_branch, 'dependabot/')
     steps:
-      - name: Fetch Dependabot metadata
-        id: metadata
-        uses: dependabot/fetch-metadata@v3
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Approve the PR
-        if: steps.metadata.outputs.update-type != 'version-update:semver-major'
-        run: gh pr review --approve "$PR_URL"
+      - name: Merge patch/minor Dependabot PR
         env:
-          PR_URL: ${{ github.event.pull_request.html_url }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          BRANCH: ${{ github.event.workflow_run.head_branch }}
+          SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          pr=$(gh pr list -R "$REPO" --head "$BRANCH" --author app/dependabot --json number -q '.[0].number')
+          if [ -z "$pr" ]; then
+            echo "No open Dependabot PR for $BRANCH"
+            exit 0
+          fi
 
-      - name: Enable auto-merge (patch & minor)
-        if: steps.metadata.outputs.update-type != 'version-update:semver-major'
-        run: gh pr merge --auto --squash "$PR_URL"
-        env:
-          PR_URL: ${{ github.event.pull_request.html_url }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Dependabot records the update type of each dependency in the commit message.
+          msg=$(gh api "repos/$REPO/commits/$SHA" -q .commit.message)
+          if ! grep -q 'update-type: version-update:semver-' <<<"$msg"; then
+            echo "No update-type metadata in commit; leaving PR #$pr for manual review"
+            exit 0
+          fi
+          if grep -q 'update-type: version-update:semver-major' <<<"$msg"; then
+            echo "Major update; leaving PR #$pr for manual review"
+            exit 0
+          fi
+
+          gh pr merge "$pr" -R "$REPO" --squash --match-head-commit "$SHA"
